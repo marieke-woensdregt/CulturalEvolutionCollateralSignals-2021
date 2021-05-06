@@ -68,6 +68,7 @@ class Production:
 
             exemplars = self.lexicon[word_index][0]
 
+            # print("Before similarity biases: ", target)
             # If both similarity biases are added to the target, they are combined
             if self.similarity_bias_word and self.similarity_bias_segment:
                 word_bias = self.similarity_word(target, exemplars, activation_exemplars, k)
@@ -76,6 +77,8 @@ class Production:
                 # The ratio of the word similarity to the segment similarity is 9/10
                 total_bias = [(9 * a) + b for a, b in zip(word_bias, segment_bias)]
                 target = [bias / 10 for bias in total_bias]
+
+                # print("After similarity biases: ", target)
 
             elif self.similarity_bias_word:
                 target = self.similarity_word(target, exemplars, activation_exemplars, k)
@@ -108,8 +111,8 @@ class Production:
             # This is done for every exemplar in the word (see the equation)
             for exemplar in exemplars:
                 sum += exemplar[dimension] * activation_exemplars[index] * math.exp(
-                    -k * abs(target[dimension] - exemplar[dimension]))
-                sum2 += activation_exemplars[index] * math.exp(-k * abs(target[dimension] - exemplar[dimension]))
+                    (-k) * abs(target[dimension] - exemplar[dimension]))
+                sum2 += activation_exemplars[index] * math.exp((-k) * abs(target[dimension] - exemplar[dimension]))
                 index += 1
 
             # Finally the target with the similarity bias is stored for the two dimensions
@@ -145,10 +148,10 @@ class Production:
                     # According to the equation, the similarity of the target to every exemplar is calculated and added
                     # as a bias
                     sum += exemplar[dimension] * total_activations[word_index][index] * math.exp(
-                        -k * abs(target[dimension] - exemplar[dimension]))
+                        (-k) * abs(target[dimension] - exemplar[dimension]))
                     # print("sum: ", sum)
                     sum2 += total_activations[word_index][index] * math.exp(
-                        -k * abs(target[dimension] - exemplar[dimension]))
+                        (-k) * abs(target[dimension] - exemplar[dimension]))
                     index += 1
                 word_index += 1
 
@@ -172,15 +175,17 @@ class Production:
 
             # A new target is sampled from a normal distribution with sd 3 and the mean of the target segment
             new_target = np.random.normal(segment, 3, 1)
+            # print("New target noise: ", new_target)
 
             # The biases is substracted or added based on the target segment value
-            if segment > N / 2:
+            if new_target[0] > (N / 2):
                 added_noise = new_target[0] - bias
             else:
                 added_noise = new_target[0] + bias
 
             # The noise of the segments is stored (as we have multiple dimensions)
             target_noise.append(added_noise)
+        # print("BEFORE NOISE: ", target)
         # print("NOISE ADDED: ", target_noise)
 
         return target_noise
