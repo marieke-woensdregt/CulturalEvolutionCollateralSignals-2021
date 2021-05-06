@@ -5,8 +5,8 @@ import math
 
 class Perception:
 
-    def __init__(self, lexicon, com_words, meta_com_words, n_words, n_dimensions, n_exemplars=100, n_continuers=0,
-                 anti_ambiguity_bias=True):
+    def __init__(self, lexicon, com_words, meta_com_words, n_words, n_dimensions, n_exemplars, n_continuers,
+                 anti_ambiguity_bias):
 
         self.lexicon = lexicon
         self.com_words = com_words
@@ -24,17 +24,13 @@ class Perception:
         total_activations = []
         for word_index in range(self.n_words):
 
-            # Only store exemplars until position 100
-            exemplars = self.lexicon[word_index][0][:101]
-
-            print("EXEMPLARS BEGINNING: ", exemplars)
+            # print("EXEMPLARS BEGINNING: ", exemplars)
             activation_exemplars = []
-            j = 1
-            for exemplar in exemplars:
+            for j in range(len(self.lexicon[word_index][0])):
+                j += 1
                 # activation = math.exp(0.2*j)
                 activation = 1 / (0.2 * j)
                 activation_exemplars.append(activation)
-                j += 1
 
             total_activations.append(activation_exemplars)
 
@@ -53,7 +49,7 @@ class Perception:
                 sum2 = 0
 
                 # Calculate the similarity of a segment of the signal compared to all the exemplars in a word
-                for exemplar in self.lexicon[word_index][0][:101]:
+                for exemplar in self.lexicon[word_index][0]:
                     sum += exemplar[dimension] * total_activations[word_index][index] * math.exp(
                         -k * abs(signal[dimension] - exemplar[dimension]))
                     sum2 += total_activations[word_index][index] * math.exp(
@@ -77,7 +73,7 @@ class Perception:
         # Get the word with the highest similarity to the signal
         max_similarity = max(total_similarities)
         index_max_sim = total_similarities.index(max_similarity)
-        print("SIGNAL MOST SIMILAR TO WORD: ", index_max_sim)
+        # print("SIGNAL MOST SIMILAR TO WORD: ", index_max_sim)
 
         return index_max_sim, total_similarities
 
@@ -99,6 +95,6 @@ class Perception:
         if store[0]:
             self.lexicon[index_max_sim][0].insert(0, signal)
 
-        print(self.lexicon[index_max_sim])
+        # print(self.lexicon[index_max_sim])
 
         return self.lexicon

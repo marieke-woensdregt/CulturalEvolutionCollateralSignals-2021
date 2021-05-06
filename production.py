@@ -5,8 +5,8 @@ import math
 
 class Production:
 
-    def __init__(self, lexicon, com_words, meta_com_words, n_words, n_dimensions, n_exemplars=100, n_continuers=0,
-                 similarity_bias_word=True, similarity_bias_segment=True, noise=True):
+    def __init__(self, lexicon, com_words, meta_com_words, n_words, n_dimensions, n_exemplars, n_continuers,
+                 similarity_bias_word, similarity_bias_segment, noise):
 
         self.lexicon = lexicon
         self.com_words = com_words
@@ -26,18 +26,14 @@ class Production:
         total_activations = []
         for word_index in range(self.n_words):
 
-            # Only store exemplars until position 100
-            exemplars = self.lexicon[word_index][0][:101]
-
             # First calculate the activation of every exemplar
-            print("EXEMPLARS BEGINNING: ", exemplars)
+            # print("EXEMPLARS BEGINNING: ", exemplars)
             activation_exemplars = []
-            j = 1
-            for exemplar in exemplars:
+            for j in range(len(self.lexicon[word_index][0])):
+                j += 1
                 # activation = math.exp(0.2*j)
                 activation = 1 / (0.2 * j)
                 activation_exemplars.append(activation)
-                j += 1
 
             # Store all the activations for all exemplars and all words
             total_activations.append(activation_exemplars)
@@ -54,8 +50,8 @@ class Production:
             # print("Max probability: ", max_prob)
 
             # Choose an exemplar to produce based on their probabilities
-            target = random.choices(exemplars, weights=exemplar_probs, k=1)
-            print("CHOSEN EXEMPLARS: ", target)
+            target = random.choices(self.lexicon[word_index][0], weights=exemplar_probs, k=1)
+            # print("CHOSEN EXEMPLARS: ", target)
 
             # Store the exemplars for every word to be produced
             targets.append(target[0])
@@ -70,8 +66,7 @@ class Production:
         target_exemplars = []
         for target in targets:
 
-            # Select only the first 100 exemplars per word
-            exemplars = self.lexicon[word_index][0][:101]
+            exemplars = self.lexicon[word_index][0]
 
             # If both similarity biases are added to the target, they are combined
             if self.similarity_bias_word and self.similarity_bias_segment:
@@ -96,8 +91,8 @@ class Production:
             target_exemplars.append(target)
             word_index += 1
 
-        print("BEFORE BIASES:", targets)
-        print("WITH BIASES:", target_exemplars)
+        # print("BEFORE BIASES:", targets)
+        # print("WITH BIASES:", target_exemplars)
 
         return target_exemplars
 
@@ -120,7 +115,7 @@ class Production:
             # Finally the target with the similarity bias is stored for the two dimensions
             bias_exemplar.append(sum / sum2)
 
-        print("SIMILARITY WORD ADDED: ", bias_exemplar)
+        # print("SIMILARITY WORD ADDED: ", bias_exemplar)
 
         return bias_exemplar
 
@@ -160,7 +155,7 @@ class Production:
             # The target including the word similarity bias is stored for both dimensions
             bias_exemplar.append(sum / sum2)
 
-        print("SIMILARITY SEGMENT ADDED: ", bias_exemplar)
+        # print("SIMILARITY SEGMENT ADDED: ", bias_exemplar)
 
         return bias_exemplar
 
@@ -186,6 +181,6 @@ class Production:
 
             # The noise of the segments is stored (as we have multiple dimensions)
             target_noise.append(added_noise)
-        print("NOISE ADDED: ", target_noise)
+        # print("NOISE ADDED: ", target_noise)
 
         return target_noise

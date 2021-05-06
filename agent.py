@@ -5,10 +5,11 @@ import matplotlib.pyplot as plt
 
 class Agent:
 
-    def __init__(self, n_words, n_dimensions, n_exemplars=100, n_continuers=0):
+    def __init__(self, n_words, n_dimensions, seed, n_exemplars=100, n_continuers=0):
 
         self.n_words = n_words
         self.n_dimensions = n_dimensions
+        self.seed = seed
         self.n_exemplars = n_exemplars
         self.n_continuers = n_continuers
 
@@ -18,11 +19,15 @@ class Agent:
     # Initialising lexicon
     def generate_lexicon(self):
 
+        if self.seed:
+            random.seed(self.seed)
         # Create a lexicon consisting of n_words words each in turn consisting of n_exemplars exemplars
         lexicon = []
         for w in range(self.n_words):
             word = []
 
+            if self.seed:
+                random.seed(self.seed+w)
             # Define the mean and the covariance to sample from a multivariate normal distribution to create clustered
             # exemplars for the words
             mean = [random.randrange(10, 91) for i in range(self.n_dimensions)]
