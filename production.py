@@ -174,14 +174,18 @@ class Production:
             bias = ((segment - (N / 2)) ** 2) / G
 
             # A new target is sampled from a normal distribution with sd 3 and the mean of the target segment
-            new_target = np.random.normal(segment, 3, 1)
+            #new_target = np.random.normal(segment, 3, 1)
             # print("New target noise: ", new_target)
 
             # The biases is substracted or added based on the target segment value
-            if new_target[0] > (N / 2):
-                added_noise = new_target[0] - bias
+            # if new_target[0] > (N / 2):
+            #     added_noise = new_target[0] - bias
+            # else:
+            #     added_noise = new_target[0] + bias
+            if segment > (N / 2):
+                added_noise = segment - bias
             else:
-                added_noise = new_target[0] + bias
+                added_noise = segment + bias
 
             # The noise of the segments is stored (as we have multiple dimensions)
             target_noise.append(added_noise)

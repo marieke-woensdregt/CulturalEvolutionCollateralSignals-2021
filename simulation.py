@@ -37,13 +37,13 @@ def simulation(n_runs, n_words, n_dimensions, seed, n_exemplars=100, n_continuer
                                                                       producer_meta_com_words, n_words, n_dimensions,
                                                                       n_exemplars, n_continuers, similarity_bias_word,
                                                                       similarity_bias_segment, noise).select_exemplar()
-        print("Chosen targets: ", targets)
+        #print("Chosen targets: ", targets)
 
         # Then the biases are added to the selected exemplars
         target_exemplars = Production(producer_lex, producer_com_words, producer_meta_com_words, n_words, n_dimensions,
                                       n_exemplars, n_continuers, similarity_bias_word, similarity_bias_segment, noise) \
             .add_biases(targets, activation_exemplars, total_activations)
-        print("Bias added to targets: ", target_exemplars)
+        #print("Bias added to targets: ", target_exemplars)
 
         # The other agent perceives the produced signals
 
@@ -72,7 +72,7 @@ def simulation(n_runs, n_words, n_dimensions, seed, n_exemplars=100, n_continuer
                     lexicon2[index_max_sim][0].insert(0, signal)
                 # Only the first 100 exemplars of a word are used
                 lexicon2[index_max_sim][0] = lexicon2[index_max_sim][0][:100]
-                print("Stored signal: ", signal)
+                #print("Stored signal: ", signal)
             else:
                 if anti_ambiguity_bias:
                     lexicon = Perception(perceiver_lex, perceiver_com_words, perceiver_meta_com_words, n_words,
@@ -86,7 +86,7 @@ def simulation(n_runs, n_words, n_dimensions, seed, n_exemplars=100, n_continuer
                 # Only the first 100 exemplars of a word are used
                 lexicon[index_max_sim][0] = lexicon[index_max_sim][0][:100]
 
-                print("Stored signal: ", signal)
+                #print("Stored signal: ", signal)
             # print(lexicon)
         i += 1
 
