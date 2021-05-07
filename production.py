@@ -31,8 +31,8 @@ class Production:
             activation_exemplars = []
             for j in range(len(self.lexicon[word_index][0])):
                 j += 1
-                # activation = math.exp(0.2*j)
-                activation = 1 / (0.2 * j)
+                activation = math.exp(-0.02*j)
+                # activation = 1 / (0.2 * j)
                 activation_exemplars.append(activation)
 
             # print("ACTIVATION: ", activation_exemplars)
