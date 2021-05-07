@@ -87,7 +87,8 @@ def simulation(n_runs, n_words, n_dimensions, seed, n_exemplars=100, n_continuer
                 lexicon[index_max_sim][0] = lexicon[index_max_sim][0][:100]
 
                 #print("Stored signal: ", signal)
-            # print(lexicon)
+            # print("LEXICON word 1: ", lexicon[0])
+            # print("LEXICON 2 word 1: ", lexicon2[0])
         i += 1
 
     # Plot the end state of the words

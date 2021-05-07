@@ -35,6 +35,7 @@ class Production:
                 activation = 1 / (0.2 * j)
                 activation_exemplars.append(activation)
 
+            # print("ACTIVATION: ", activation_exemplars)
             # Store all the activations for all exemplars and all words
             total_activations.append(activation_exemplars)
             # print("Activation exemplars: ", activation_exemplars)
@@ -51,6 +52,8 @@ class Production:
 
             # Choose an exemplar to produce based on their probabilities
             target = random.choices(self.lexicon[word_index][0], weights=exemplar_probs, k=1)
+            # print(self.lexicon[word_index][0])
+            # print("Index chosen exemplar: ", self.lexicon[word_index][0].index(target[0]))
             # print("CHOSEN EXEMPLARS: ", target)
 
             # Store the exemplars for every word to be produced
@@ -75,7 +78,7 @@ class Production:
                 segment_bias = self.similarity_segment(target, total_activations, k)
 
                 # The ratio of the word similarity to the segment similarity is 9/10
-                total_bias = [(9 * a) + b for a, b in zip(word_bias, segment_bias)]
+                total_bias = [(9 * bias_word) + bias_segment for bias_word, bias_segment in zip(word_bias, segment_bias)]
                 target = [bias / 10 for bias in total_bias]
 
                 # print("After similarity biases: ", target)
@@ -173,19 +176,16 @@ class Production:
             # First the bias is calculated
             bias = ((segment - (N / 2)) ** 2) / G
 
-            # A new target is sampled from a normal distribution with sd 3 and the mean of the target segment
-            #new_target = np.random.normal(segment, 3, 1)
-            # print("New target noise: ", new_target)
-
-            # The biases is substracted or added based on the target segment value
-            # if new_target[0] > (N / 2):
-            #     added_noise = new_target[0] - bias
-            # else:
-            #     added_noise = new_target[0] + bias
+            # The bias is substracted or added based on the target segment value
             if segment > (N / 2):
-                added_noise = segment - bias
+                new_target = segment - bias
             else:
-                added_noise = segment + bias
+                new_target = segment + bias
+
+            # A new target is sampled from a normal distribution with sd 3 and the mean of the target segment with the
+            # added bias
+            added_noise = np.random.normal(new_target, 3, 1)
+            # print("New target noise: ", new_target)
 
             # The noise of the segments is stored (as we have multiple dimensions)
             target_noise.append(added_noise)
