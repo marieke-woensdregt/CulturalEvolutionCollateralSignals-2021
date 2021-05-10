@@ -32,18 +32,21 @@ def simulation(n_runs, n_words, n_dimensions, seed, n_exemplars=100, n_continuer
             perceiver_com_words = com_words
             perceiver_meta_com_words = meta_com_words
 
+        # print("Producer lex: ", producer_lex)
+        # print("Perceiver lex: ", perceiver_lex)
+
         # One agent starts producing something: first the exemplars are selected for every word category
-        targets, activation_exemplars, total_activations = Production(producer_lex, producer_com_words,
+        targets, total_activations = Production(producer_lex, producer_com_words,
                                                                       producer_meta_com_words, n_words, n_dimensions,
                                                                       n_exemplars, n_continuers, similarity_bias_word,
                                                                       similarity_bias_segment, noise).select_exemplar()
-        #print("Chosen targets: ", targets)
+        # print("Chosen targets: ", targets)
 
         # Then the biases are added to the selected exemplars
         target_exemplars = Production(producer_lex, producer_com_words, producer_meta_com_words, n_words, n_dimensions,
                                       n_exemplars, n_continuers, similarity_bias_word, similarity_bias_segment, noise) \
-            .add_biases(targets, activation_exemplars, total_activations)
-        #print("Bias added to targets: ", target_exemplars)
+            .add_biases(targets, total_activations)
+        # print("Bias added to targets: ", target_exemplars)
 
         # The other agent perceives the produced signals
 
@@ -56,6 +59,8 @@ def simulation(n_runs, n_words, n_dimensions, seed, n_exemplars=100, n_continuer
             index_max_sim, total_similarities = Perception(perceiver_lex, perceiver_com_words, perceiver_meta_com_words,
                                                            n_words, n_dimensions, n_exemplars, n_continuers,
                                                            anti_ambiguity_bias).similarity(signal)
+            # print("Word category signal: ", index_max_sim)
+            # print("Total similarities: ", total_similarities)
 
             # Then the anti-ambiguity bias is added and the signal is stored (or not) depending on its probability of
             # being stored. This probability is based on how well the signal fits within the chosen word category
@@ -72,7 +77,8 @@ def simulation(n_runs, n_words, n_dimensions, seed, n_exemplars=100, n_continuer
                     lexicon2[index_max_sim][0].insert(0, signal)
                 # Only the first 100 exemplars of a word are used
                 lexicon2[index_max_sim][0] = lexicon2[index_max_sim][0][:100]
-                #print("Stored signal: ", signal)
+                # print("Stored signal: ", signal)
+                # print("Lexicon word: ", lexicon2[index_max_sim])
             else:
                 if anti_ambiguity_bias:
                     lexicon = Perception(perceiver_lex, perceiver_com_words, perceiver_meta_com_words, n_words,
@@ -86,7 +92,8 @@ def simulation(n_runs, n_words, n_dimensions, seed, n_exemplars=100, n_continuer
                 # Only the first 100 exemplars of a word are used
                 lexicon[index_max_sim][0] = lexicon[index_max_sim][0][:100]
 
-                #print("Stored signal: ", signal)
+                # print("Stored signal: ", signal)
+                # print("Lexicon word: ", lexicon[index_max_sim])
             # print("LEXICON word 1: ", lexicon[0])
             # print("LEXICON 2 word 1: ", lexicon2[0])
         i += 1

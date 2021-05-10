@@ -20,6 +20,12 @@ class Production:
         self.noise = noise
 
     def select_exemplar(self):
+        """
+        Select the exemplars for every word category based on their activation.
+        :return: list; a list containing the selected exemplars for every word category
+                 list; a list containing the activation of the
+                 list;
+        """
 
         # Select a target exemplar for every word category
         targets = []
@@ -60,9 +66,9 @@ class Production:
             targets.append(target[0])
             # print(targets)
 
-        return targets, activation_exemplars, total_activations
+        return targets, total_activations
 
-    def add_biases(self, targets, activation_exemplars, total_activations, k=0.2):
+    def add_biases(self, targets, total_activations, k=0.2):
 
         # Add the biases to every target (one target per word) before production
         word_index = 0
@@ -74,8 +80,11 @@ class Production:
             # print("Before similarity biases: ", target)
             # If both similarity biases are added to the target, they are combined
             if self.similarity_bias_word and self.similarity_bias_segment:
-                word_bias = self.similarity_word(target, exemplars, activation_exemplars, k)
+                word_bias = self.similarity_word(target, exemplars, total_activations[word_index], k)
                 segment_bias = self.similarity_segment(target, total_activations, k)
+
+                # print("Word bias: ", word_bias)
+                # print("Segment bias: ", segment_bias)
 
                 # The ratio of the word similarity to the segment similarity is 9/10
                 total_bias = [(9 * bias_word) + bias_segment for bias_word, bias_segment in zip(word_bias, segment_bias)]
@@ -84,14 +93,16 @@ class Production:
                 # print("After similarity biases: ", target)
 
             elif self.similarity_bias_word:
-                target = self.similarity_word(target, exemplars, activation_exemplars, k)
+                target = self.similarity_word(target, exemplars, total_activations[word_index], k)
 
             elif self.similarity_bias_segment:
                 target = self.similarity_segment(target, total_activations, k)
 
             # If noise is added, it should be added to the target exemplar after the other biases have been added
             if self.noise:
+                # print("Before noise bias: ", target)
                 target = self.add_noise(target)
+                # print("After noise bias: ", target)
 
             # Store all the targets after the biases have been added
             target_exemplars.append(target)
