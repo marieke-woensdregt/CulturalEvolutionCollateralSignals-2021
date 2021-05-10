@@ -23,8 +23,7 @@ class Production:
         """
         Select the exemplars for every word category based on their activation.
         :return: list; a list containing the selected exemplars for every word category
-                 list; a list containing the activation of the
-                 list;
+                 list; a list containing the activations of the exemplars for every word category
         """
 
         # Select a target exemplar for every word category

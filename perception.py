@@ -56,6 +56,7 @@ class Perception:
                         (-k) * abs(signal[dimension] - exemplar[dimension]))
                     index += 1
                 exemplar_sim.append(sum)
+            # print("Exemplar similarity: ", exemplar_sim)
 
             word_index += 1
 
@@ -83,9 +84,10 @@ class Perception:
         # the sum of its similarity to all word categories
 
         # print(1/total_similarities[index_max_sim])
-        # print(sum(total_similarities))
+        print("Similarity best fit: ", total_similarities[index_max_sim])
+        print("Total similarity: ", sum(total_similarities))
         probability_storage = (total_similarities[index_max_sim]) / sum(total_similarities)
-        # print(probability_storage)
+        print("Probability of being stored: ", probability_storage)
 
         # Determine whether the signal is stored based on the probability calculated
         store = random.choices([True, False], weights=[probability_storage, 1 - probability_storage], k=1)
