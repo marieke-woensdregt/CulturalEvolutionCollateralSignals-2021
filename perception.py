@@ -84,13 +84,15 @@ class Perception:
         # the sum of its similarity to all word categories
 
         # print(1/total_similarities[index_max_sim])
-        print("Similarity best fit: ", total_similarities[index_max_sim])
-        print("Total similarity: ", sum(total_similarities))
+        # print("Similarity best fit: ", total_similarities[index_max_sim])
+        # print("Total similarity: ", sum(total_similarities))
+        # probability_storage = ((1/total_similarities[index_max_sim])) / sum(total_similarities)
         probability_storage = (total_similarities[index_max_sim]) / sum(total_similarities)
-        print("Probability of being stored: ", probability_storage)
+        # print("Probability of being stored: ", probability_storage)
 
         # Determine whether the signal is stored based on the probability calculated
         store = random.choices([True, False], weights=[probability_storage, 1 - probability_storage], k=1)
+        # store = random.choices([False, True], weights=[probability_storage, 1 - probability_storage], k=1)
 
         # If the signal is stored, the signal is stored in the lexicon as the first segment of the previously determined
         # word category

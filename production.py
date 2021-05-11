@@ -86,8 +86,8 @@ class Production:
                 # print("Segment bias: ", segment_bias)
 
                 # The ratio of the word similarity to the segment similarity is 9/10
-                total_bias = [(9 * bias_word) + bias_segment for bias_word, bias_segment in zip(word_bias, segment_bias)]
-                target = [bias / 10 for bias in total_bias]
+                total_bias = [(0.9 * bias_word) + bias_segment for bias_word, bias_segment in zip(word_bias, segment_bias)]
+                target = [bias / 1.9 for bias in total_bias]
 
                 # print("After similarity biases: ", target)
 
