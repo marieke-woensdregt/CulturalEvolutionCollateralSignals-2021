@@ -85,9 +85,18 @@ class Production:
                 # print("Word bias: ", word_bias)
                 # print("Segment bias: ", segment_bias)
 
-                # The ratio of the word similarity to the segment similarity is 9/10
-                total_bias = [(0.9 * bias_word) + bias_segment for bias_word, bias_segment in zip(word_bias, segment_bias)]
-                target = [bias / 1.9 for bias in total_bias]
+                # The ratio of the word similarity to the segment similarity is 0.9:1
+                if self.lexicon[word_index][1] == "C":
+                    total_bias = [(0.9 * bias_word) + bias_segment for bias_word, bias_segment in zip(word_bias,
+                                                                                                      segment_bias)]
+                    target = [bias / 1.9 for bias in total_bias]
+
+                # The ratio of the word similarity to the segment similarity is 1:0.5 for collateral signals
+                if self.lexicon[word_index][1] == "M":
+                    total_bias = [bias_word + (0.5 * bias_segment) for bias_word, bias_segment in
+                                  zip(word_bias, segment_bias)]
+                    target = [bias / 1.5 for bias in total_bias]
+
 
                 # print("After similarity biases: ", target)
 
@@ -100,8 +109,13 @@ class Production:
             # If noise is added, it should be added to the target exemplar after the other biases have been added
             if self.noise:
                 # print("Before noise bias: ", target)
-                target = self.add_noise(target)
+                if self.lexicon[word_index][1] == "C":
+                    target = self.add_noise(target)
                 # print("After noise bias: ", target)
+
+                # The bias is weakened through a lower G value when the exemplar is from a continuer word
+                else:
+                    target = self.add_noise(target, G=2500)
 
             # Store all the targets after the biases have been added
             target_exemplars.append(target)

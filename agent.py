@@ -82,4 +82,4 @@ class Agent:
             com_words = lexicon
             meta_com_words = []
 
-        return lexicon, com_words, meta_com_words
+        return lexicon, com_words, meta_com_words, indices_meta

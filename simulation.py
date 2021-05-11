@@ -7,9 +7,12 @@ import random
 
 def simulation(n_runs, n_words, n_dimensions, seed, n_exemplars=100, n_continuers=0, similarity_bias_word=True,
                similarity_bias_segment=True, noise=True, anti_ambiguity_bias=True):
+
     # Initialise agents
-    lexicon, com_words, meta_com_words = Agent(n_words, n_dimensions, seed).generate_lexicon()
-    lexicon2, com_words2, meta_com_words2 = Agent(n_words, n_dimensions, seed).generate_lexicon()
+    lexicon, com_words, meta_com_words, indices_meta = Agent(n_words, n_dimensions, seed, n_exemplars, n_continuers).\
+        generate_lexicon()
+    lexicon2, com_words2, meta_com_words2, indices_meta2 = Agent(n_words, n_dimensions, seed, n_exemplars,
+                                                                 n_continuers).generate_lexicon()
 
     # Start the simulation: i counts the number of runs. One run consists of one production and perception step
     i = 0
@@ -113,3 +116,6 @@ def simulation(n_runs, n_words, n_dimensions, seed, n_exemplars=100, n_continuer
     plt.xlim(0, 100)
     plt.ylim(0, 100)
     plt.show()
+
+    print("Continuer word indices: ", indices_meta)
+    print("Continuer word indices 2: ", indices_meta2)
