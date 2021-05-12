@@ -41,18 +41,18 @@ class Agent:
             x, y = np.random.multivariate_normal(mean, cov, self.n_exemplars).T
             word.append(list(map(lambda x, y: [x, y], x, y)))
 
-            # Plot every word
-            plt.scatter(x, y)
+            # # Plot every word
+            # plt.scatter(x, y)
 
             # Initialiase all words as 'communicative words' ('C')
             lexicon.append([word[0], "C"])
 
         # print(lexicon)
 
-        # Some plot settings
-        plt.xlim(0, 100)
-        plt.ylim(0, 100)
-        plt.show()
+        # # Some plot settings
+        # plt.xlim(0, 100)
+        # plt.ylim(0, 100)
+        # plt.show()
 
         # Split the lexicon into meta communicative words (continuers) and communicative words
         indices_meta = False
