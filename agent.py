@@ -55,6 +55,7 @@ class Agent:
         plt.show()
 
         # Split the lexicon into meta communicative words (continuers) and communicative words
+        indices_meta = False
         if self.n_continuers:
             if self.n_continuers > self.n_words:
                 raise ValueError("The number of continuers must be lower than the number of words.")

@@ -93,9 +93,9 @@ class Production:
 
                 # The ratio of the word similarity to the segment similarity is 1:0.5 for collateral signals
                 if self.lexicon[word_index][1] == "M":
-                    total_bias = [bias_word + (0.5 * bias_segment) for bias_word, bias_segment in
+                    total_bias = [bias_word + (0.0 * bias_segment) for bias_word, bias_segment in
                                   zip(word_bias, segment_bias)]
-                    target = [bias / 1.5 for bias in total_bias]
+                    target = [bias / 1.0 for bias in total_bias]
 
 
                 # print("After similarity biases: ", target)
@@ -115,7 +115,7 @@ class Production:
 
                 # The bias is weakened through a lower G value when the exemplar is from a continuer word
                 else:
-                    target = self.add_noise(target, G=2500)
+                    target = self.add_noise(target, G=1000)
 
             # Store all the targets after the biases have been added
             target_exemplars.append(target)

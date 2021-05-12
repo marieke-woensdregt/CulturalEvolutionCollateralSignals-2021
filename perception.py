@@ -36,47 +36,43 @@ class Perception:
 
         # Calculate the similarity of the signal to all the exemplars of all the words
         similarities = []
-        word_index = 0
 
         # Iterate over all the words
         for word_index in range(self.n_words):
-            exemplar_sim = []
+            # exemplar_sim = []
 
             # Iterate over all the dimensions (to access the segments)
+
+            sum_similarity = 0
             for dimension in range(self.n_dimensions):
                 index = 0
                 sum = 0
-                sum2 = 0
+                # sum2 = 0
 
                 # Calculate the similarity of a segment of the signal compared to all the exemplars in a word
                 for exemplar in self.lexicon[word_index][0]:
-                    sum += exemplar[dimension] * total_activations[word_index][index] * math.exp(
-                        (-k) * abs(signal[dimension] - exemplar[dimension]))
-                    sum2 += total_activations[word_index][index] * math.exp(
-                        (-k) * abs(signal[dimension] - exemplar[dimension]))
+                    # print("Exemplar dimension: ", exemplar[dimension])
+                    sum += exemplar[dimension] * total_activations[word_index][index] * math.exp((-k) * abs(signal[dimension] - exemplar[dimension]))
+                    # sum2 += total_activations[word_index][index] * math.exp((-k) * abs(signal[dimension] - exemplar[dimension]))
                     index += 1
-                exemplar_sim.append(sum)
-            # print("Exemplar similarity: ", exemplar_sim)
 
-            word_index += 1
+                # Take the sum of the distances of all the dimensions
+                sum_similarity += sum
 
-            # Store the similarities for every exemplar of every word
-            similarities.append(exemplar_sim)
+            # Store the distances for every exemplar of every word
+            similarities.append(sum_similarity)
+        # print("Similarities: ", similarities)
 
-            # Take the sum of the similarities within a word category
-            total_similarities = []
-            for word_cat in similarities:
-                sum = np.sum(word_cat)
-                total_similarities.append(sum)
-        # print(similarities)
-        # print(total_similarities)
+        # Get the word with the highest similarity to the signal, so the lowest distance
+        # similarities = [1/distance for distance in similarities]
+        max_similarity = max(similarities)
+        index_max_sim = similarities.index(max_similarity)
 
-        # Get the word with the highest similarity to the signal
-        max_similarity = max(total_similarities)
-        index_max_sim = total_similarities.index(max_similarity)
+        # print("SIGNAL: ", signal)
+        # print("SIMILARITIES: ", similarities)
         # print("SIGNAL MOST SIMILAR TO WORD: ", index_max_sim)
 
-        return index_max_sim, total_similarities
+        return index_max_sim, similarities
 
     def add_anti_ambiguity_bias(self, index_max_sim, total_similarities, signal):
 
