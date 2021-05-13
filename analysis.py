@@ -2,8 +2,10 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # Read the data
-results = pd.read_pickle("results_0.p")
-print(results)
+# results = pd.read_pickle("results_0.p")
+# print(results)
+results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_10000/results_0.p")
+print(results["N_rounds"])
 
 i = 0
 for run in range(9):
@@ -38,8 +40,22 @@ for run in range(9):
         average_distance = results_slice.loc[(results_slice["Word"] == word_index) & (results_slice["Agent"] == 1) &
                                            (results_slice["State"] == "End"), "Average_distance"]
         average_distance_list.append(average_distance.tolist())
-    print(centroid_list)
-    print(average_distance_list)
+    # print(centroid_list)
+    # print(average_distance_list)
+
+    # centroid_x = [item[0] for item in centroid_list]
+    # centroid_y = [item[1] for item in centroid_list]
+    #
+    # sorted_x = sorted(centroid_x)
+    # sorted_y = sorted(centroid_y)
+
+    # index_smallest_x = centroid_x.index(sorted(centroid_x)[0])
+    # index_small_x = centroid_x.index(sorted(centroid_x)[1])
+    #
+    # index_smallest_y = centroid_y.index(sorted(centroid_y)[0])
+    # index_small_y = centroid_y.index(sorted(centroid_y)[1])
+
+    # left_upper = centroid_x.index(sorted_x[0])
 
     plt.xlim(0, 100)
     plt.ylim(0, 100)
