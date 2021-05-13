@@ -5,7 +5,7 @@ import pandas as pd
 # results = pd.read_pickle("results_0.p")
 # print(results)
 results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_10000/results_0.p")
-print(results["N_rounds"])
+print(results["Anti_ambiguity_bias"])
 
 i = 0
 for run in range(9):
@@ -42,6 +42,11 @@ for run in range(9):
         average_distance_list.append(average_distance.tolist())
     # print(centroid_list)
     # print(average_distance_list)
+
+
+    # How to get to know which coordinates belongs to which word in space? (upper left, upper right etc.)
+    # The two smallest x values and the two smallest y values? Like the one with the smallest x value and the highest y
+    # is the left upper one
 
     # centroid_x = [item[0] for item in centroid_list]
     # centroid_y = [item[1] for item in centroid_list]
