@@ -6,14 +6,16 @@ import numpy as np
 import math
 import pandas as pd
 import pickle
+import copy
 
 
 def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars=100, n_continuers=0, similarity_bias_word=True,
                similarity_bias_segment=True, noise=True, anti_ambiguity_bias=True):
+
     # Initialise agents
-    lexicon, com_words, meta_com_words, indices_meta = Agent(n_words, n_dimensions, seed, n_exemplars, n_continuers). \
+    lexicon_start, com_words, meta_com_words, indices_meta = Agent(n_words, n_dimensions, seed, n_exemplars, n_continuers). \
         generate_lexicon()
-    lexicon2, com_words2, meta_com_words2, indices_meta2 = Agent(n_words, n_dimensions, seed, n_exemplars,
+    lexicon2_start, com_words2, meta_com_words2, indices_meta2 = Agent(n_words, n_dimensions, seed, n_exemplars,
                                                                  n_continuers).generate_lexicon()
 
     # Store the state of the lexicons at the beginning for both agents
@@ -21,12 +23,17 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars=100, n_continu
                                   "Continuer_indices", "Similarity_bias_word", "Similarity_bias_segment", "Noise",
                                   "Anti_ambiguity_bias", "N_words", "N_dimensions", "Seed", "N_exemplars",
                                   "N_continuers", "N_rounds", "State"])
-    start.loc[len(start)] = [None, 1, None, None, None, lexicon, indices_meta, similarity_bias_word,
+    start.loc[len(start)] = [None, 1, None, None, None, lexicon_start, indices_meta, similarity_bias_word,
                              similarity_bias_segment, noise, anti_ambiguity_bias, n_words, n_dimensions, seed,
                              n_exemplars, n_continuers, n_rounds, "Start"]
-    start.loc[len(start)] = [None, 2, None, None, None, lexicon2, indices_meta2, similarity_bias_word,
+    start.loc[len(start)] = [None, 2, None, None, None, lexicon2_start, indices_meta2, similarity_bias_word,
                              similarity_bias_segment, noise, anti_ambiguity_bias, n_words, n_dimensions, seed,
                              n_exemplars, n_continuers, n_rounds, "Start"]
+
+    #print("START1: ", start["Lexicon"][0][0][0])
+    #print("START:", lexicon_start[0][0])
+    lexicon = copy.deepcopy(lexicon_start)
+    lexicon2 = copy.deepcopy(lexicon2_start)
 
     # Start the simulation: i counts the number of runs. One run consists of one production and perception step
     i = 0
@@ -115,6 +122,10 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars=100, n_continu
             # print("LEXICON 2 word 1: ", lexicon2[0])
         i += 1
 
+    #print("LEX: ", lexicon[0][0])
+    #print("START2: ", start["Lexicon"][0][0][0])
+    #print("START2:", lexicon_start[0][0])
+
     return lexicon, lexicon2, indices_meta, indices_meta2, start
 
 
@@ -135,6 +146,9 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed, n_exemplars=1
                                                                            similarity_bias_word,
                                                                            similarity_bias_segment, noise,
                                                                            anti_ambiguity_bias)
+
+        # print(start["Lexicon"][0][0][0])
+        # print(lexicon[0][0])
 
         for word_index in range(n_words):
 
