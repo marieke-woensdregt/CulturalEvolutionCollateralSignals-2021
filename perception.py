@@ -52,7 +52,8 @@ class Perception:
                 # Calculate the similarity of a segment of the signal compared to all the exemplars in a word
                 for exemplar in self.lexicon[word_index][0]:
                     # print("Exemplar dimension: ", exemplar[dimension])
-                    sum += exemplar[dimension] * total_activations[word_index][index] * math.exp((-k) * abs(signal[dimension] - exemplar[dimension]))
+                    # sum += exemplar[dimension] * total_activations[word_index][index] * math.exp((-k) * abs(signal[dimension] - exemplar[dimension]))
+                    sum += total_activations[word_index][index] * math.exp((-k) * abs(signal[dimension] - exemplar[dimension]))
                     # sum2 += total_activations[word_index][index] * math.exp((-k) * abs(signal[dimension] - exemplar[dimension]))
                     index += 1
 

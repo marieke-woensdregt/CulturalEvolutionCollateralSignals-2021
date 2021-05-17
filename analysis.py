@@ -2,9 +2,9 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 # Read the data
-# results = pd.read_pickle("results_0.p")
+results = pd.read_pickle("results_0.p")
 # print(results)
-results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_10000/results_0.p")
+# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_10000/results_0.p")
 print(results["Anti_ambiguity_bias"])
 
 i = 0
