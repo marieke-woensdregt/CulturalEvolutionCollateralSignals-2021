@@ -120,6 +120,8 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars=100, n_continu
                 # print("Lexicon word: ", lexicon[index_max_sim])
             # print("LEXICON word 1: ", lexicon[0])
             # print("LEXICON 2 word 1: ", lexicon2[0])
+            # print("Speaker signal: ", signal)
+            # print("Word: ", lexicon2[index_max_sim][0][:10])
         i += 1
 
     #print("LEX: ", lexicon[0][0])

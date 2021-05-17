@@ -85,7 +85,7 @@ class Perception:
         # print("Total similarity: ", sum(total_similarities))
         # probability_storage = ((1/total_similarities[index_max_sim])) / sum(total_similarities)
         probability_storage = (total_similarities[index_max_sim]) / sum(total_similarities)
-        # print("Probability of being stored: ", probability_storage)
+        print("Probability of being stored: ", probability_storage)
 
         # Determine whether the signal is stored based on the probability calculated
         store = random.choices([True, False], weights=[probability_storage, 1 - probability_storage], k=1)
@@ -95,6 +95,7 @@ class Perception:
         # word category
         if store[0]:
             self.lexicon[index_max_sim][0].insert(0, signal)
+            print("The signal is stored: ", signal)
 
         # print(self.lexicon[index_max_sim])
 
