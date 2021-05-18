@@ -6,7 +6,7 @@ import math
 class Production:
 
     def __init__(self, lexicon, com_words, meta_com_words, n_words, n_dimensions, n_exemplars, n_continuers,
-                 similarity_bias_word, similarity_bias_segment, noise):
+                 similarity_bias_word, similarity_bias_segment, noise, activation_constant):
 
         self.lexicon = lexicon
         self.com_words = com_words
@@ -18,6 +18,7 @@ class Production:
         self.similarity_bias_word = similarity_bias_word
         self.similarity_bias_segment = similarity_bias_segment
         self.noise = noise
+        self.activation_constant = activation_constant
 
     def select_exemplar(self):
         """
@@ -36,7 +37,7 @@ class Production:
             activation_exemplars = []
             for j in range(len(self.lexicon[word_index][0])):
                 j += 1
-                activation = math.exp(-0.02*j)
+                activation = math.exp(-self.activation_constant*j)
                 # activation = 1 / (0.2 * j)
                 activation_exemplars.append(activation)
 

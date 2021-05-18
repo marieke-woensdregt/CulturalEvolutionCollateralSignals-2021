@@ -9,8 +9,8 @@ import pickle
 import copy
 
 
-def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars=100, n_continuers=0, similarity_bias_word=True,
-               similarity_bias_segment=True, noise=True, anti_ambiguity_bias=True):
+def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers, similarity_bias_word,
+               similarity_bias_segment, noise, anti_ambiguity_bias, activation_constant):
 
     # Initialise agents
     lexicon_start, com_words, meta_com_words, indices_meta = Agent(n_words, n_dimensions, seed, n_exemplars, n_continuers). \
@@ -63,13 +63,13 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars=100, n_continu
         targets, total_activations = Production(producer_lex, producer_com_words,
                                                 producer_meta_com_words, n_words, n_dimensions,
                                                 n_exemplars, n_continuers, similarity_bias_word,
-                                                similarity_bias_segment, noise).select_exemplar()
+                                                similarity_bias_segment, noise, activation_constant).select_exemplar()
         # print("Chosen targets: ", targets)
 
         # Then the biases are added to the selected exemplars
         target_exemplars = Production(producer_lex, producer_com_words, producer_meta_com_words, n_words, n_dimensions,
-                                      n_exemplars, n_continuers, similarity_bias_word, similarity_bias_segment, noise) \
-            .add_biases(targets, total_activations)
+                                      n_exemplars, n_continuers, similarity_bias_word, similarity_bias_segment, noise,
+                                      activation_constant).add_biases(targets, total_activations)
         # print("Bias added to targets: ", target_exemplars)
 
         # The other agent perceives the produced signals
@@ -82,7 +82,7 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars=100, n_continu
             # is chosen accordingly
             index_max_sim, total_similarities = Perception(perceiver_lex, perceiver_com_words, perceiver_meta_com_words,
                                                            n_words, n_dimensions, n_exemplars, n_continuers,
-                                                           anti_ambiguity_bias).similarity(signal)
+                                                           anti_ambiguity_bias, activation_constant).similarity(signal)
             # print("Word category signal: ", index_max_sim)
             # print("Total similarities: ", total_similarities)
 
@@ -92,8 +92,9 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars=100, n_continu
             if (i % 2) == 0:
                 if anti_ambiguity_bias:
                     lexicon2 = Perception(perceiver_lex, perceiver_com_words, perceiver_meta_com_words, n_words,
-                                          n_dimensions, n_exemplars, n_continuers, anti_ambiguity_bias). \
-                        add_anti_ambiguity_bias(index_max_sim, total_similarities, signal)
+                                          n_dimensions, n_exemplars, n_continuers, anti_ambiguity_bias,
+                                          activation_constant).add_anti_ambiguity_bias(index_max_sim,
+                                                                                       total_similarities, signal)
 
                 # If there's no anti-ambiguity bias, the signal is stored within the best fitting word category
                 # whatsoever
@@ -106,8 +107,9 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars=100, n_continu
             else:
                 if anti_ambiguity_bias:
                     lexicon = Perception(perceiver_lex, perceiver_com_words, perceiver_meta_com_words, n_words,
-                                         n_dimensions, n_exemplars, n_continuers, anti_ambiguity_bias). \
-                        add_anti_ambiguity_bias(index_max_sim, total_similarities, signal)
+                                         n_dimensions, n_exemplars, n_continuers, anti_ambiguity_bias,
+                                         activation_constant).add_anti_ambiguity_bias(index_max_sim, total_similarities,
+                                                                                      signal)
                 # If there's no anti-ambiguity bias, the signal is stored within the best fitting word category
                 # whatsoever
                 else:
@@ -132,7 +134,8 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars=100, n_continu
 
 
 def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed, n_exemplars=100, n_continuers=0,
-                    similarity_bias_word=True, similarity_bias_segment=True, noise=True, anti_ambiguity_bias=True):
+                    similarity_bias_word=True, similarity_bias_segment=True, noise=True, anti_ambiguity_bias=True,
+                    activation_constant=0.02):
 
     # Turn off the warning
     np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
@@ -147,7 +150,7 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed, n_exemplars=1
                                                                            n_exemplars, n_continuers,
                                                                            similarity_bias_word,
                                                                            similarity_bias_segment, noise,
-                                                                           anti_ambiguity_bias)
+                                                                           anti_ambiguity_bias, activation_constant)
 
         # print(start["Lexicon"][0][0][0])
         # print(lexicon[0][0])

@@ -1,14 +1,19 @@
 import matplotlib.pyplot as plt
 import pandas as pd
+from itertools import chain
+from math import hypot
+from itertools import combinations
 
 # Read the data
 results = pd.read_pickle("results_0.p")
 # print(results)
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_10000/results_0.p")
-print(results["Anti_ambiguity_bias"])
+# print(results["Anti_ambiguity_bias"])
 
 i = 0
-for run in range(9):
+
+# 9 is the number of simulation runs
+for run in range(20):
     # Plot the beginning and end for the first agent
     lexicon_start = results["Lexicon"].iloc[i]
     lexicon_end = results["Lexicon"].iloc[i + 2]
@@ -41,7 +46,32 @@ for run in range(9):
                                            (results_slice["State"] == "End"), "Average_distance"]
         average_distance_list.append(average_distance.tolist())
     # print(centroid_list)
-    # print(average_distance_list)
+
+    average_distance_list = list(chain.from_iterable(average_distance_list))
+    print("Average SD: ", sum(average_distance_list)/len(average_distance_list))
+
+    # total_distance = 0
+    # n = 1
+    # for centroid in centroid_list:
+    #     x = centroid[0][0]
+    #     y = centroid[0][1]
+    #     print(x)
+    #     distance = ((x - centroid2[0]) ** 2) + ((y - centroid2[1]) ** 2)
+    #     total_distance += math.sqrt(distance)
+    #     n += 1
+    # average_distance2 = total_distance / n
+
+
+    def distance(p1, p2):
+        """Euclidean distance between two points."""
+        x1, y1 = p1
+        x2, y2 = p2
+        return hypot(x2 - x1, y2 - y1)
+
+
+    centroid_list = list(chain(*centroid_list))
+    print(centroid_list)
+    centroid_distances = [distance(*combo) for combo in combinations(list_of_coords, 2)]
 
 
     # How to get to know which coordinates belongs to which word in space? (upper left, upper right etc.)

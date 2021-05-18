@@ -6,7 +6,7 @@ import math
 class Perception:
 
     def __init__(self, lexicon, com_words, meta_com_words, n_words, n_dimensions, n_exemplars, n_continuers,
-                 anti_ambiguity_bias):
+                 anti_ambiguity_bias, activation_constant):
 
         self.lexicon = lexicon
         self.com_words = com_words
@@ -16,6 +16,7 @@ class Perception:
         self.n_exemplars = n_exemplars
         self.n_continuers = n_continuers
         self.anti_ambiguity_bias = anti_ambiguity_bias
+        self.activation_constant = activation_constant
 
     def similarity(self, signal, k=0.2):
 
@@ -28,7 +29,7 @@ class Perception:
             activation_exemplars = []
             for j in range(len(self.lexicon[word_index][0])):
                 j += 1
-                activation = math.exp(-0.02*j)
+                activation = math.exp(-self.activation_constant*j)
                 # activation = 1 / (0.2 * j)
                 activation_exemplars.append(activation)
 
@@ -85,7 +86,7 @@ class Perception:
         # print("Total similarity: ", sum(total_similarities))
         # probability_storage = ((1/total_similarities[index_max_sim])) / sum(total_similarities)
         probability_storage = (total_similarities[index_max_sim]) / sum(total_similarities)
-        print("Probability of being stored: ", probability_storage)
+        # print("Probability of being stored: ", probability_storage)
 
         # Determine whether the signal is stored based on the probability calculated
         store = random.choices([True, False], weights=[probability_storage, 1 - probability_storage], k=1)
@@ -95,7 +96,7 @@ class Perception:
         # word category
         if store[0]:
             self.lexicon[index_max_sim][0].insert(0, signal)
-            print("The signal is stored: ", signal)
+            # print("The signal is stored: ", signal)
 
         # print(self.lexicon[index_max_sim])
 
