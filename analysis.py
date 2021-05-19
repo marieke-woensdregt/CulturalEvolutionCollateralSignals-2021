@@ -3,9 +3,10 @@ import pandas as pd
 from itertools import chain
 from math import hypot
 from itertools import combinations
+import seaborn as sns
 
 # Read the data
-# results = pd.read_pickle("results_0.p")
+#results = pd.read_pickle("results_0.p")
 # print(results)
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_10000/results_0.p")
 results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_10000/"
@@ -15,6 +16,9 @@ results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/
 i = 0
 
 # 9 is the number of simulation runs
+
+average_centroid_distances = []
+average_sd = []
 for run in range(20):
     # Plot the beginning and end for the first agent
     lexicon_start = results["Lexicon"].iloc[i]
@@ -26,11 +30,11 @@ for run in range(20):
     # Plot the beginning first
     for word_index in range(results["N_words"].iloc[0]):
         exemplars = lexicon_start[word_index][0]
-        plt.scatter(*zip(*exemplars))
+        # plt.scatter(*zip(*exemplars))
         # centroid = results["Centroid"].loc[results["Word"] == word_index and results["Agent"] == 1 and results["State"]=="End", "Centroid"]
 
-    plt.xlim(0, 100)
-    plt.ylim(0, 100)
+    # plt.xlim(0, 100)
+    # plt.ylim(0, 100)
     # plt.show()
 
     # Plot the end state for all simulations
@@ -38,7 +42,7 @@ for run in range(20):
     average_distance_list = []
     for word_index in range(results["N_words"].iloc[0]):
         exemplars = lexicon_end[word_index][0]
-        plt.scatter(*zip(*exemplars))
+        # plt.scatter(*zip(*exemplars))
 
         results_slice = results[i-16:i]
         centroid = results_slice.loc[(results_slice["Word"] == word_index) & (results_slice["Agent"] == 1) &
@@ -50,7 +54,7 @@ for run in range(20):
     # print(centroid_list)
 
     average_distance_list = list(chain.from_iterable(average_distance_list))
-    print("Average SD: ", sum(average_distance_list)/len(average_distance_list))
+    # print("Average SD: ", sum(average_distance_list)/len(average_distance_list))
 
     # total_distance = 0
     # n = 1
@@ -73,8 +77,25 @@ for run in range(20):
 
     centroid_list = list(chain(*centroid_list))
     centroid_distances = [distance(*combo) for combo in combinations(centroid_list, 2)]
-    print("Average centroid distance: ", sum(centroid_distances)/len(centroid_distances))
+    average_centroid_distances.append(sum(centroid_distances)/len(centroid_distances))
+    # print("Average centroid distance: ", average_centroid_distances)
+    average_sd.append(sum(average_distance_list)/len(average_distance_list))
 
+r = list(range(1, 21))
+plt.bar(x=r, height=average_centroid_distances)
+plt.ylim(0, 50)
+plt.xticks(r)
+plt.xlabel("Simulation run")
+plt.ylabel("Average centroids distance")
+plt.show()
+
+r = list(range(1, 21))
+plt.bar(x=r, height=average_sd)
+plt.ylim(0, 5)
+plt.xticks(r)
+plt.xlabel("Simulation run")
+plt.ylabel("Average distance of exemplars to centroids")
+plt.show()
 
     # How to get to know which coordinates belongs to which word in space? (upper left, upper right etc.)
     # The two smallest x values and the two smallest y values? Like the one with the smallest x value and the highest y
@@ -94,6 +115,6 @@ for run in range(20):
 
     # left_upper = centroid_x.index(sorted_x[0])
 
-    plt.xlim(0, 100)
-    plt.ylim(0, 100)
+    # plt.xlim(0, 100)
+    # plt.ylim(0, 100)
     # plt.show()
