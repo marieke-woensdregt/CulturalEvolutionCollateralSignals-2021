@@ -5,9 +5,11 @@ from math import hypot
 from itertools import combinations
 
 # Read the data
-results = pd.read_pickle("results_0.p")
+# results = pd.read_pickle("results_0.p")
 # print(results)
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_10000/results_0.p")
+results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_10000/"
+                         "results_0.p")
 # print(results["Anti_ambiguity_bias"])
 
 i = 0
@@ -29,7 +31,7 @@ for run in range(20):
 
     plt.xlim(0, 100)
     plt.ylim(0, 100)
-    plt.show()
+    # plt.show()
 
     # Plot the end state for all simulations
     centroid_list = []
@@ -64,14 +66,14 @@ for run in range(20):
 
     def distance(p1, p2):
         """Euclidean distance between two points."""
+
         x1, y1 = p1
         x2, y2 = p2
         return hypot(x2 - x1, y2 - y1)
 
-
     centroid_list = list(chain(*centroid_list))
-    print(centroid_list)
-    centroid_distances = [distance(*combo) for combo in combinations(list_of_coords, 2)]
+    centroid_distances = [distance(*combo) for combo in combinations(centroid_list, 2)]
+    print("Average centroid distance: ", sum(centroid_distances)/len(centroid_distances))
 
 
     # How to get to know which coordinates belongs to which word in space? (upper left, upper right etc.)
@@ -94,4 +96,4 @@ for run in range(20):
 
     plt.xlim(0, 100)
     plt.ylim(0, 100)
-    plt.show()
+    # plt.show()
