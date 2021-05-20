@@ -11,9 +11,9 @@ import seaborn as sns
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_10000/results_0.p")
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_10000/"
 #                          "results_0.p")
-results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/"
-                         "results_20_2500_True_0.02.p")
-# print(results["Anti_ambiguity_bias"])
+results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_10000/"
+                         "results_20_10000_False_0.02.p")
+#print(results[:50])
 
 # 9 is the number of simulation runs
 
@@ -24,11 +24,14 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     # Plot the beginning and end for the first agent
 
     n_rounds = results.iloc[0]["N_rounds"]
-    n_states = (n_rounds/500) +1
+    n_states = (n_rounds/500) + 1
     n_words = results["N_words"].iloc[0]
     end = int(2*n_words*n_states)
     start_position = run*end
-    end_position = ((run+1) * end) - 2
+    #end_position = ((run+1) * end) - 2
+    end_position = start_position + 43
+
+    # print(results.iloc[end_position])
 
     lexicon_start = results["Lexicon"].iloc[start_position]
     lexicon_end = results["Lexicon"].iloc[end_position]
@@ -53,12 +56,18 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
         # results_slice = results[start_position:end_position+2]
         # print(results_slice)
 
+        # centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
+        #                              (results["State"] == "End") & (results["Simulation_run"] == run), "Centroid"]
+        # centroid_list.append(centroid.tolist())
+        # average_distance = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
+        #                                      (results["State"] == "End") & (results["Simulation_run"] == run),
+        #                                      "Average_distance"]
         centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-                                     (results["State"] == "End") & (results["Simulation_run"] == run), "Centroid"]
+                               (results["N_rounds"] == 2500) & (results["Simulation_run"] == run), "Centroid"]
         centroid_list.append(centroid.tolist())
         average_distance = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-                                             (results["State"] == "End") & (results["Simulation_run"] == run),
-                                             "Average_distance"]
+                                       (results["N_rounds"] == 2500) & (results["Simulation_run"] == run),
+                                       "Average_distance"]
         average_distance_list.append(average_distance.tolist())
     # print(centroid_list)
 
