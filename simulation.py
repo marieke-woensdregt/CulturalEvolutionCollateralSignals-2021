@@ -124,7 +124,18 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
             # print("LEXICON 2 word 1: ", lexicon2[0])
             # print("Speaker signal: ", signal)
             # print("Word: ", lexicon2[index_max_sim][0][:10])
+
+        # After every 500 rounds, store the agent's lexicons
+        if i % 500 == 0:
+            start.loc[len(start)] = [None, 1, None, None, None, lexicon, indices_meta, similarity_bias_word,
+                                     similarity_bias_segment, noise, anti_ambiguity_bias, n_words, n_dimensions, seed,
+                                     n_exemplars, n_continuers, i, "End"]
+            start.loc[len(start)] = [None, 2, None, None, None, lexicon2, indices_meta2, similarity_bias_word,
+                                     similarity_bias_segment, noise, anti_ambiguity_bias, n_words, n_dimensions, seed,
+                                     n_exemplars, n_continuers, i, "End"]
+
         i += 1
+
 
     #print("LEX: ", lexicon[0][0])
     #print("START2: ", start["Lexicon"][0][0][0])
@@ -155,45 +166,55 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed, n_exemplars=1
         # print(start["Lexicon"][0][0][0])
         # print(lexicon[0][0])
 
+        # Calculate some measures for all the rows of the start dataframe
+
+        # centroids = []
+        # average_distances = []
+        for row in range(start.shape[0]):
+
+            for word_index in range(n_words):
+
+                # Calculate the distance of the exemplars towards the mean as a dispersion of the data for the start
+                # condition for both agents
+                exemplars = start["Lexicon"][row][word_index][0]
+                #exemplars2 = start["Lexicon"][row][word_index][0]
+
+                centroid = np.mean(exemplars, axis=0)
+                # centroids.append(centroid)
+
+                total_distance = 0
+                n = 1
+                for exemplar in exemplars:
+                    x = exemplar[0]
+                    y = exemplar[1]
+                    distance = ((x - centroid[0]) ** 2) + ((y - centroid[1]) ** 2)
+                    total_distance += math.sqrt(distance)
+                    n += 1
+                average_distance = total_distance / n
+                # average_distances.append(average_distance)
+
+                # centroid2 = np.mean(exemplars2, axis=0)
+
+                # total_distance = 0
+                # n = 1
+                # for exemplar in exemplars2:
+                #     x = exemplar[0]
+                #     y = exemplar[1]
+                #     distance = ((x - centroid2[0]) ** 2) + ((y - centroid2[1]) ** 2)
+                #     total_distance += math.sqrt(distance)
+                #     n += 1
+                # average_distance2 = total_distance / n
+
+                # Store the start/in between conditions for both agents
+                start[row]["Simulation_run"] = n_run
+                start[row]["Word"] = word_index
+                start[row]["Centroid"] = centroid
+                start[row]["Average_distance"] = average_distance
+                results = results.append(start.iloc[row])
+
+        # Store the end state results
         for word_index in range(n_words):
-
-            # Calculate the distance of the exemplars towards the mean as a dispersion of the data for the start
-            # condition for both agents
-            exemplars = start["Lexicon"][0][word_index][0]
-            exemplars2 = start["Lexicon"][1][word_index][0]
-
-            centroid = np.mean(exemplars, axis=0)
-
-            total_distance = 0
-            n = 1
-            for exemplar in exemplars:
-                x = exemplar[0]
-                y = exemplar[1]
-                distance = ((x - centroid[0]) ** 2) + ((y - centroid[1]) ** 2)
-                total_distance += math.sqrt(distance)
-                n += 1
-            average_distance = total_distance / n
-
-            centroid2 = np.mean(exemplars2, axis=0)
-
-            total_distance = 0
-            n = 1
-            for exemplar in exemplars2:
-                x = exemplar[0]
-                y = exemplar[1]
-                distance = ((x - centroid2[0]) ** 2) + ((y - centroid2[1]) ** 2)
-                total_distance += math.sqrt(distance)
-                n += 1
-            average_distance2 = total_distance / n
-
-            # Store the start condition for both agents
-            start["Simulation_run"] = n_run
-            start["Word"] = word_index
-            start["Centroid"] = [centroid, centroid2]
-            start["Average_distance"] = [average_distance, average_distance2]
-            results = results.append(start)
-
-            # Get the exemplars of the specified word
+            # Get the exemplars of the specified word at the end state
             exemplars = lexicon[word_index][0]
             exemplars2 = lexicon2[word_index][0]
 
@@ -233,7 +254,7 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed, n_exemplars=1
                                          n_words, n_dimensions, seed, n_exemplars, n_continuers, n_rounds, "End"]
 
     # Pickle the results
-    filename = "results_" + str(n_continuers) + ".p"
+    filename = "results_" + str(n_runs) + str(n_rounds) + str(anti_ambiguity_bias) + ".p"
     outfile = open(filename, 'wb')
     pickle.dump(results, outfile)
     outfile.close()
