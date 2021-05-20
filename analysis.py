@@ -6,14 +6,16 @@ from itertools import combinations
 import seaborn as sns
 
 # Read the data
-results = pd.read_pickle("results_1_1000_True.p")
+# results = pd.read_pickle("results_1_1000_True.p")
 # print(results)
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_10000/results_0.p")
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_10000/"
-#                         "results_0.p")
+#                          "results_0.p")
+results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/"
+                         "results_20_2500_True_0.02.p")
 # print(results["Anti_ambiguity_bias"])
 
-print(results)
+print(results[:48])
 
 i = 0
 
@@ -21,16 +23,22 @@ i = 0
 
 average_centroid_distances = []
 average_sd = []
-for run in range(20):
+
+for run in range(results.iloc[-1]["Simulation_run"] + 1):
     # Plot the beginning and end for the first agent
     lexicon_start = results["Lexicon"].iloc[i]
-    lexicon_end = results["Lexicon"].iloc[i + 2]
+
+    n_rounds = results.iloc[0]["N_rounds"]
+    n_states = (n_rounds/500) +1
+    n_words = results["N_words"].iloc[0]
+    end = int((2*n_words*n_states)-1)
+    lexicon_end = results["Lexicon"].iloc[end]
 
     # Skip all the data from each individual word and the second agent
     i += 16
 
     # Plot the beginning first
-    for word_index in range(results["N_words"].iloc[0]):
+    for word_index in range(n_words):
         exemplars = lexicon_start[word_index][0]
         # plt.scatter(*zip(*exemplars))
         # centroid = results["Centroid"].loc[results["Word"] == word_index and results["Agent"] == 1 and results["State"]=="End", "Centroid"]
@@ -42,9 +50,9 @@ for run in range(20):
     # Plot the end state for all simulations
     centroid_list = []
     average_distance_list = []
-    for word_index in range(results["N_words"].iloc[0]):
+    for word_index in range(n_words):
         exemplars = lexicon_end[word_index][0]
-        # plt.scatter(*zip(*exemplars))
+        plt.scatter(*zip(*exemplars))
 
         results_slice = results[i-16:i]
         centroid = results_slice.loc[(results_slice["Word"] == word_index) & (results_slice["Agent"] == 1) &
@@ -68,6 +76,10 @@ for run in range(20):
     #     total_distance += math.sqrt(distance)
     #     n += 1
     # average_distance2 = total_distance / n
+
+    plt.xlim(0, 100)
+    plt.ylim(0, 100)
+    plt.show()
 
 
     def distance(p1, p2):
@@ -116,7 +128,3 @@ plt.show()
     # index_small_y = centroid_y.index(sorted(centroid_y)[1])
 
     # left_upper = centroid_x.index(sorted_x[0])
-
-    # plt.xlim(0, 100)
-    # plt.ylim(0, 100)
-    # plt.show()
