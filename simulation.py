@@ -126,13 +126,13 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
             # print("Word: ", lexicon2[index_max_sim][0][:10])
 
         # After every 500 rounds, store the agent's lexicons
-        if i % 500 == 0:
+        if i % 500 == 0 and i > 0:
             start.loc[len(start)] = [None, 1, None, None, None, lexicon, indices_meta, similarity_bias_word,
                                      similarity_bias_segment, noise, anti_ambiguity_bias, n_words, n_dimensions, seed,
-                                     n_exemplars, n_continuers, i, "End"]
+                                     n_exemplars, n_continuers, i, "Middle"]
             start.loc[len(start)] = [None, 2, None, None, None, lexicon2, indices_meta2, similarity_bias_word,
                                      similarity_bias_segment, noise, anti_ambiguity_bias, n_words, n_dimensions, seed,
-                                     n_exemplars, n_continuers, i, "End"]
+                                     n_exemplars, n_continuers, i, "Middle"]
 
         i += 1
 
@@ -206,10 +206,10 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed, n_exemplars=1
                 # average_distance2 = total_distance / n
 
                 # Store the start/in between conditions for both agents
-                start[row]["Simulation_run"] = n_run
-                start[row]["Word"] = word_index
-                start[row]["Centroid"] = centroid
-                start[row]["Average_distance"] = average_distance
+                start.at[row, "Simulation_run"] = n_run
+                start.at[row, "Word"] = word_index
+                start.at[row, "Centroid"] = centroid
+                start.at[row, "Average_distance"] = average_distance
                 results = results.append(start.iloc[row])
 
         # Store the end state results
@@ -254,7 +254,7 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed, n_exemplars=1
                                          n_words, n_dimensions, seed, n_exemplars, n_continuers, n_rounds, "End"]
 
     # Pickle the results
-    filename = "results_" + str(n_runs) + str(n_rounds) + str(anti_ambiguity_bias) + ".p"
+    filename = "results_" + str(n_runs) + "_" + str(n_rounds) + "_" + str(anti_ambiguity_bias) + ".p"
     outfile = open(filename, 'wb')
     pickle.dump(results, outfile)
     outfile.close()

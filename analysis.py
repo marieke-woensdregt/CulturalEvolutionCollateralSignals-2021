@@ -6,12 +6,14 @@ from itertools import combinations
 import seaborn as sns
 
 # Read the data
-#results = pd.read_pickle("results_0.p")
+results = pd.read_pickle("results_1_1000_True.p")
 # print(results)
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_10000/results_0.p")
-results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_10000/"
-                         "results_0.p")
+# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_10000/"
+#                         "results_0.p")
 # print(results["Anti_ambiguity_bias"])
+
+print(results)
 
 i = 0
 
