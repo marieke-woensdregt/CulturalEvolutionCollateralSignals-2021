@@ -3,9 +3,9 @@ import pandas as pd
 from itertools import chain
 from math import hypot
 from itertools import combinations
-import seaborn as sns
 
 # Read the data
+
 # results = pd.read_pickle("results_1_1000_True.p")
 # print(results)
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_10000/results_0.p")
@@ -13,22 +13,49 @@ import seaborn as sns
 #                          "results_0.p")
 results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_10000/"
                          "results_20_10000_False_0.02.p")
-#print(results[:50])
 
-# 9 is the number of simulation runs
 
+# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/"
+#                          "results_20_10000_True_0.069.p")
+# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_2500/"
+#                          "results_20_2500_True_0.02.p")
+# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_4000/"
+#                          "results_0.p")
+
+# ======================================================================================================================
+
+# Define the Euclidean distance measure between two points in a 2D space
+def distance(p1, p2):
+    """Euclidean distance between two points."""
+
+    x1, y1 = p1
+    x2, y2 = p2
+    return hypot(x2 - x1, y2 - y1)
+
+
+# ======================================================================================================================
+
+# Start the analysis of the results data selected
+
+# Initialise some empty lists to put in the average distances between the centroids and the two dimensional SD of the
+# word categories
 average_centroid_distances = []
 average_sd = []
 
 for run in range(results.iloc[-1]["Simulation_run"] + 1):
-    # Plot the beginning and end for the first agent
 
     n_rounds = results.iloc[0]["N_rounds"]
-    n_states = (n_rounds/500) + 1
+    n_states = (n_rounds / 500) + 1
+
+    # The number of states for the older results (before saving lexicons after every 500 rounds)
+    # n_states = 2
+
     n_words = results["N_words"].iloc[0]
-    end = int(2*n_words*n_states)
-    start_position = run*end
-    #end_position = ((run+1) * end) - 2
+    end = int(2 * n_words * n_states)
+    start_position = run * end
+    # end_position = ((run+1) * end) - 2
+
+    # The end position if you want an intermediate result
     end_position = start_position + 43
 
     # print(results.iloc[end_position])
@@ -37,14 +64,17 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     lexicon_end = results["Lexicon"].iloc[end_position]
 
     # Plot the beginning first
-    for word_index in range(n_words):
-        exemplars = lexicon_start[word_index][0]
+    # for word_index in range(n_words):
+    #     exemplars = lexicon_start[word_index][0]
         # plt.scatter(*zip(*exemplars))
-        # centroid = results["Centroid"].loc[results["Word"] == word_index and results["Agent"] == 1 and results["State"]=="End", "Centroid"]
+        # centroid = results["Centroid"].loc[results["Word"] == word_index and results["Agent"] == 1 and
+    # results["State"]=="End", "Centroid"]
 
     # plt.xlim(0, 100)
     # plt.ylim(0, 100)
     # plt.show()
+
+# ======================================================================================================================
 
     # Plot the end state for all simulations
     centroid_list = []
@@ -53,20 +83,19 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
         exemplars = lexicon_end[word_index][0]
         plt.scatter(*zip(*exemplars))
 
-        # results_slice = results[start_position:end_position+2]
-        # print(results_slice)
-
         # centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
         #                              (results["State"] == "End") & (results["Simulation_run"] == run), "Centroid"]
         # centroid_list.append(centroid.tolist())
         # average_distance = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-        #                                      (results["State"] == "End") & (results["Simulation_run"] == run),
-        #                                      "Average_distance"]
+        #                                (results["State"] == "End") & (results["Simulation_run"] == run),
+        #                                "Average_distance"]
+
+        # The centroids and average distance measures for intermediate rounds
         centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-                               (results["N_rounds"] == 2500) & (results["Simulation_run"] == run), "Centroid"]
+                               (results["N_rounds"] == 4000) & (results["Simulation_run"] == run), "Centroid"]
         centroid_list.append(centroid.tolist())
         average_distance = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-                                       (results["N_rounds"] == 2500) & (results["Simulation_run"] == run),
+                                       (results["N_rounds"] == 4000) & (results["Simulation_run"] == run),
                                        "Average_distance"]
         average_distance_list.append(average_distance.tolist())
     # print(centroid_list)
@@ -87,55 +116,78 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
 
     plt.xlim(0, 100)
     plt.ylim(0, 100)
-    plt.show()
+    # plt.show()
+    plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/Wedel_4000/20_runs/"
+                "amb_false/" + str(run + 1) + ".pdf")
+    plt.clf()
 
-
-    def distance(p1, p2):
-        """Euclidean distance between two points."""
-
-        x1, y1 = p1
-        x2, y2 = p2
-        return hypot(x2 - x1, y2 - y1)
-
-    #print(centroid_list)
+    # print(centroid_list)
     centroid_list = list(chain(*centroid_list))
-    #print(centroid_list)
+    # print(centroid_list)
     centroid_distances = [distance(*combo) for combo in combinations(centroid_list, 2)]
-    #print(centroid_distances)
-    average_centroid_distances.append(sum(centroid_distances)/len(centroid_distances))
+    # print(centroid_distances)
+    average_centroid_distances.append(sum(centroid_distances) / len(centroid_distances))
     # print("Average centroid distance: ", average_centroid_distances)
-    average_sd.append(sum(average_distance_list)/len(average_distance_list))
+    average_sd.append(sum(average_distance_list) / len(average_distance_list))
 
+# ======================================================================================================================
+
+# Plot the average centroids distance
 r = list(range(1, 21))
 plt.bar(x=r, height=average_centroid_distances)
 plt.ylim(0, 50)
 plt.xticks(r)
 plt.xlabel("Simulation run")
 plt.ylabel("Average centroids distance")
-plt.show()
+# plt.show()
+plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/Wedel_4000/20_runs/"
+            "amb_false/centroid.pdf")
+plt.clf()
 
+# Plot the average SD for a two dimensional space
 r = list(range(1, 21))
 plt.bar(x=r, height=average_sd)
 plt.ylim(0, 5)
 plt.xticks(r)
 plt.xlabel("Simulation run")
 plt.ylabel("Average distance of exemplars to centroids")
-plt.show()
+# plt.show()
+plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/Wedel_4000/20_runs/"
+            "amb_false/sd.pdf")
+plt.clf()
 
-    # How to get to know which coordinates belongs to which word in space? (upper left, upper right etc.)
-    # The two smallest x values and the two smallest y values? Like the one with the smallest x value and the highest y
-    # is the left upper one
+# ======================================================================================================================
 
-    # centroid_x = [item[0] for item in centroid_list]
-    # centroid_y = [item[1] for item in centroid_list]
-    #
-    # sorted_x = sorted(centroid_x)
-    # sorted_y = sorted(centroid_y)
+# Distance to the middle of the space for the different types of words: communicative vs metacommunicative (continuers)
 
-    # index_smallest_x = centroid_x.index(sorted(centroid_x)[0])
-    # index_small_x = centroid_x.index(sorted(centroid_x)[1])
-    #
-    # index_smallest_y = centroid_y.index(sorted(centroid_y)[0])
-    # index_small_y = centroid_y.index(sorted(centroid_y)[1])
 
-    # left_upper = centroid_x.index(sorted_x[0])
+# ======================================================================================================================
+
+# 2D SD measure across all simulations: SD of first run to every other run compared for the communicative and
+# metacommunactive words
+
+
+# ======================================================================================================================
+
+# Plot the distinct words over all the simulation runs per word (one plot per word to see how they move in the space)
+
+
+# ======================================================================================================================
+
+# How to get to know which coordinates belongs to which word in space? (upper left, upper right etc.)
+# The two smallest x values and the two smallest y values? Like the one with the smallest x value and the highest y
+# is the left upper one
+
+# centroid_x = [item[0] for item in centroid_list]
+# centroid_y = [item[1] for item in centroid_list]
+#
+# sorted_x = sorted(centroid_x)
+# sorted_y = sorted(centroid_y)
+
+# index_smallest_x = centroid_x.index(sorted(centroid_x)[0])
+# index_small_x = centroid_x.index(sorted(centroid_x)[1])
+#
+# index_smallest_y = centroid_y.index(sorted(centroid_y)[0])
+# index_small_y = centroid_y.index(sorted(centroid_y)[1])
+
+# left_upper = centroid_x.index(sorted_x[0])
