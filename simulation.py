@@ -254,7 +254,8 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed, n_exemplars=1
                                          n_words, n_dimensions, seed, n_exemplars, n_continuers, n_rounds, "End"]
 
     # Pickle the results
-    filename = "results_" + str(n_runs) + "_" + str(n_rounds) + "_" + str(anti_ambiguity_bias) + ".p"
+    filename = "results_" + str(n_runs) + "_" + str(n_rounds) + "_" + str(anti_ambiguity_bias) + "_" + \
+               str(n_continuers) + ".p"
     outfile = open(filename, 'wb')
     pickle.dump(results, outfile)
     outfile.close()

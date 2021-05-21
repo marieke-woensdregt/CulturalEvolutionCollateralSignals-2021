@@ -6,21 +6,18 @@ from itertools import combinations
 
 # Read the data
 
-# results = pd.read_pickle("results_1_1000_True.p")
-# print(results)
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_10000/results_0.p")
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_10000/"
 #                          "results_0.p")
-results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_10000/"
-                         "results_20_10000_False_0.02.p")
-
-
+# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_10000/"
+#                          "results_20_10000_False_0.02.p")
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/"
 #                          "results_20_10000_True_0.069.p")
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_2500/"
 #                          "results_20_2500_True_0.02.p")
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_4000/"
 #                          "results_0.p")
+results = pd.read_pickle("results_3_1000_True.p")
 
 # ======================================================================================================================
 
@@ -29,6 +26,7 @@ def distance(p1, p2):
     """Euclidean distance between two points."""
 
     x1, y1 = p1
+    print("KDJFKDJK", x1)
     x2, y2 = p2
     return hypot(x2 - x1, y2 - y1)
 
@@ -53,10 +51,10 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     n_words = results["N_words"].iloc[0]
     end = int(2 * n_words * n_states)
     start_position = run * end
-    # end_position = ((run+1) * end) - 2
+    end_position = ((run+1) * end) - 2
 
     # The end position if you want an intermediate result
-    end_position = start_position + 43
+    # end_position = start_position + 43
 
     # print(results.iloc[end_position])
 
@@ -83,43 +81,33 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
         exemplars = lexicon_end[word_index][0]
         plt.scatter(*zip(*exemplars))
 
-        # centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-        #                              (results["State"] == "End") & (results["Simulation_run"] == run), "Centroid"]
-        # centroid_list.append(centroid.tolist())
-        # average_distance = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-        #                                (results["State"] == "End") & (results["Simulation_run"] == run),
-        #                                "Average_distance"]
-
-        # The centroids and average distance measures for intermediate rounds
         centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-                               (results["N_rounds"] == 4000) & (results["Simulation_run"] == run), "Centroid"]
+                                     (results["State"] == "End") & (results["Simulation_run"] == run), "Centroid"]
         centroid_list.append(centroid.tolist())
         average_distance = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-                                       (results["N_rounds"] == 4000) & (results["Simulation_run"] == run),
+                                       (results["State"] == "End") & (results["Simulation_run"] == run),
                                        "Average_distance"]
+
+        # The centroids and average distance measures for intermediate rounds
+        # centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
+        #                        (results["N_rounds"] == 4000) & (results["Simulation_run"] == run), "Centroid"]
+        # centroid_list.append(centroid.tolist())
+        # average_distance = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
+        #                                (results["N_rounds"] == 4000) & (results["Simulation_run"] == run),
+        #                                "Average_distance"]
+
         average_distance_list.append(average_distance.tolist())
     # print(centroid_list)
 
     average_distance_list = list(chain.from_iterable(average_distance_list))
     # print("Average SD: ", sum(average_distance_list)/len(average_distance_list))
 
-    # total_distance = 0
-    # n = 1
-    # for centroid in centroid_list:
-    #     x = centroid[0][0]
-    #     y = centroid[0][1]
-    #     print(x)
-    #     distance = ((x - centroid2[0]) ** 2) + ((y - centroid2[1]) ** 2)
-    #     total_distance += math.sqrt(distance)
-    #     n += 1
-    # average_distance2 = total_distance / n
-
-    plt.xlim(0, 100)
-    plt.ylim(0, 100)
-    # plt.show()
-    plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/Wedel_4000/20_runs/"
-                "amb_false/" + str(run + 1) + ".pdf")
-    plt.clf()
+    # plt.xlim(0, 100)
+    # plt.ylim(0, 100)
+    # # plt.show()
+    # plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/Wedel_4000/20_runs/"
+    #             "amb_false/" + str(run + 1) + ".pdf")
+    # plt.clf()
 
     # print(centroid_list)
     centroid_list = list(chain(*centroid_list))
@@ -133,32 +121,56 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
 # ======================================================================================================================
 
 # Plot the average centroids distance
-r = list(range(1, 21))
-plt.bar(x=r, height=average_centroid_distances)
-plt.ylim(0, 50)
-plt.xticks(r)
-plt.xlabel("Simulation run")
-plt.ylabel("Average centroids distance")
-# plt.show()
-plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/Wedel_4000/20_runs/"
-            "amb_false/centroid.pdf")
-plt.clf()
+# r = list(range(1, results.iloc[-1]["Simulation_run"] + 2))
+# plt.bar(x=r, height=average_centroid_distances)
+# plt.ylim(0, 50)
+# plt.xticks(r)
+# plt.xlabel("Simulation run")
+# plt.ylabel("Average centroids distance")
+# # plt.show()
+# plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/Wedel_4000/20_runs/"
+#             "amb_false/centroid.pdf")
+# plt.clf()
 
 # Plot the average SD for a two dimensional space
-r = list(range(1, 21))
-plt.bar(x=r, height=average_sd)
-plt.ylim(0, 5)
-plt.xticks(r)
-plt.xlabel("Simulation run")
-plt.ylabel("Average distance of exemplars to centroids")
-# plt.show()
-plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/Wedel_4000/20_runs/"
-            "amb_false/sd.pdf")
-plt.clf()
+# r = list(range(1, results.iloc[-1]["Simulation_run"] + 2))
+# plt.bar(x=r, height=average_sd)
+# plt.ylim(0, 5)
+# plt.xticks(r)
+# plt.xlabel("Simulation run")
+# plt.ylabel("Average distance of exemplars to centroids")
+# # plt.show()
+# plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/Wedel_4000/20_runs/"
+#             "amb_false/sd.pdf")
+# plt.clf()
 
 # ======================================================================================================================
 
 # Distance to the middle of the space for the different types of words: communicative vs metacommunicative (continuers)
+
+com_words = []
+meta_words = []
+distances_com = []
+distances_meta = []
+for word_index in range(n_words):
+    if lexicon_end[word_index][1] == "C":
+        exemplars = lexicon_end[word_index][0]
+        com_words.append(exemplars)
+        for exemplar in exemplars:
+            distance_exemplar = distance(exemplar, [50, 50])
+            distances_com.append(distance_exemplar)
+    else:
+        exemplars = lexicon_end[word_index][0]
+        meta_words.append(exemplars)
+        for exemplar in exemplars:
+            distance_exemplar = distance(exemplar, [50, 50])
+            distances_meta.append(distance_exemplar)
+
+average_distance_com = sum(distances_com)/len(distances_com)
+average_distance_meta = sum(distances_meta)/len(distances_meta)
+
+print("Com average distance: ", average_distance_com)
+print("Meta average distance: ", average_distance_meta)
 
 
 # ======================================================================================================================
