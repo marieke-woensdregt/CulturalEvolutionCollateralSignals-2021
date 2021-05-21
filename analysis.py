@@ -26,7 +26,6 @@ def distance(p1, p2):
     """Euclidean distance between two points."""
 
     x1, y1 = p1
-    print("KDJFKDJK", x1)
     x2, y2 = p2
     return hypot(x2 - x1, y2 - y1)
 
@@ -39,6 +38,9 @@ def distance(p1, p2):
 # word categories
 average_centroid_distances = []
 average_sd = []
+
+averages_com_runs = []
+averages_meta_runs = []
 
 for run in range(results.iloc[-1]["Simulation_run"] + 1):
 
@@ -148,30 +150,38 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
 
 # Distance to the middle of the space for the different types of words: communicative vs metacommunicative (continuers)
 
-com_words = []
-meta_words = []
-distances_com = []
-distances_meta = []
-for word_index in range(n_words):
-    if lexicon_end[word_index][1] == "C":
-        exemplars = lexicon_end[word_index][0]
-        com_words.append(exemplars)
-        for exemplar in exemplars:
-            distance_exemplar = distance(exemplar, [50, 50])
-            distances_com.append(distance_exemplar)
-    else:
-        exemplars = lexicon_end[word_index][0]
-        meta_words.append(exemplars)
-        for exemplar in exemplars:
-            distance_exemplar = distance(exemplar, [50, 50])
-            distances_meta.append(distance_exemplar)
+    com_words = []
+    meta_words = []
+    distances_com = []
+    distances_meta = []
+    for word_index in range(n_words):
+        if lexicon_end[word_index][1] == "C":
+            exemplars = lexicon_end[word_index][0]
+            com_words.append(exemplars)
+            for exemplar in exemplars:
+                distance_exemplar = distance(exemplar, [50, 50])
+                distances_com.append(distance_exemplar)
+        else:
+            exemplars = lexicon_end[word_index][0]
+            meta_words.append(exemplars)
+            for exemplar in exemplars:
+                distance_exemplar = distance(exemplar, [50, 50])
+                distances_meta.append(distance_exemplar)
 
-average_distance_com = sum(distances_com)/len(distances_com)
-average_distance_meta = sum(distances_meta)/len(distances_meta)
+    average_distance_com = sum(distances_com)/len(distances_com)
+    average_distance_meta = sum(distances_meta)/len(distances_meta)
 
-print("Com average distance: ", average_distance_com)
-print("Meta average distance: ", average_distance_meta)
+    print("Com average distance: ", average_distance_com)
+    print("Meta average distance: ", average_distance_meta)
 
+    # Average over all runs
+    averages_com_runs.append(average_distance_com)
+    averages_meta_runs.append(average_distance_meta)
+
+average_com_runs = sum(averages_com_runs)/len(averages_com_runs)
+average_meta_runs = sum(averages_meta_runs)/len(averages_meta_runs)
+print("Com average distance over all runs: ", average_com_runs)
+print("Meta average distance over all runs: ", average_meta_runs)
 
 # ======================================================================================================================
 
