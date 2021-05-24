@@ -1,11 +1,18 @@
 import random
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 class Agent:
 
     def __init__(self, n_words, n_dimensions, seed, n_exemplars=100, n_continuers=0):
+        """
+        Initialisation of the agent class.
+        :param n_words: int; the number of word categories contained in the lexicons of the agents
+        :param n_dimensions: int; the number of dimensions of the exemplars
+        :param seed: int; the seed used to produce the means for sampling the word categories
+        :param n_exemplars: int; the number of exemplars per word category
+        :param n_continuers: int; the number of continuer words in the lexicon
+        """
 
         self.n_words = n_words
         self.n_dimensions = n_dimensions
@@ -13,27 +20,35 @@ class Agent:
         self.n_exemplars = n_exemplars
         self.n_continuers = n_continuers
 
-        # # Generate a lexicon as part of the initialisation
-        # self.lexicon, self.com_words, self.meta_com_words = self.generate_lexicon()
-
-    # Initialising lexicon
     def generate_lexicon(self):
+        """
+        Generate a lexicon containing words, which in turn contains n_exemplar exemplars.
+        :return: list; a list of words, for which each word consists of a list of exemplars, which in turn is a
+                       list of the number of dimensions floats
+                 list; a list containing the communicative words
+                 list; a list containing the metacommunicative words (continuers)
+                 list; a list containing the indices of the metacommunicative words in the lexicon
+        """
 
+        # If a seed was provided, set the seed
         if self.seed:
             random.seed(self.seed)
+
         # Create a lexicon consisting of n_words words each in turn consisting of n_exemplars exemplars
         lexicon = []
 
-        # The starting condition of the words used in the paper
-        means = [[20,80], [40,40], [60,60], [80,20]]
+        # The means of the starting condition of the words used in the paper
+        means = [[20, 80], [40, 40], [60, 60], [80, 20]]
+
         for w in range(self.n_words):
             word = []
 
             if self.seed:
-                random.seed(self.seed+w)
+                random.seed(self.seed + w)
+
             # Define the mean and the covariance to sample from a multivariate normal distribution to create clustered
             # exemplars for the words
-            #mean = [random.randrange(10, 91) for i in range(self.n_dimensions)]
+            # mean = [random.randrange(10, 91) for i in range(self.n_dimensions)]
 
             # Instead, we're using the starting condition used in the paper
             mean = means[w]
@@ -41,22 +56,14 @@ class Agent:
             x, y = np.random.multivariate_normal(mean, cov, self.n_exemplars).T
             word.append(list(map(lambda x, y: [x, y], x, y)))
 
-            # # Plot every word
-            # plt.scatter(x, y)
-
-            # Initialiase all words as 'communicative words' ('C')
+            # Initialise all words as 'communicative words' ('C')
             lexicon.append([word[0], "C"])
 
-        # print(lexicon)
-
-        # # Some plot settings
-        # plt.xlim(0, 100)
-        # plt.ylim(0, 100)
-        # plt.show()
-
-        # Split the lexicon into meta communicative words (continuers) and communicative words
+        # Split the lexicon into meta communicative words (continuers) and communicative words if applicable
         indices_meta = False
         if self.n_continuers:
+
+            # If the number of continuer words is bigger than the number of words in the lexicon raise an error message
             if self.n_continuers > self.n_words:
                 raise ValueError("The number of continuers must be lower than the number of words.")
 
@@ -65,17 +72,17 @@ class Agent:
             meta_com_words = []
             for index in indices_meta:
                 lexicon[index][1] = "M"
+
                 # Create a separate lexicon with the meta communicative words
                 meta_com_words.append(lexicon[index])
 
             # The words that are not meta communicative words are communicative words
             com_words = [word for word in lexicon if word not in meta_com_words]
 
-            # print("The word categories are split into communicative and metacommunicative words")
-            # print("New lexicon:", lexicon)
+            # print("Lexicon:", lexicon)
 
-            # print("Meta:", meta_com_words)
-            # print("Com:", com_words)
+            # print("Meta lexicon:", meta_com_words)
+            # print("Com lexicon:", com_words)
 
         # If there are no continuers, the meta communicative words list is empty and all the words in the lexicon are
         # communicative words
