@@ -22,13 +22,13 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
     start = pd.DataFrame(columns=["Simulation_run", "Agent", "Word", "Centroid", "Average_distance", "Lexicon",
                                   "Continuer_indices", "Similarity_bias_word", "Similarity_bias_segment", "Noise",
                                   "Anti_ambiguity_bias", "N_words", "N_dimensions", "Seed", "N_exemplars",
-                                  "N_continuers", "N_rounds", "State"])
+                                  "N_continuers", "N_rounds", "State", "Exemplars"])
     start.loc[len(start)] = [None, 1, None, None, None, lexicon_start, indices_meta, similarity_bias_word,
                              similarity_bias_segment, noise, anti_ambiguity_bias, n_words, n_dimensions, seed,
-                             n_exemplars, n_continuers, n_rounds, "Start"]
+                             n_exemplars, n_continuers, n_rounds, "Start", None]
     start.loc[len(start)] = [None, 2, None, None, None, lexicon2_start, indices_meta2, similarity_bias_word,
                              similarity_bias_segment, noise, anti_ambiguity_bias, n_words, n_dimensions, seed,
-                             n_exemplars, n_continuers, n_rounds, "Start"]
+                             n_exemplars, n_continuers, n_rounds, "Start", None]
 
     #print("START1: ", start["Lexicon"][0][0][0])
     #print("START:", lexicon_start[0][0])
@@ -129,10 +129,10 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
         if i % 500 == 0 and i > 0:
             start.loc[len(start)] = [None, 1, None, None, None, lexicon, indices_meta, similarity_bias_word,
                                      similarity_bias_segment, noise, anti_ambiguity_bias, n_words, n_dimensions, seed,
-                                     n_exemplars, n_continuers, i, "Middle"]
+                                     n_exemplars, n_continuers, i, "Middle", None]
             start.loc[len(start)] = [None, 2, None, None, None, lexicon2, indices_meta2, similarity_bias_word,
                                      similarity_bias_segment, noise, anti_ambiguity_bias, n_words, n_dimensions, seed,
-                                     n_exemplars, n_continuers, i, "Middle"]
+                                     n_exemplars, n_continuers, i, "Middle", None]
 
         i += 1
 
@@ -154,7 +154,8 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed, n_exemplars=1
     results = pd.DataFrame(columns=["Simulation_run", "Agent", "Word", "Centroid", "Average_distance",
                                     "Lexicon", "Continuer_indices", "Similarity_bias_word",
                                     "Similarity_bias_segment", "Noise", "Anti_ambiguity_bias", "N_words",
-                                    "N_dimensions", "Seed", "N_exemplars", "N_continuers", "N_rounds", "State"])
+                                    "N_dimensions", "Seed", "N_exemplars", "N_continuers", "N_rounds", "State",
+                                    "Exemplars"])
 
     for n_run in range(n_runs):
         lexicon, lexicon2, indices_meta, indices_meta2, start = simulation(n_rounds, n_words, n_dimensions, seed,
@@ -210,6 +211,7 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed, n_exemplars=1
                 start.at[row, "Word"] = word_index
                 start.at[row, "Centroid"] = centroid
                 start.at[row, "Average_distance"] = average_distance
+                start.at[row, "Exemplars"] = np.array([exemplars], dtype=object)
                 results = results.append(start.iloc[row])
 
         # Store the end state results
@@ -233,7 +235,8 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed, n_exemplars=1
 
             results.loc[len(results)] = [n_run, 1, word_index, centroid, average_distance, lexicon, indices_meta,
                                          similarity_bias_word, similarity_bias_segment, noise, anti_ambiguity_bias,
-                                         n_words, n_dimensions, seed, n_exemplars, n_continuers, n_rounds, "End"]
+                                         n_words, n_dimensions, seed, n_exemplars, n_continuers, n_rounds, "End",
+                                         exemplars]
 
             # Calculate the distance of the exemplars towards the mean as a dispersion of the data for the second agent
             centroid = np.mean(exemplars2, axis=0)
@@ -251,7 +254,8 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed, n_exemplars=1
             # Store the results
             results.loc[len(results)] = [n_run, 2, word_index, centroid, average_distance, lexicon2, indices_meta2,
                                          similarity_bias_word, similarity_bias_segment, noise, anti_ambiguity_bias,
-                                         n_words, n_dimensions, seed, n_exemplars, n_continuers, n_rounds, "End"]
+                                         n_words, n_dimensions, seed, n_exemplars, n_continuers, n_rounds, "End",
+                                         exemplars2]
 
     # Pickle the results
     filename = "results_" + str(n_runs) + "_" + str(n_rounds) + "_" + str(anti_ambiguity_bias) + "_" + \

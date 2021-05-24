@@ -17,8 +17,7 @@ from itertools import combinations
 #                          "results_20_2500_True_0.02.p")
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_4000/"
 #                          "results_0.p")
-results = pd.read_pickle("results_3_1000_True.p")
-
+results = pd.read_pickle("results_3_1000_True_2.p")
 
 # ======================================================================================================================
 
@@ -234,6 +233,19 @@ for word in com_words:
 
 for word in meta_words:
     ax2.scatter(*zip(*word))
+
+# # Plot the in between states as well
+# sliced_results = results[results["Agent"] == 1]
+#
+# for index, row in sliced_results.iterrows():
+#     if row["Lexicon"][1] == "C":
+#         exemplars = row["Exemplars"]
+#         plt.scatter(*zip(*exemplars))
+#     else:
+#         exemplars = row["Exemplars"]
+#         plt.scatter(*zip(*exemplars))
+# plt.show()
+
 
 # ======================================================================================================================
 
