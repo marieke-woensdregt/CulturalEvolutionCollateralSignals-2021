@@ -52,6 +52,9 @@ averages_meta_runs = []
 com_distance_start_end_average = []
 meta_distance_start_end_average = []
 
+com_words = []
+meta_words = []
+
 for run in range(results.iloc[-1]["Simulation_run"] + 1):
 
     n_rounds = results.iloc[0]["N_rounds"]
@@ -93,7 +96,7 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     average_distance_list = []
     for word_index in range(n_words):
         exemplars = lexicon_end[word_index][0]
-        plt.scatter(*zip(*exemplars))
+        # plt.scatter(*zip(*exemplars))
 
         centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
                                (results["State"] == "End") & (results["Simulation_run"] == run), "Centroid"]
@@ -165,8 +168,6 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     # Distance to the middle of the space for the different types of words: communicative vs metacommunicative
     # (continuers)
 
-    com_words = []
-    meta_words = []
     distances_com = []
     distances_meta = []
     for word_index in range(n_words):
@@ -221,7 +222,20 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     com_distance_start_end_average.append(sum(com_distance_start_end) / len(com_distance_start_end))
     meta_distance_start_end_average.append(sum(meta_distance_start_end) / len(meta_distance_start_end))
 
-    # ==================================================================================================================
+# ======================================================================================================================
+
+# Plot the distinct words over all the simulation runs per word (one plot per word to see how they move in the
+# space)
+
+fig, (ax1, ax2) = plt.subplots(1, 2)
+
+for word in com_words:
+    ax1.scatter(*zip(*word))
+
+for word in meta_words:
+    ax2.scatter(*zip(*word))
+
+# ======================================================================================================================
 
 # Calculate the average distance for the communicative and metacommunicative words over all runs
 average_com_runs = sum(averages_com_runs) / len(averages_com_runs)
@@ -232,6 +246,15 @@ print("Meta average distance over all runs: ", average_meta_runs)
 # Print the average distance (averaged over words) between centroids of the initialisation versus the end
 print("Com average distance per run: ", com_distance_start_end_average)
 print("Meta average distance per run: ", meta_distance_start_end_average)
+
+# Plot all the words for all runs
+ax1.set_xlim([0, 100])
+ax1.set_ylim([0, 100])
+
+ax2.set_xlim([0, 100])
+ax2.set_ylim([0, 100])
+
+plt.show()
 
 # ======================================================================================================================
 
