@@ -221,6 +221,16 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     com_distance_start_end_average.append(sum(com_distance_start_end) / len(com_distance_start_end))
     meta_distance_start_end_average.append(sum(meta_distance_start_end) / len(meta_distance_start_end))
 
+# Calculate the average distance for the communicative and metacommunicative words over all runs
+average_com_runs = sum(averages_com_runs) / len(averages_com_runs)
+average_meta_runs = sum(averages_meta_runs) / len(averages_meta_runs)
+print("Com average distance over all runs: ", average_com_runs)
+print("Meta average distance over all runs: ", average_meta_runs)
+
+# Print the average distance (averaged over words) between centroids of the initialisation versus the end
+print("Com average distance per run: ", com_distance_start_end_average)
+print("Meta average distance per run: ", meta_distance_start_end_average)
+
 # ======================================================================================================================
 
 # Plot the distinct words over all the simulation runs per word (one plot per word to see how they move in the
@@ -246,19 +256,6 @@ for word in meta_words:
 #         plt.scatter(*zip(*exemplars))
 # plt.show()
 
-
-# ======================================================================================================================
-
-# Calculate the average distance for the communicative and metacommunicative words over all runs
-average_com_runs = sum(averages_com_runs) / len(averages_com_runs)
-average_meta_runs = sum(averages_meta_runs) / len(averages_meta_runs)
-print("Com average distance over all runs: ", average_com_runs)
-print("Meta average distance over all runs: ", average_meta_runs)
-
-# Print the average distance (averaged over words) between centroids of the initialisation versus the end
-print("Com average distance per run: ", com_distance_start_end_average)
-print("Meta average distance per run: ", meta_distance_start_end_average)
-
 # Plot all the words for all runs
 ax1.set_xlim([0, 100])
 ax1.set_ylim([0, 100])
@@ -267,11 +264,6 @@ ax2.set_xlim([0, 100])
 ax2.set_ylim([0, 100])
 
 plt.show()
-
-# ======================================================================================================================
-
-# Plot the distinct words over all the simulation runs per word (one plot per word to see how they move in the space)
-
 
 # ======================================================================================================================
 
