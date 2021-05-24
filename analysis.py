@@ -19,14 +19,21 @@ from itertools import combinations
 #                          "results_0.p")
 results = pd.read_pickle("results_3_1000_True.p")
 
+
 # ======================================================================================================================
 
 # Define the Euclidean distance measure between two points in a 2D space
 def distance(p1, p2):
-    """Euclidean distance between two points."""
+    """
+    Calculate the Euclidean distance between two points.
+    :param p1: list; the first point in the 2D space
+    :param p2: list; the second point in the 2D space
+    :return: float; the Euclidean distance
+    """
 
     x1, y1 = p1
     x2, y2 = p2
+
     return hypot(x2 - x1, y2 - y1)
 
 
@@ -42,6 +49,9 @@ average_sd = []
 averages_com_runs = []
 averages_meta_runs = []
 
+com_distance_start_end_average = []
+meta_distance_start_end_average = []
+
 for run in range(results.iloc[-1]["Simulation_run"] + 1):
 
     n_rounds = results.iloc[0]["N_rounds"]
@@ -53,7 +63,7 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     n_words = results["N_words"].iloc[0]
     end = int(2 * n_words * n_states)
     start_position = run * end
-    end_position = ((run+1) * end) - 2
+    end_position = ((run + 1) * end) - 2
 
     # The end position if you want an intermediate result
     # end_position = start_position + 43
@@ -66,17 +76,19 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     # Plot the beginning first
     # for word_index in range(n_words):
     #     exemplars = lexicon_start[word_index][0]
-        # plt.scatter(*zip(*exemplars))
-        # centroid = results["Centroid"].loc[results["Word"] == word_index and results["Agent"] == 1 and
+    # plt.scatter(*zip(*exemplars))
+    # centroid = results["Centroid"].loc[results["Word"] == word_index and results["Agent"] == 1 and
     # results["State"]=="End", "Centroid"]
 
     # plt.xlim(0, 100)
     # plt.ylim(0, 100)
     # plt.show()
 
-# ======================================================================================================================
+    # ===============================================================================================================
 
     # Plot the end state for all simulations
+
+    # Select the centroids and SDs of the last runs
     centroid_list = []
     average_distance_list = []
     for word_index in range(n_words):
@@ -84,7 +96,7 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
         plt.scatter(*zip(*exemplars))
 
         centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-                                     (results["State"] == "End") & (results["Simulation_run"] == run), "Centroid"]
+                               (results["State"] == "End") & (results["Simulation_run"] == run), "Centroid"]
         centroid_list.append(centroid.tolist())
         average_distance = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
                                        (results["State"] == "End") & (results["Simulation_run"] == run),
@@ -116,39 +128,42 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     # print(centroid_list)
     centroid_distances = [distance(*combo) for combo in combinations(centroid_list, 2)]
     # print(centroid_distances)
+
+    # Calculate the average centroid distance and sd per run
     average_centroid_distances.append(sum(centroid_distances) / len(centroid_distances))
     # print("Average centroid distance: ", average_centroid_distances)
     average_sd.append(sum(average_distance_list) / len(average_distance_list))
 
-# ======================================================================================================================
+    # ==================================================================================================================
 
-# Plot the average centroids distance
-# r = list(range(1, results.iloc[-1]["Simulation_run"] + 2))
-# plt.bar(x=r, height=average_centroid_distances)
-# plt.ylim(0, 50)
-# plt.xticks(r)
-# plt.xlabel("Simulation run")
-# plt.ylabel("Average centroids distance")
-# # plt.show()
-# plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/Wedel_4000/20_runs/"
-#             "amb_false/centroid.pdf")
-# plt.clf()
+    # Plot the average centroids distance
+    # r = list(range(1, results.iloc[-1]["Simulation_run"] + 2))
+    # plt.bar(x=r, height=average_centroid_distances)
+    # plt.ylim(0, 50)
+    # plt.xticks(r)
+    # plt.xlabel("Simulation run")
+    # plt.ylabel("Average centroids distance")
+    # # plt.show()
+    # plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/Wedel_4000/20_runs/"
+    #             "amb_false/centroid.pdf")
+    # plt.clf()
 
-# Plot the average SD for a two dimensional space
-# r = list(range(1, results.iloc[-1]["Simulation_run"] + 2))
-# plt.bar(x=r, height=average_sd)
-# plt.ylim(0, 5)
-# plt.xticks(r)
-# plt.xlabel("Simulation run")
-# plt.ylabel("Average distance of exemplars to centroids")
-# # plt.show()
-# plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/Wedel_4000/20_runs/"
-#             "amb_false/sd.pdf")
-# plt.clf()
+    # Plot the average SD for a two dimensional space
+    # r = list(range(1, results.iloc[-1]["Simulation_run"] + 2))
+    # plt.bar(x=r, height=average_sd)
+    # plt.ylim(0, 5)
+    # plt.xticks(r)
+    # plt.xlabel("Simulation run")
+    # plt.ylabel("Average distance of exemplars to centroids")
+    # # plt.show()
+    # plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/Wedel_4000/20_runs/"
+    #             "amb_false/sd.pdf")
+    # plt.clf()
 
-# ======================================================================================================================
+    # ==================================================================================================================
 
-# Distance to the middle of the space for the different types of words: communicative vs metacommunicative (continuers)
+    # Distance to the middle of the space for the different types of words: communicative vs metacommunicative
+    # (continuers)
 
     com_words = []
     meta_words = []
@@ -168,8 +183,8 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
                 distance_exemplar = distance(exemplar, [50, 50])
                 distances_meta.append(distance_exemplar)
 
-    average_distance_com = sum(distances_com)/len(distances_com)
-    average_distance_meta = sum(distances_meta)/len(distances_meta)
+    average_distance_com = sum(distances_com) / len(distances_com)
+    average_distance_meta = sum(distances_meta) / len(distances_meta)
 
     print("Com average distance: ", average_distance_com)
     print("Meta average distance: ", average_distance_meta)
@@ -178,16 +193,45 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     averages_com_runs.append(average_distance_com)
     averages_meta_runs.append(average_distance_meta)
 
-average_com_runs = sum(averages_com_runs)/len(averages_com_runs)
-average_meta_runs = sum(averages_meta_runs)/len(averages_meta_runs)
+    # ==================================================================================================================
+
+    # 2D SD measure across all simulations: SD of first run to every other run compared for the communicative and
+    # metacommunactive words
+
+    com_distance_start_end = []
+    meta_distance_start_end = []
+
+    for word_index in range(n_words):
+        if lexicon_end[word_index][1] == "C":
+            centroid_start = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
+                                         (results["State"] == "Start") & (results["Simulation_run"] == run), "Centroid"]
+            centroid_end = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
+                                       (results["State"] == "End") & (results["Simulation_run"] == run), "Centroid"]
+            distance_centroid = distance(centroid_start[0], list(chain(*centroid_end)))
+            com_distance_start_end.append(distance_centroid)
+        else:
+            centroid_start = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
+                                         (results["State"] == "Start") & (results["Simulation_run"] == run), "Centroid"]
+            centroid_end = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
+                                       (results["State"] == "End") & (results["Simulation_run"] == run), "Centroid"]
+            distance_centroid = distance(centroid_start[0], list(chain(*centroid_end)))
+            meta_distance_start_end.append(distance_centroid)
+
+    # Calculate the average over all words
+    com_distance_start_end_average.append(sum(com_distance_start_end) / len(com_distance_start_end))
+    meta_distance_start_end_average.append(sum(meta_distance_start_end) / len(meta_distance_start_end))
+
+    # ==================================================================================================================
+
+# Calculate the average distance for the communicative and metacommunicative words over all runs
+average_com_runs = sum(averages_com_runs) / len(averages_com_runs)
+average_meta_runs = sum(averages_meta_runs) / len(averages_meta_runs)
 print("Com average distance over all runs: ", average_com_runs)
 print("Meta average distance over all runs: ", average_meta_runs)
 
-# ======================================================================================================================
-
-# 2D SD measure across all simulations: SD of first run to every other run compared for the communicative and
-# metacommunactive words
-
+# Print the average distance (averaged over words) between centroids of the initialisation versus the end
+print("Com average distance per run: ", com_distance_start_end_average)
+print("Meta average distance per run: ", meta_distance_start_end_average)
 
 # ======================================================================================================================
 
