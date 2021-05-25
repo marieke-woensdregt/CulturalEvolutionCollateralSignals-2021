@@ -6,7 +6,7 @@ import math
 class Production:
 
     def __init__(self, lexicon, com_words, meta_com_words, n_words, n_dimensions, n_exemplars, n_continuers,
-                 similarity_bias_word, similarity_bias_segment, noise, activation_constant):
+                 similarity_bias_word, similarity_bias_segment, noise, activation_constant, continuer_G, segment_ratio):
         """
         The initialisation of the production class.
         :param lexicon: list; a list of words, for which each word consists of a list of exemplars, which in turn is a
@@ -23,6 +23,8 @@ class Production:
         :param similarity_bias_segment: boolean; whether the segment similarity bias is present
         :param noise: boolean; whether noise is added to the signals
         :param activation_constant: float; the constant used to calculate the activation level
+        :param continuer_G: int; the constant used to determine the strength of the noise bias
+        :param segment_ratio: float; the relative contribution of the segment similarity bias in case of continuer words
         """
 
         self.lexicon = lexicon
@@ -36,6 +38,8 @@ class Production:
         self.similarity_bias_segment = similarity_bias_segment
         self.noise = noise
         self.activation_constant = activation_constant
+        self.continuer_G = continuer_G
+        self.segment_ratio = segment_ratio
 
     def select_exemplar(self):
         """
@@ -118,9 +122,9 @@ class Production:
                 # The ratio of the word similarity to the segment similarity is 1:0.5 for metacommunicative words
                 # (continuers)
                 if self.lexicon[word_index][1] == "M":
-                    total_bias = [bias_word + (0.0 * bias_segment) for bias_word, bias_segment in
+                    total_bias = [bias_word + (self.segment_ratio * bias_segment) for bias_word, bias_segment in
                                   zip(word_bias, segment_bias)]
-                    target = [bias / 1.0 for bias in total_bias]
+                    target = [bias / (1.0 + self.segment_ratio) for bias in total_bias]
 
 
                 # print("After similarity biases: ", target)
@@ -142,7 +146,7 @@ class Production:
 
                 # The bias is weakened through a lower G value when the exemplar is from a continuer word
                 else:
-                    target = self.add_noise(target, G=1000)
+                    target = self.add_noise(target, G=self.continuer_G)
 
             # Store all the targets after the biases have been added
             target_exemplars.append(target)
