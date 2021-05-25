@@ -19,7 +19,6 @@ from itertools import combinations
 #                          "results_0.p")
 results = pd.read_pickle("Results/results_20_4000_True_2.p")
 
-
 # ======================================================================================================================
 
 # Define the Euclidean distance measure between two points in a 2D space
@@ -48,19 +47,19 @@ def distance(p1, p2):
 average_centroid_distances = []
 average_sd = []
 
-# Initialise empty lists for the average distance of the communicative and meta-communicative words to the middle of the
+# Initialise empty lists for the average distance of the words and continuer words to the middle of the
 # 2D space
-averages_com_runs = []
-averages_meta_runs = []
+averages_word_runs = []
+averages_continuer_runs = []
 
-# Initialise empty lists for the average distance of the communicative and meta-communicative words to their
+# Initialise empty lists for the average distance of the words and continuer words to their
 # initialisation state
-com_distance_start_end_average = []
-meta_distance_start_end_average = []
+word_distance_start_end_average = []
+continuer_distance_start_end_average = []
 
-# Initialise empty lists for the communicative and meta-communicative words
-com_words = []
-meta_words = []
+# Initialise empty lists for the words and continuer words
+words = []
+continuer_words = []
 
 # Iterate over the total number of runs to access every independent simulation run
 for run in range(results.iloc[-1]["Simulation_run"] + 1):
@@ -183,79 +182,77 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
 
     # ==================================================================================================================
 
-    # Calculate the distance to the middle of the space for the different types of words: communicative vs
-    # meta-communicative (continuers)
+    # Calculate the distance to the middle of the space for the different types of words: words vs continuers
 
-    distances_com = []
-    distances_meta = []
+    distances_word = []
+    distances_continuer = []
     for word_index in range(n_words):
-        # Calculate the exemplar distances to the middle for the communicative words
+        # Calculate the exemplar distances to the middle for the words
         if lexicon_end[word_index][1] == "C":
             exemplars = lexicon_end[word_index][0]
-            com_words.append(exemplars)
+            words.append(exemplars)
             for exemplar in exemplars:
                 distance_exemplar = distance(exemplar, [50, 50])
-                distances_com.append(distance_exemplar)
+                distances_word.append(distance_exemplar)
         else:
-            # Calculate the exemplar distances to the middle for the meta-communicative words
+            # Calculate the exemplar distances to the middle for the continuer words
             exemplars = lexicon_end[word_index][0]
-            meta_words.append(exemplars)
+            continuer_words.append(exemplars)
             for exemplar in exemplars:
                 distance_exemplar = distance(exemplar, [50, 50])
-                distances_meta.append(distance_exemplar)
+                distances_continuer.append(distance_exemplar)
 
-    # Calculate the average distance to the middle of the space for the communicative and meta-communicative words
-    average_distance_com = sum(distances_com) / len(distances_com)
-    average_distance_meta = sum(distances_meta) / len(distances_meta)
+    # Calculate the average distance to the middle of the space for the words and continuer words
+    average_distance_words = sum(distances_word) / len(distances_word)
+    average_distance_continuer = sum(distances_continuer) / len(distances_continuer)
 
-    print("Com average distance: ", average_distance_com)
-    print("Meta average distance: ", average_distance_meta)
+    print("Words average distance: ", average_distance_words)
+    print("Continuer average distance: ", average_distance_continuer)
 
-    # Calculate the average distance to the middle of the space over all runs for the communicative and
-    # meta-communicative words
-    averages_com_runs.append(average_distance_com)
-    averages_meta_runs.append(average_distance_meta)
+    # Calculate the average distance to the middle of the space over all runs for the words and continuer words
+    averages_word_runs.append(average_distance_words)
+    averages_continuer_runs.append(average_distance_continuer)
 
     # ==================================================================================================================
 
-    # 2D SD measure across all simulations: SD of first run to every other run compared for the communicative and
-    # metacommunactive words
+    # 2D SD measure across all simulations: SD of first run to every other run compared for the words and continuer
+    # words
 
-    com_distance_start_end = []
-    meta_distance_start_end = []
+    word_distance_start_end = []
+    continuer_distance_start_end = []
 
     for word_index in range(n_words):
-        # Calculate the distance between the start and end state of the centroid of the selected communicative word
-        if lexicon_end[word_index][1] == "C":
+        # Calculate the distance between the start and end state of the centroid of the selected word
+        if lexicon_end[word_index][1] == "W":
             centroid_start = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
                                          (results["State"] == "Start") & (results["Simulation_run"] == run), "Centroid"]
             centroid_end = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
                                        (results["State"] == "End") & (results["Simulation_run"] == run), "Centroid"]
             distance_centroid = distance(centroid_start[0], list(chain(*centroid_end)))
-            com_distance_start_end.append(distance_centroid)
-        # Calculate the distance between the start and end state of the centroid of the selected meta-communicative word
+            word_distance_start_end.append(distance_centroid)
+        # Calculate the distance between the start and end state of the centroid of the selected continuer word
         else:
             centroid_start = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
                                          (results["State"] == "Start") & (results["Simulation_run"] == run), "Centroid"]
             centroid_end = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
                                        (results["State"] == "End") & (results["Simulation_run"] == run), "Centroid"]
             distance_centroid = distance(centroid_start[0], list(chain(*centroid_end)))
-            meta_distance_start_end.append(distance_centroid)
+            continuer_distance_start_end.append(distance_centroid)
 
     # Calculate the average distance of the start and end states of the centroids over all words
-    com_distance_start_end_average.append(sum(com_distance_start_end) / len(com_distance_start_end))
-    meta_distance_start_end_average.append(sum(meta_distance_start_end) / len(meta_distance_start_end))
+    word_distance_start_end_average.append(sum(word_distance_start_end) / len(word_distance_start_end))
+    continuer_distance_start_end_average.append(sum(continuer_distance_start_end) / len(continuer_distance_start_end))
 
-# Calculate the average distance of the start and end states of the centroids for the communicative and
-# metacommunicative words over all runs
-average_com_runs = sum(averages_com_runs) / len(averages_com_runs)
-average_meta_runs = sum(averages_meta_runs) / len(averages_meta_runs)
-print("Com average distance over all runs: ", average_com_runs)
-print("Meta average distance over all runs: ", average_meta_runs)
+# Calculate the average distance of the start and end states of the centroids for the words and continuer words over all
+# runs
+average_word_runs = sum(averages_word_runs) / len(averages_word_runs)
+average_continuer_runs = sum(averages_continuer_runs) / len(averages_continuer_runs)
+print("Word average distance over all runs: ", average_word_runs)
+print("Continuer average distance over all runs: ", average_continuer_runs)
 
 # Print the average distance (averaged over words) between centroids of the initialisation versus the end for every word
-print("Com average distance per run: ", com_distance_start_end_average)
-print("Meta average distance per run: ", meta_distance_start_end_average)
+print("Word average distance per run: ", word_distance_start_end_average)
+print("Continuer average distance per run: ", continuer_distance_start_end_average)
 
 # ======================================================================================================================
 
@@ -264,17 +261,17 @@ print("Meta average distance per run: ", meta_distance_start_end_average)
 
 fig, (ax1, ax2) = plt.subplots(1, 2)
 
-for word in com_words:
+for word in words:
     ax1.scatter(*zip(*word))
 
-for word in meta_words:
+for word in continuer_words:
     ax2.scatter(*zip(*word))
 
 # # Plot the in between states as well
 # sliced_results = results[results["Agent"] == 1]
 #
 # for index, row in sliced_results.iterrows():
-#     if row["Lexicon"][1] == "C":
+#     if row["Lexicon"][1] == "W":
 #         exemplars = row["Exemplars"]
 #         plt.scatter(*zip(*exemplars))
 #     else:

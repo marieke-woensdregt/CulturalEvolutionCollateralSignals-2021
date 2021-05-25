@@ -11,14 +11,14 @@ class Production:
         The initialisation of the production class.
         :param lexicon: list; a list of words, for which each word consists of a list of exemplars, which in turn is a
         list of the number of dimensions floats
-        :param com_words: list; a list of the communicative words, for which each word consists of a list of exemplars,
+        :param com_words: list; a list of the words, for which each word consists of a list of exemplars,
         which in turn is a list of the number of dimensions floats
-        :param meta_com_words: list; a list of the metacommunicative words, for which each word consists of a list of
+        :param meta_com_words: list; a list of the continuer words, for which each word consists of a list of
         exemplars, which in turn is a list of the number of dimensions floats
         :param n_words: int; the number of words contained in the agent's lexicon
         :param n_dimensions: int; the number of dimensions of the exemplars
         :param n_exemplars: int; the number of exemplars per word
-        :param n_continuers: int; the number of continuer (metacommunicative) words
+        :param n_continuers: int; the number of continuer words
         :param similarity_bias_word: boolean; whether the word similarity bias is present
         :param similarity_bias_segment: boolean; whether the segment similarity bias is present
         :param noise: boolean; whether noise is added to the signals
@@ -112,16 +112,14 @@ class Production:
                 # print("Word bias: ", word_bias)
                 # print("Segment bias: ", segment_bias)
 
-                # The ratio of the word similarity to the segment similarity is 0.9:1 if we deal with communicative
-                # words
-                if self.lexicon[word_index][1] == "C":
+                # The ratio of the word similarity to the segment similarity is 0.9:1 if we deal with words
+                if self.lexicon[word_index][1] == "W":
                     total_bias = [(0.9 * bias_word) + bias_segment for bias_word, bias_segment in zip(word_bias,
                                                                                                       segment_bias)]
                     target = [bias / 1.9 for bias in total_bias]
 
-                # The ratio of the word similarity to the segment similarity is 1:0.5 for metacommunicative words
-                # (continuers)
-                if self.lexicon[word_index][1] == "M":
+                # The ratio of the word similarity to the segment similarity is 1:0.5 for continuer words
+                if self.lexicon[word_index][1] == "C":
                     total_bias = [bias_word + (self.segment_ratio * bias_segment) for bias_word, bias_segment in
                                   zip(word_bias, segment_bias)]
                     target = [bias / (1.0 + self.segment_ratio) for bias in total_bias]
@@ -140,7 +138,7 @@ class Production:
             # applicable
             if self.noise:
                 # print("Before noise bias: ", target)
-                if self.lexicon[word_index][1] == "C":
+                if self.lexicon[word_index][1] == "W":
                     target = self.add_noise(target)
                 # print("After noise bias: ", target)
 

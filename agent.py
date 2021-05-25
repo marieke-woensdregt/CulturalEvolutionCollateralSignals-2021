@@ -56,8 +56,8 @@ class Agent:
             x, y = np.random.multivariate_normal(mean, cov, self.n_exemplars).T
             word.append(list(map(lambda x, y: [x, y], x, y)))
 
-            # Initialise all words as 'communicative words' ('C')
-            lexicon.append([word[0], "C"])
+            # Initialise all words as words ('W')
+            lexicon.append([word[0], "W"])
 
         # Split the lexicon into meta communicative words (continuers) and communicative words if applicable
         indices_meta = False
@@ -71,7 +71,7 @@ class Agent:
             indices_meta = random.sample(range(self.n_words), k=self.n_continuers)
             meta_com_words = []
             for index in indices_meta:
-                lexicon[index][1] = "M"
+                lexicon[index][1] = "C"
 
                 # Create a separate lexicon with the meta communicative words
                 meta_com_words.append(lexicon[index])
@@ -82,7 +82,7 @@ class Agent:
             # print("Lexicon:", lexicon)
 
             # print("Meta lexicon:", meta_com_words)
-            # print("Com lexicon:", com_words)
+            # print("Com lexicon:", words)
 
         # If there are no continuers, the meta communicative words list is empty and all the words in the lexicon are
         # communicative words

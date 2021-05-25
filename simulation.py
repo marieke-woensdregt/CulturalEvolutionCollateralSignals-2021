@@ -30,8 +30,8 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
                    in turn is a list of the number of dimensions floats
              list; the second agent's lexicon consists of a list of words, for which each word consists of a list of
                    exemplars, which in turn is a list of the number of dimensions floats
-             list; the indices of the meta-communicative words (continuers) in the lexicon
-             list; the indices of the meta-communicative words (continuers) in the lexicon of the second agent
+             list; the indices of the continuers in the lexicon
+             list; the indices of the continuers in the lexicon of the second agent
              dataframe; a pandas dataframe containing the starting conditions
     """
 
