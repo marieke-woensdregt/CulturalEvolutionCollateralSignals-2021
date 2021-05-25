@@ -7,6 +7,7 @@ import math
 import pandas as pd
 import pickle
 import copy
+import sys
 
 
 def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers, similarity_bias_word,
@@ -36,10 +37,15 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
     """
 
     # Initialise agents
-    lexicon_start, v_words, continuer_words, indices_continuer = Agent(n_words, n_dimensions, seed, n_exemplars,
+    if seed:
+        seed_value = seed
+    else:
+        seed_value = random.randrange(sys.maxsize)
+
+    lexicon_start, v_words, continuer_words, indices_continuer = Agent(n_words, n_dimensions, seed_value, n_exemplars,
                                                                        n_continuers).generate_lexicon()
-    lexicon2_start, v_words2, continuer_words2, indices_continuer2 = Agent(n_words, n_dimensions, seed, n_exemplars,
-                                                                           n_continuers).generate_lexicon()
+    lexicon2_start, v_words2, continuer_words2, indices_continuer2 = Agent(n_words, n_dimensions, seed_value,
+                                                                           n_exemplars, n_continuers).generate_lexicon()
 
     # Store the state of the lexicons at the beginning for both agents
     start = pd.DataFrame(columns=["Simulation_run", "Agent", "Word", "Centroid", "Average_distance", "Lexicon",
@@ -161,7 +167,7 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
     return lexicon, lexicon2, indices_continuer, indices_continuer2, start
 
 
-def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed, n_exemplars=100, n_continuers=0,
+def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exemplars=100, n_continuers=0,
                     similarity_bias_word=True, similarity_bias_segment=True, noise=True, anti_ambiguity_bias=True,
                     activation_constant=0.02, continuer_G=1000, segment_ratio=0.25):
     """

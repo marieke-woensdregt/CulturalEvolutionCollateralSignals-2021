@@ -37,21 +37,19 @@ class Agent:
         # Create a lexicon consisting of n_words words each in turn consisting of n_exemplars exemplars
         lexicon = []
 
-        # The means of the starting condition of the words used in the paper
-        means = [[20, 80], [40, 40], [60, 60], [80, 20]]
+        # # The means of the starting condition of the words used in the paper
+        # means = [[20, 80], [40, 40], [60, 60], [80, 20]]
 
         for w in range(self.n_words):
             word = []
 
-            if self.seed:
-                random.seed(self.seed + w)
-
             # Define the mean and the covariance to sample from a multivariate normal distribution to create clustered
             # exemplars for the words
-            # mean = [random.randrange(10, 91) for i in range(self.n_dimensions)]
+            mean = [random.randrange(10, 91) for i in range(self.n_dimensions)]
 
             # Instead, we're using the starting condition used in the paper
-            mean = means[w]
+            # mean = means[w]
+
             cov = [[10, 0], [0, 10]]
             x, y = np.random.multivariate_normal(mean, cov, self.n_exemplars).T
             word.append(list(map(lambda x, y: [x, y], x, y)))
@@ -69,6 +67,7 @@ class Agent:
 
             # The continuers are randomly chosen out of the lexicon
             indices_continuer = random.sample(range(self.n_words), k=self.n_continuers)
+
             continuer_words = []
             for index in indices_continuer:
                 lexicon[index][1] = "C"

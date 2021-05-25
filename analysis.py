@@ -17,7 +17,9 @@ from itertools import combinations
 #                          "results_20_2500_True_0.02.p")
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_4000/"
 #                          "results_0.p")
-results = pd.read_pickle("Results/results_20_4000_True_2.p")
+# results = pd.read_pickle("Results/results_20_4000_True_2.p")
+results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/Continuers/"
+                         "A_1.0-0.5/results_20_10000_True_2_250_0.5.p")
 
 # ======================================================================================================================
 
@@ -54,7 +56,7 @@ averages_continuer_runs = []
 
 # Initialise empty lists for the average distance of the words and continuer words to their
 # initialisation state
-word_distance_start_end_average = []
+v_word_distance_start_end_average = []
 continuer_distance_start_end_average = []
 
 # Initialise empty lists for the words and continuer words
@@ -188,7 +190,7 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     distances_continuer = []
     for word_index in range(n_words):
         # Calculate the exemplar distances to the middle for the words
-        if lexicon_end[word_index][1] == "C":
+        if lexicon_end[word_index][1] == "V":
             exemplars = lexicon_end[word_index][0]
             words.append(exemplars)
             for exemplar in exemplars:
@@ -218,18 +220,18 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     # 2D SD measure across all simulations: SD of first run to every other run compared for the words and continuer
     # words
 
-    word_distance_start_end = []
+    v_word_distance_start_end = []
     continuer_distance_start_end = []
 
     for word_index in range(n_words):
         # Calculate the distance between the start and end state of the centroid of the selected word
-        if lexicon_end[word_index][1] == "W":
+        if lexicon_end[word_index][1] == "V":
             centroid_start = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
                                          (results["State"] == "Start") & (results["Simulation_run"] == run), "Centroid"]
             centroid_end = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
                                        (results["State"] == "End") & (results["Simulation_run"] == run), "Centroid"]
             distance_centroid = distance(centroid_start[0], list(chain(*centroid_end)))
-            word_distance_start_end.append(distance_centroid)
+            v_word_distance_start_end.append(distance_centroid)
         # Calculate the distance between the start and end state of the centroid of the selected continuer word
         else:
             centroid_start = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
@@ -240,7 +242,7 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
             continuer_distance_start_end.append(distance_centroid)
 
     # Calculate the average distance of the start and end states of the centroids over all words
-    word_distance_start_end_average.append(sum(word_distance_start_end) / len(word_distance_start_end))
+    v_word_distance_start_end_average.append(sum(v_word_distance_start_end) / len(v_word_distance_start_end))
     continuer_distance_start_end_average.append(sum(continuer_distance_start_end) / len(continuer_distance_start_end))
 
 # Calculate the average distance of the start and end states of the centroids for the words and continuer words over all
@@ -251,7 +253,7 @@ print("Word average distance over all runs: ", average_word_runs)
 print("Continuer average distance over all runs: ", average_continuer_runs)
 
 # Print the average distance (averaged over words) between centroids of the initialisation versus the end for every word
-print("Word average distance per run: ", word_distance_start_end_average)
+print("Word average distance per run: ", v_word_distance_start_end_average)
 print("Continuer average distance per run: ", continuer_distance_start_end_average)
 
 # ======================================================================================================================
