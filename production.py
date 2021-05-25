@@ -5,15 +5,15 @@ import math
 
 class Production:
 
-    def __init__(self, lexicon, com_words, meta_com_words, n_words, n_dimensions, n_exemplars, n_continuers,
+    def __init__(self, lexicon, v_words, continuer_words, n_words, n_dimensions, n_exemplars, n_continuers,
                  similarity_bias_word, similarity_bias_segment, noise, activation_constant, continuer_G, segment_ratio):
         """
         The initialisation of the production class.
         :param lexicon: list; a list of words, for which each word consists of a list of exemplars, which in turn is a
         list of the number of dimensions floats
-        :param com_words: list; a list of the words, for which each word consists of a list of exemplars,
-        which in turn is a list of the number of dimensions floats
-        :param meta_com_words: list; a list of the continuer words, for which each word consists of a list of
+        :param v_words: list; a list of the regular vocabulary words, for which each word consists of a list of 
+        exemplars, which in turn is a list of the number of dimensions floats
+        :param continuer_words: list; a list of the continuer words, for which each word consists of a list of
         exemplars, which in turn is a list of the number of dimensions floats
         :param n_words: int; the number of words contained in the agent's lexicon
         :param n_dimensions: int; the number of dimensions of the exemplars
@@ -28,8 +28,8 @@ class Production:
         """
 
         self.lexicon = lexicon
-        self.com_words = com_words
-        self.meta_com_words = meta_com_words
+        self.v_words = v_words
+        self.continuer_words = continuer_words
         self.n_words = n_words
         self.n_dimensions = n_dimensions
         self.n_exemplars = n_exemplars
@@ -112,8 +112,9 @@ class Production:
                 # print("Word bias: ", word_bias)
                 # print("Segment bias: ", segment_bias)
 
-                # The ratio of the word similarity to the segment similarity is 0.9:1 if we deal with words
-                if self.lexicon[word_index][1] == "W":
+                # The ratio of the word similarity to the segment similarity is 0.9:1 if we deal with regular vocabulary
+                # words
+                if self.lexicon[word_index][1] == "V":
                     total_bias = [(0.9 * bias_word) + bias_segment for bias_word, bias_segment in zip(word_bias,
                                                                                                       segment_bias)]
                     target = [bias / 1.9 for bias in total_bias]
@@ -138,7 +139,7 @@ class Production:
             # applicable
             if self.noise:
                 # print("Before noise bias: ", target)
-                if self.lexicon[word_index][1] == "W":
+                if self.lexicon[word_index][1] == "V":
                     target = self.add_noise(target)
                 # print("After noise bias: ", target)
 

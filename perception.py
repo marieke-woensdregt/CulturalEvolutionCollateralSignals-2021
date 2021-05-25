@@ -4,15 +4,15 @@ import math
 
 class Perception:
 
-    def __init__(self, lexicon, com_words, meta_com_words, n_words, n_dimensions, n_exemplars, n_continuers,
+    def __init__(self, lexicon, v_words, continuer_words, n_words, n_dimensions, n_exemplars, n_continuers,
                  anti_ambiguity_bias, activation_constant):
         """
         The initialisation of the perception class.
         :param lexicon: list; a list of words, for which each word consists of a list of exemplars, which in turn is a
         list of the number of dimensions floats
-        :param com_words: list; a list of the words, for which each word consists of a list of exemplars,
-        which in turn is a list of the number of dimensions floats
-        :param meta_com_words: list; a list of the continuer words, for which each word consists of a list of
+        :param v_words: list; a list of the regular vocabulary words, for which each word consists of a list of
+        exemplars, which in turn is a list of the number of dimensions floats
+        :param continuer_words: list; a list of the continuer words, for which each word consists of a list of
         exemplars, which in turn is a list of the number of dimensions floats
         :param n_words: int; the number of words contained in the agent's lexicon
         :param n_dimensions: int; the number of dimensions of the exemplars
@@ -23,8 +23,8 @@ class Perception:
         """
 
         self.lexicon = lexicon
-        self.com_words = com_words
-        self.meta_com_words = meta_com_words
+        self.v_words = v_words
+        self.continuer_words = continuer_words
         self.n_words = n_words
         self.n_dimensions = n_dimensions
         self.n_exemplars = n_exemplars

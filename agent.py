@@ -56,11 +56,11 @@ class Agent:
             x, y = np.random.multivariate_normal(mean, cov, self.n_exemplars).T
             word.append(list(map(lambda x, y: [x, y], x, y)))
 
-            # Initialise all words as words ('W')
-            lexicon.append([word[0], "W"])
+            # Initialise all words as regular vocabulary words ('V')
+            lexicon.append([word[0], "V"])
 
         # Split the lexicon into meta communicative words (continuers) and communicative words if applicable
-        indices_meta = False
+        indices_continuer = False
         if self.n_continuers:
 
             # If the number of continuer words is bigger than the number of words in the lexicon raise an error message
@@ -68,26 +68,26 @@ class Agent:
                 raise ValueError("The number of continuers must be lower than the number of words.")
 
             # The continuers are randomly chosen out of the lexicon
-            indices_meta = random.sample(range(self.n_words), k=self.n_continuers)
-            meta_com_words = []
-            for index in indices_meta:
+            indices_continuer = random.sample(range(self.n_words), k=self.n_continuers)
+            continuer_words = []
+            for index in indices_continuer:
                 lexicon[index][1] = "C"
 
                 # Create a separate lexicon with the meta communicative words
-                meta_com_words.append(lexicon[index])
+                continuer_words.append(lexicon[index])
 
             # The words that are not meta communicative words are communicative words
-            com_words = [word for word in lexicon if word not in meta_com_words]
+            v_words = [word for word in lexicon if word not in continuer_words]
 
             # print("Lexicon:", lexicon)
 
-            # print("Meta lexicon:", meta_com_words)
+            # print("Meta lexicon:", continuer_words)
             # print("Com lexicon:", words)
 
         # If there are no continuers, the meta communicative words list is empty and all the words in the lexicon are
         # communicative words
         else:
-            com_words = lexicon
-            meta_com_words = []
+            v_words = lexicon
+            continuer_words = []
 
-        return lexicon, com_words, meta_com_words, indices_meta
+        return lexicon, v_words, continuer_words, indices_continuer
