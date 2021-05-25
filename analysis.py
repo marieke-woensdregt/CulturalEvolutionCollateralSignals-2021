@@ -17,7 +17,7 @@ from itertools import combinations
 #                          "results_20_2500_True_0.02.p")
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_4000/"
 #                          "results_0.p")
-results = pd.read_pickle("results_3_1000_True_2.p")
+results = pd.read_pickle("Results/results_20_4000_True_2.p")
 
 
 # ======================================================================================================================
