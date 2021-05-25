@@ -37,9 +37,12 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
     """
 
     # Initialise agents
+
+    # If the seed is defined use that seed to initialise the agents
     if seed:
         seed_value = seed
     else:
+        # Else generate a random seed to use for the simulation
         seed_value = random.randrange(sys.maxsize)
 
     lexicon_start, v_words, continuer_words, indices_continuer = Agent(n_words, n_dimensions, seed_value, n_exemplars,
