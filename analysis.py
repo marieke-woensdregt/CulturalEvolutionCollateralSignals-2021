@@ -56,8 +56,8 @@ averages_continuer_runs = []
 
 # Initialise empty lists for the average distance of the words and continuer words to their
 # initialisation state
-v_word_distance_start_end_average = []
-continuer_distance_start_end_average = []
+v_word_distance_run1_average = []
+continuer_distance_run1_average = []
 
 # Initialise empty lists for the words and continuer words
 words = []
@@ -190,7 +190,7 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     distances_continuer = []
     for word_index in range(n_words):
         # Calculate the exemplar distances to the middle for the words
-        if lexicon_end[word_index][1] == "V":
+        if lexicon_end[word_index][1] == "C":
             exemplars = lexicon_end[word_index][0]
             words.append(exemplars)
             for exemplar in exemplars:
@@ -208,8 +208,8 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     average_distance_words = sum(distances_word) / len(distances_word)
     average_distance_continuer = sum(distances_continuer) / len(distances_continuer)
 
-    print("Words average distance: ", average_distance_words)
-    print("Continuer average distance: ", average_distance_continuer)
+    print("Regular vocabulary words average distance to middle: ", average_distance_words)
+    print("Continuer average distance to middle: ", average_distance_continuer)
 
     # Calculate the average distance to the middle of the space over all runs for the words and continuer words
     averages_word_runs.append(average_distance_words)
@@ -220,54 +220,64 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     # 2D SD measure across all simulations: SD of first run to every other run compared for the words and continuer
     # words
 
-    v_word_distance_start_end = []
-    continuer_distance_start_end = []
+    v_word_distance_run1 = []
+    continuer_distance_run1 = []
 
     for word_index in range(n_words):
         # Calculate the distance between the start and end state of the centroid of the selected word
-        if lexicon_end[word_index][1] == "V":
-            centroid_start = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-                                         (results["State"] == "Start") & (results["Simulation_run"] == run), "Centroid"]
+        if lexicon_end[word_index][1] == "C":
+            centroid_first = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
+                                         (results["State"] == "End") & (results["Simulation_run"] == 0), "Centroid"]
             centroid_end = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
                                        (results["State"] == "End") & (results["Simulation_run"] == run), "Centroid"]
-            distance_centroid = distance(centroid_start[0], list(chain(*centroid_end)))
-            v_word_distance_start_end.append(distance_centroid)
+            distance_centroid = distance(list(chain(*centroid_first)), list(chain(*centroid_end)))
+            v_word_distance_run1.append(distance_centroid)
         # Calculate the distance between the start and end state of the centroid of the selected continuer word
         else:
-            centroid_start = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-                                         (results["State"] == "Start") & (results["Simulation_run"] == run), "Centroid"]
+            centroid_first = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
+                                         (results["State"] == "End") & (results["Simulation_run"] == 0), "Centroid"]
             centroid_end = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
                                        (results["State"] == "End") & (results["Simulation_run"] == run), "Centroid"]
-            distance_centroid = distance(centroid_start[0], list(chain(*centroid_end)))
-            continuer_distance_start_end.append(distance_centroid)
+            distance_centroid = distance(list(chain(*centroid_first)), list(chain(*centroid_end)))
+            continuer_distance_run1.append(distance_centroid)
 
     # Calculate the average distance of the start and end states of the centroids over all words
-    v_word_distance_start_end_average.append(sum(v_word_distance_start_end) / len(v_word_distance_start_end))
-    continuer_distance_start_end_average.append(sum(continuer_distance_start_end) / len(continuer_distance_start_end))
+    v_word_distance_run1_average.append(sum(v_word_distance_run1) / len(v_word_distance_run1))
+    continuer_distance_run1_average.append(sum(continuer_distance_run1) / len(continuer_distance_run1))
 
 # Calculate the average distance of the start and end states of the centroids for the words and continuer words over all
 # runs
 average_word_runs = sum(averages_word_runs) / len(averages_word_runs)
 average_continuer_runs = sum(averages_continuer_runs) / len(averages_continuer_runs)
-print("Word average distance over all runs: ", average_word_runs)
+print("Regular vocabulary word average distance over all runs: ", average_word_runs)
 print("Continuer average distance over all runs: ", average_continuer_runs)
 
 # Print the average distance (averaged over words) between centroids of the initialisation versus the end for every word
-print("Word average distance per run: ", v_word_distance_start_end_average)
-print("Continuer average distance per run: ", continuer_distance_start_end_average)
+print("Regular vocabulary word average distance per run: ", v_word_distance_run1_average)
+print("Continuer average distance per run: ", continuer_distance_run1_average)
 
 # ======================================================================================================================
 
 # Plot the distinct words over all the simulation runs per word (one plot per word to see how they move in the
 # space)
 
-fig, (ax1, ax2) = plt.subplots(1, 2)
+ax1 = plt.subplot(231)
+ax2 = plt.subplot(232)
+ax3 = plt.subplot(233)
+ax4 = plt.subplot(234)
+ax5 = plt.subplot(236)
 
-for word in words:
-    ax1.scatter(*zip(*word))
+ax1.scatter(*zip(*words[0]), c="tab:blue")
+ax2.scatter(*zip(*words[1]), c="tab:orange")
+ax3.scatter(*zip(*words[2]), c="tab:green")
+ax4.scatter(*zip(*words[3]), c="tab:red")
+ax5.scatter(*zip(*continuer_words[0]), c="tab:purple")
 
-for word in continuer_words:
-    ax2.scatter(*zip(*word))
+# for word in words:
+#     ax1.scatter(*zip(*word))
+#
+# for word in continuer_words:
+#     ax2.scatter(*zip(*word))
 
 # # Plot the in between states as well
 # sliced_results = results[results["Agent"] == 1]
@@ -287,5 +297,14 @@ ax1.set_ylim([0, 100])
 
 ax2.set_xlim([0, 100])
 ax2.set_ylim([0, 100])
+
+ax3.set_xlim([0, 100])
+ax3.set_ylim([0, 100])
+
+ax4.set_xlim([0, 100])
+ax4.set_ylim([0, 100])
+
+ax5.set_xlim([0, 100])
+ax5.set_ylim([0, 100])
 
 plt.show()
