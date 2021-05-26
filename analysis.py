@@ -15,15 +15,15 @@ import numpy as np
 #                          "results_20_10000_False_0.02.p")
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/"
 #                          "results_20_10000_True_0.069.p")
-results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_2500/"
-                         "results_20_2500_True_0.02.p")
+# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_2500/"
+#                          "results_20_2500_True_0.02.p")
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_4000/"
 #                          "results_0.p")
 # results = pd.read_pickle("Results/results_20_4000_True_2.p")
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/Continuers/"
 #                          "D_1.0-0.0/results_20_4000_True_1_250_0.p")
 
-# print(results[:45])
+#print(results[-45:])
 # ======================================================================================================================
 
 # Define the Euclidean distance measure between two points in a 2D space
@@ -88,9 +88,9 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     end_position = ((run + 1) * end) - 2
 
     # Define the end position if you want an intermediate result
-    #end_position = start_position + 11
+    end_position = start_position + 11
 
-    print(results.iloc[end_position])
+    #print(results.iloc[end_position])
 
     # Define the start and end lexicons
     lexicon_start = results["Lexicon"].iloc[start_position]
@@ -120,22 +120,22 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
 
         # Gather the centroids for the first agent only, for the current word, for the end position of the simulation
         # and for the current simulation run
-        centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-                               (results["State"] == "End") & (results["Simulation_run"] == run), "Centroid"]
-        centroid_list.append(centroid.tolist())
-
-        # Do the same for the 2D SDs
-        average_distance = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-                                       (results["State"] == "End") & (results["Simulation_run"] == run),
-                                       "Average_distance"]
-
-        # # The centroids and average distance measures for intermediate rounds
         # centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-        #                        (results["N_rounds"] == 500) & (results["Simulation_run"] == run), "Centroid"]
+        #                        (results["State"] == "End") & (results["Simulation_run"] == run), "Centroid"]
         # centroid_list.append(centroid.tolist())
+        #
+        # # Do the same for the 2D SDs
         # average_distance = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-        #                                (results["N_rounds"] == 500) & (results["Simulation_run"] == run),
+        #                                (results["State"] == "End") & (results["Simulation_run"] == run),
         #                                "Average_distance"]
+
+        # The centroids and average distance measures for intermediate rounds
+        centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
+                               (results["N_rounds"] == 500) & (results["Simulation_run"] == run), "Centroid"]
+        centroid_list.append(centroid.tolist())
+        average_distance = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
+                                       (results["N_rounds"] == 500) & (results["Simulation_run"] == run),
+                                       "Average_distance"]
 
         average_distance_list.append(average_distance.tolist())
     # print("List of centroids: ", centroid_list)
