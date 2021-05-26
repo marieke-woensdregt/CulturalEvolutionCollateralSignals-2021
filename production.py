@@ -9,22 +9,22 @@ class Production:
                  similarity_bias_word, similarity_bias_segment, noise, activation_constant, continuer_G, segment_ratio):
         """
         The initialisation of the production class.
-        :param lexicon: list; a list of words, for which each word consists of a list of exemplars, which in turn is a
+        :param lexicon: list; a list of v_words, for which each word consists of a list of exemplars, which in turn is a
         list of the number of dimensions floats
-        :param v_words: list; a list of the regular vocabulary words, for which each word consists of a list of 
+        :param v_words: list; a list of the regular vocabulary v_words, for which each word consists of a list of
         exemplars, which in turn is a list of the number of dimensions floats
-        :param continuer_words: list; a list of the continuer words, for which each word consists of a list of
+        :param continuer_words: list; a list of the continuer v_words, for which each word consists of a list of
         exemplars, which in turn is a list of the number of dimensions floats
-        :param n_words: int; the number of words contained in the agent's lexicon
+        :param n_words: int; the number of v_words contained in the agent's lexicon
         :param n_dimensions: int; the number of dimensions of the exemplars
         :param n_exemplars: int; the number of exemplars per word
-        :param n_continuers: int; the number of continuer words
+        :param n_continuers: int; the number of continuer v_words
         :param similarity_bias_word: boolean; whether the word similarity bias is present
         :param similarity_bias_segment: boolean; whether the segment similarity bias is present
         :param noise: boolean; whether noise is added to the signals
         :param activation_constant: float; the constant used to calculate the activation level
         :param continuer_G: int; the constant used to determine the strength of the noise bias
-        :param segment_ratio: float; the relative contribution of the segment similarity bias in case of continuer words
+        :param segment_ratio: float; the relative contribution of the segment similarity bias in case of continuer v_words
         """
 
         self.lexicon = lexicon
@@ -63,7 +63,7 @@ class Production:
 
             # print("Activation exemplars: ", activation_exemplars)
 
-            # Store all the activations for all exemplars and all words
+            # Store all the activations for all exemplars and all v_words
             total_activations.append(activation_exemplars)
 
             # Calculate the sum of the activation of the exemplars of the word
@@ -113,13 +113,13 @@ class Production:
                 # print("Segment bias: ", segment_bias)
 
                 # The ratio of the word similarity to the segment similarity is 0.9:1 if we deal with regular vocabulary
-                # words
+                # v_words
                 if self.lexicon[word_index][1] == "V":
                     total_bias = [(0.9 * bias_word) + bias_segment for bias_word, bias_segment in zip(word_bias,
                                                                                                       segment_bias)]
                     target = [bias / 1.9 for bias in total_bias]
 
-                # The ratio of the word similarity to the segment similarity is 1:0.5 for continuer words
+                # The ratio of the word similarity to the segment similarity is 1:0.5 for continuer v_words
                 if self.lexicon[word_index][1] == "C":
                     total_bias = [bias_word + (self.segment_ratio * bias_segment) for bias_word, bias_segment in
                                   zip(word_bias, segment_bias)]
@@ -197,7 +197,7 @@ class Production:
         :return: list; the target exemplar with the added word similarity bias
         """
 
-        # For every segment (dimension) of all exemplars (of all words) the similarity is calculated and a bias is added
+        # For every segment (dimension) of all exemplars (of all v_words) the similarity is calculated and a bias is added
         # to the target
         bias_exemplar = []
 
@@ -207,7 +207,7 @@ class Production:
             sum = 0
             sum2 = 0
 
-            # This is done for all the words in the lexicon
+            # This is done for all the v_words in the lexicon
             for word in self.lexicon:
 
                 # The exemplar index

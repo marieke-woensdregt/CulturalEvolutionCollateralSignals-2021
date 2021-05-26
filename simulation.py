@@ -15,21 +15,21 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
     """
     Run a simulation of n_rounds rounds with the specified parameters.
     :param n_rounds: int; the number of rounds of the simulation run
-    :param n_words: int; the number of words contained in the lexicon
+    :param n_words: int; the number of v_words contained in the lexicon
     :param n_dimensions: int; the number of dimensions of the exemplars
     :param seed: int; a seed used to generate the agents' lexicons
     :param n_exemplars: int; the number of exemplars of a word
-    :param n_continuers: int; the number of continuer words in the lexicon
+    :param n_continuers: int; the number of continuer v_words in the lexicon
     :param similarity_bias_word: boolean; whether the word similarity bias should be applied to the signals
     :param similarity_bias_segment: boolean; whether the segment similarity bias should be applied to the signals
     :param noise: boolean; whether noise should be added to the signals
     :param anti_ambiguity_bias: boolean; whether the anti-ambiguity bias should be applied to storing signals
     :param activation_constant: float; the constant used to calculate the activation levels of the exemplars
     :param continuer_G: int; the constant used to determine the strength of the noise bias
-    :param segment_ratio: float; the relative contribution of the segment similarity bias in case of continuer words
-    :return: list; the lexicon consists of a list of words, for which each word consists of a list of exemplars, which
+    :param segment_ratio: float; the relative contribution of the segment similarity bias in case of continuer v_words
+    :return: list; the lexicon consists of a list of v_words, for which each word consists of a list of exemplars, which
                    in turn is a list of the number of dimensions floats
-             list; the second agent's lexicon consists of a list of words, for which each word consists of a list of
+             list; the second agent's lexicon consists of a list of v_words, for which each word consists of a list of
                    exemplars, which in turn is a list of the number of dimensions floats
              list; the indices of the continuers in the lexicon
              list; the indices of the continuers in the lexicon of the second agent
@@ -54,13 +54,13 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
     start = pd.DataFrame(columns=["Simulation_run", "Agent", "Word", "Centroid", "Average_distance", "Lexicon",
                                   "Continuer_indices", "Similarity_bias_word", "Similarity_bias_segment", "Noise",
                                   "Anti_ambiguity_bias", "N_words", "N_dimensions", "Seed", "N_exemplars",
-                                  "N_continuers", "N_rounds", "State", "Exemplars"])
+                                  "N_continuers", "N_rounds", "State", "Exemplars", "Store"])
     start.loc[len(start)] = [None, 1, None, None, None, lexicon_start, indices_continuer, similarity_bias_word,
                              similarity_bias_segment, noise, anti_ambiguity_bias, n_words, n_dimensions, seed,
-                             n_exemplars, n_continuers, n_rounds, "Start", None]
+                             n_exemplars, n_continuers, n_rounds, "Start", None, None]
     start.loc[len(start)] = [None, 2, None, None, None, lexicon2_start, indices_continuer2, similarity_bias_word,
                              similarity_bias_segment, noise, anti_ambiguity_bias, n_words, n_dimensions, seed,
-                             n_exemplars, n_continuers, n_rounds, "Start", None]
+                             n_exemplars, n_continuers, n_rounds, "Start", None, None]
 
     # Make a copy of the lexicon for the agents to use in conversation
     lexicon = copy.deepcopy(lexicon_start)
@@ -68,6 +68,8 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
 
     # Start the simulation: i counts the number of runs. One run consists of one production and perception step
     i = 0
+    store_count = 0
+    store_count_2 = 0
     while i < n_rounds:
         print("Run number: ", i)
 
@@ -126,10 +128,14 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
             # The signal is stored in the lexicon of the agent being the perceiver this round
             if (i % 2) == 0:
                 if anti_ambiguity_bias:
-                    lexicon2 = Perception(perceiver_lex, perceiver_v_words, perceiver_continuer_words, n_words,
-                                          n_dimensions, n_exemplars, n_continuers, anti_ambiguity_bias,
-                                          activation_constant).add_anti_ambiguity_bias(index_max_sim,
-                                                                                       total_similarities, signal)
+                    lexicon2, store = Perception(perceiver_lex, perceiver_v_words, perceiver_continuer_words, n_words,
+                                                 n_dimensions, n_exemplars, n_continuers, anti_ambiguity_bias,
+                                                 activation_constant).add_anti_ambiguity_bias(index_max_sim,
+                                                                                              total_similarities,
+                                                                                              signal)
+
+                    if store is True:
+                        store_count_2 += 1
 
                 # If there's no anti-ambiguity bias, the signal is stored within the best fitting word category
                 # whatsoever
@@ -141,10 +147,14 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
                 # print("Lexicon word: ", lexicon2[index_max_sim])
             else:
                 if anti_ambiguity_bias:
-                    lexicon = Perception(perceiver_lex, perceiver_v_words, perceiver_continuer_words, n_words,
-                                         n_dimensions, n_exemplars, n_continuers, anti_ambiguity_bias,
-                                         activation_constant).add_anti_ambiguity_bias(index_max_sim, total_similarities,
-                                                                                      signal)
+                    lexicon, store = Perception(perceiver_lex, perceiver_v_words, perceiver_continuer_words, n_words,
+                                                n_dimensions, n_exemplars, n_continuers, anti_ambiguity_bias,
+                                                activation_constant).add_anti_ambiguity_bias(index_max_sim,
+                                                                                             total_similarities, signal)
+
+                    if store is True:
+                        store_count += 1
+
                 # If there's no anti-ambiguity bias, the signal is stored within the best fitting word category
                 # whatsoever
                 else:
@@ -160,14 +170,14 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
         if i % 500 == 0 and i > 0:
             start.loc[len(start)] = [None, 1, None, None, None, lexicon, indices_continuer, similarity_bias_word,
                                      similarity_bias_segment, noise, anti_ambiguity_bias, n_words, n_dimensions, seed,
-                                     n_exemplars, n_continuers, i, "Middle", None]
+                                     n_exemplars, n_continuers, i, "Middle", None, store_count]
             start.loc[len(start)] = [None, 2, None, None, None, lexicon2, indices_continuer2, similarity_bias_word,
                                      similarity_bias_segment, noise, anti_ambiguity_bias, n_words, n_dimensions, seed,
-                                     n_exemplars, n_continuers, i, "Middle", None]
+                                     n_exemplars, n_continuers, i, "Middle", None, store_count_2]
 
         i += 1
 
-    return lexicon, lexicon2, indices_continuer, indices_continuer2, start
+    return lexicon, lexicon2, indices_continuer, indices_continuer2, start, store_count, store_count_2
 
 
 def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exemplars=100, n_continuers=0,
@@ -177,18 +187,18 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
     Run n_runs simulations with the specified parameters and pickle and store the results as a dataframe.
     :param n_runs: int; the number of simulations run
     :param n_rounds: int; the number of rounds of the simulation run
-    :param n_words: int; the number of words contained in the lexicon
+    :param n_words: int; the number of v_words contained in the lexicon
     :param n_dimensions: int; the number of dimensions of the exemplars
     :param seed: int; a seed used to generate the agents' lexicons
     :param n_exemplars: int; the number of exemplars of a word
-    :param n_continuers: int; the number of continuer words in the lexicon
+    :param n_continuers: int; the number of continuer v_words in the lexicon
     :param similarity_bias_word: boolean; whether the word similarity bias should be applied to the signals
     :param similarity_bias_segment: boolean; whether the segment similarity bias should be applied to the signals
     :param noise: boolean; whether noise should be added to the signals
     :param anti_ambiguity_bias: boolean; whether the anti-ambiguity bias should be applied to storing signals
     :param activation_constant: float; the constant used to calculate the activation levels of the exemplars
     :param continuer_G: int; the constant used to determine the strength of the noise bias
-    :param segment_ratio: float; the relative contribution of the segment similarity bias in case of continuer words
+    :param segment_ratio: float; the relative contribution of the segment similarity bias in case of continuer v_words
     """
 
     # Turn off the warning
@@ -199,17 +209,14 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
                                     "Lexicon", "Continuer_indices", "Similarity_bias_word",
                                     "Similarity_bias_segment", "Noise", "Anti_ambiguity_bias", "N_words",
                                     "N_dimensions", "Seed", "N_exemplars", "N_continuers", "N_rounds", "State",
-                                    "Exemplars"])
+                                    "Exemplars", "Store"])
 
     # Run the simulations
     for n_run in range(n_runs):
-        lexicon, lexicon2, indices_continuer, indices_continuer2, start = simulation(n_rounds, n_words, n_dimensions,
-                                                                                     seed, n_exemplars, n_continuers,
-                                                                                     similarity_bias_word,
-                                                                                     similarity_bias_segment, noise,
-                                                                                     anti_ambiguity_bias,
-                                                                                     activation_constant, continuer_G,
-                                                                                     segment_ratio)
+        lexicon, lexicon2, indices_continuer, indices_continuer2, start, store_count, store_count_2 = \
+            simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers, similarity_bias_word,
+                       similarity_bias_segment, noise, anti_ambiguity_bias, activation_constant, continuer_G,
+                       segment_ratio)
 
         # Calculate some measures for all the rows of the start dataframe (containing the starting condition of a
         # simulation run)
@@ -271,7 +278,7 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
             results.loc[len(results)] = [n_run, 1, word_index, centroid, average_distance, lexicon, indices_continuer,
                                          similarity_bias_word, similarity_bias_segment, noise, anti_ambiguity_bias,
                                          n_words, n_dimensions, seed, n_exemplars, n_continuers, n_rounds, "End",
-                                         exemplars]
+                                         exemplars, store_count]
 
             # Calculate the distance of the exemplars towards the mean as a dispersion of the data for the second agent
             centroid = np.mean(exemplars2, axis=0)
@@ -290,7 +297,7 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
             results.loc[len(results)] = [n_run, 2, word_index, centroid, average_distance, lexicon2, indices_continuer2,
                                          similarity_bias_word, similarity_bias_segment, noise, anti_ambiguity_bias,
                                          n_words, n_dimensions, seed, n_exemplars, n_continuers, n_rounds, "End",
-                                         exemplars2]
+                                         exemplars2, store_count_2]
 
     results["Continuer_G"] = continuer_G
     results["Segment_ratio"] = segment_ratio

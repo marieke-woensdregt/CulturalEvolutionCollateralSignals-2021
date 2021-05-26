@@ -8,16 +8,16 @@ class Perception:
                  anti_ambiguity_bias, activation_constant):
         """
         The initialisation of the perception class.
-        :param lexicon: list; a list of words, for which each word consists of a list of exemplars, which in turn is a
+        :param lexicon: list; a list of v_words, for which each word consists of a list of exemplars, which in turn is a
         list of the number of dimensions floats
-        :param v_words: list; a list of the regular vocabulary words, for which each word consists of a list of
+        :param v_words: list; a list of the regular vocabulary v_words, for which each word consists of a list of
         exemplars, which in turn is a list of the number of dimensions floats
-        :param continuer_words: list; a list of the continuer words, for which each word consists of a list of
+        :param continuer_words: list; a list of the continuer v_words, for which each word consists of a list of
         exemplars, which in turn is a list of the number of dimensions floats
-        :param n_words: int; the number of words contained in the agent's lexicon
+        :param n_words: int; the number of v_words contained in the agent's lexicon
         :param n_dimensions: int; the number of dimensions of the exemplars
         :param n_exemplars: int; the number of exemplars per word
-        :param n_continuers: int; the number of continuer words
+        :param n_continuers: int; the number of continuer v_words
         :param anti_ambiguity_bias: boolean; whether an anti-ambiguity bias is present
         :param activation_constant: float; the constant used to calculate the activation level
         """
@@ -53,10 +53,10 @@ class Perception:
                 activation_exemplars.append(activation)
             total_activations.append(activation_exemplars)
 
-        # Calculate the similarity of the signal to all the exemplars of all the words
+        # Calculate the similarity of the signal to all the exemplars of all the v_words
         similarities = []
 
-        # Iterate over all the words
+        # Iterate over all the v_words
         for word_index in range(self.n_words):
             # Iterate over all the dimensions (to access the segments)
             sum_similarity = 0
@@ -91,7 +91,7 @@ class Perception:
         :param index_max_sim: int; the index of the word category which was the best fit for the signal
         :param total_similarities: list; a list of the similarities of the signal to each word category
         :param signal: list; the signal produced by the producer, consisting of the number of dimensions floats
-        :return: list; a list of words, for which each word consists of a list of exemplars, which in turn is a
+        :return: list; a list of v_words, for which each word consists of a list of exemplars, which in turn is a
         list of the number of dimensions floats
         """
 
@@ -112,4 +112,4 @@ class Perception:
 
         # print(self.lexicon[index_max_sim])
 
-        return self.lexicon
+        return self.lexicon, store[0]
