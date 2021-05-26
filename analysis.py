@@ -22,10 +22,10 @@ import numpy as np
 # results = pd.read_pickle("Results/results_20_4000_True_2.p")
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/Continuers/"
 #                          "D_1.0-0.0/results_20_4000_True_1_250_0.p")
-results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_500_words/"
-                         "results_20_500_True_0_250_0.5_9.p")
+# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_500_words/"
+#                          "results_20_500_True_0_250_0.5_4.p")
+results = pd.read_pickle("results_1_20_True_0_1000_0.25_4.p")
 
-#print(results[-45:])
 # ======================================================================================================================
 
 # Define the Euclidean distance measure between two points in a 2D space
@@ -48,6 +48,9 @@ def distance(p1, p2):
 # ======================================================================================================================
 
 # Start the analysis of the results data selected
+
+# A list collecting all the probabilities of signals being stored in the rounds of the simulation runs
+probability_storages = []
 
 # A list collecting the error rate/Exclusion rates
 excluded_signals_runs = []
@@ -198,13 +201,24 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     stored_signals = results.loc[(results["Word"] == n_words-1) & (results["Agent"] == 1) &
                                (results["State"] == "End") & (results["Simulation_run"] == run), "Store"].values
     print(stored_signals)
-    relative_stored = stored_signals / (n_words * n_rounds)
+    relative_stored = stored_signals / (n_words * (n_rounds/2))
 
     # Calculate how often the signal gets excluded
     excluded_signals = 1 - relative_stored
     excluded_signals_runs.append(excluded_signals)
 
     # ==================================================================================================================
+
+    # Calculate the average probability storage of all signals in all the simulation runs
+
+    probability_storage = results.loc[(results["Word"] == n_words - 1) & (results["Agent"] == 1) &
+                                 (results["State"] == "End") & (results["Simulation_run"] == run),
+                                      "Probability_storages"].values
+
+    probability_storages.append(probability_storage)
+
+    # ==================================================================================================================
+
     # Calculate the distance to the middle of the space for the different types of v_words: v_words vs continuers
 
 #     distances_word = []
@@ -282,6 +296,13 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
 # Calculate the average exclusion rate for the independent simulation runs
 average_exclusion_rate = sum(excluded_signals_runs)/len(excluded_signals_runs)
 print("Average exclusion rate: ", average_exclusion_rate)
+
+# ======================================================================================================================
+
+# Calculate the average probability storage over all rounds and simulation runs
+probability_storages = list(chain.from_iterable(probability_storages))[0]
+average_probability_storage = sum(probability_storages)/len(probability_storages)
+print("Average probability storage: ", average_probability_storage)
 
 # ======================================================================================================================
 # Plot the distinct v_words over all the simulation runs per word (one plot per word to see how they move in the

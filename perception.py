@@ -112,4 +112,4 @@ class Perception:
 
         # print(self.lexicon[index_max_sim])
 
-        return self.lexicon, store[0]
+        return self.lexicon, store[0], probability_storage
