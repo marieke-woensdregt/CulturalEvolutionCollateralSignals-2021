@@ -11,7 +11,7 @@ import sys
 
 
 def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers, similarity_bias_word,
-               similarity_bias_segment, noise, anti_ambiguity_bias, continuer_G, segment_ratio):
+               similarity_bias_segment, noise, anti_ambiguity_bias, continuer_G, segment_ratio, wedel_start):
     """
     Run a simulation of n_rounds rounds with the specified parameters.
     :param n_rounds: int; the number of rounds of the simulation run
@@ -26,6 +26,8 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
     :param anti_ambiguity_bias: boolean; whether the anti-ambiguity bias should be applied to storing signals
     :param continuer_G: int; the constant used to determine the strength of the noise bias
     :param segment_ratio: float; the relative contribution of the segment similarity bias in case of continuer v_words
+    :param wedel_start: boolean; whether the means for initialising the lexicon are based on the one used in Wedel's
+    model
     :return: list; the lexicon consists of a list of v_words, for which each word consists of a list of exemplars, which
                    in turn is a list of the number of dimensions floats
              list; the second agent's lexicon consists of a list of v_words, for which each word consists of a list of
@@ -45,9 +47,10 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
         seed_value = random.randrange(sys.maxsize)
 
     lexicon_start, v_words, continuer_words, indices_continuer = Agent(n_words, n_dimensions, seed_value, n_exemplars,
-                                                                       n_continuers).generate_lexicon()
+                                                                       n_continuers, wedel_start).generate_lexicon()
     lexicon2_start, v_words2, continuer_words2, indices_continuer2 = Agent(n_words, n_dimensions, seed_value,
-                                                                           n_exemplars, n_continuers).generate_lexicon()
+                                                                           n_exemplars, n_continuers, wedel_start).\
+        generate_lexicon()
 
     # Store the state of the lexicons at the beginning for both agents
     start = pd.DataFrame(columns=["Simulation_run", "Agent", "Word", "Centroid", "Average_distance", "Lexicon",
@@ -155,7 +158,7 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
                 if anti_ambiguity_bias:
                     lexicon, store, probability_storage = Perception(perceiver_lex, perceiver_v_words,
                                                                      perceiver_continuer_words, n_words, n_dimensions,
-                                                                     n_exemplars, n_continuers, anti_ambiguity_bias,).\
+                                                                     n_exemplars, n_continuers, anti_ambiguity_bias).\
                         add_anti_ambiguity_bias(index_max_sim, total_similarities, signal)
 
                     if store is True:
@@ -191,7 +194,7 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
 
 def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exemplars=100, n_continuers=0,
                     similarity_bias_word=True, similarity_bias_segment=True, noise=True, anti_ambiguity_bias=True,
-                    continuer_G=1000, segment_ratio=0.25):
+                    continuer_G=1000, segment_ratio=0.25, wedel_start=False):
     """
     Run n_runs simulations with the specified parameters and pickle and store the results as a dataframe.
     :param n_runs: int; the number of simulations run
@@ -207,6 +210,8 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
     :param anti_ambiguity_bias: boolean; whether the anti-ambiguity bias should be applied to storing signals
     :param continuer_G: int; the constant used to determine the strength of the noise bias
     :param segment_ratio: float; the relative contribution of the segment similarity bias in case of continuer v_words
+    :param wedel_start: boolean; whether the means for initialising the lexicon are based on the one used in Wedel's
+    model
     """
 
     # Turn off the warning
@@ -225,7 +230,7 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
         probability_storages, probability_storages2 = simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars,
                                                                  n_continuers, similarity_bias_word,
                                                                  similarity_bias_segment, noise, anti_ambiguity_bias,
-                                                                 continuer_G, segment_ratio)
+                                                                 continuer_G, segment_ratio, wedel_start)
 
         # Calculate some measures for all the rows of the start dataframe (containing the starting condition of a
         # simulation run)
@@ -313,7 +318,8 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
 
     # Pickle the results
     filename = "results_" + str(n_runs) + "_" + str(n_rounds) + "_" + str(anti_ambiguity_bias) + "_" + \
-               str(n_continuers) + "_" + str(continuer_G) + "_" + str(segment_ratio) + "_" + str(n_words) + ".p"
-    outfile = open(filename, 'wb')
+               str(n_continuers) + "_" + str(continuer_G) + "_" + str(segment_ratio) + "_" + str(n_words) + "_" + \
+               str(wedel_start) + ".p"
+    outfile = open(filename, "wb")
     pickle.dump(results, outfile)
     outfile.close()

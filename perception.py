@@ -5,7 +5,7 @@ import math
 class Perception:
 
     def __init__(self, lexicon, v_words, continuer_words, n_words, n_dimensions, n_exemplars, n_continuers,
-                 anti_ambiguity_bias, activation_constant):
+                 anti_ambiguity_bias):
         """
         The initialisation of the perception class.
         :param lexicon: list; a list of v_words, for which each word consists of a list of exemplars, which in turn is a
@@ -19,7 +19,6 @@ class Perception:
         :param n_exemplars: int; the number of exemplars per word
         :param n_continuers: int; the number of continuer v_words
         :param anti_ambiguity_bias: boolean; whether an anti-ambiguity bias is present
-        :param activation_constant: float; the constant used to calculate the activation level
         """
 
         self.lexicon = lexicon
@@ -30,7 +29,6 @@ class Perception:
         self.n_exemplars = n_exemplars
         self.n_continuers = n_continuers
         self.anti_ambiguity_bias = anti_ambiguity_bias
-        self.activation_constant = activation_constant
 
     def similarity(self, signal, k=0.2):
         """

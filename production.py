@@ -6,7 +6,7 @@ import math
 class Production:
 
     def __init__(self, lexicon, v_words, continuer_words, n_words, n_dimensions, n_exemplars, n_continuers,
-                 similarity_bias_word, similarity_bias_segment, noise, activation_constant, continuer_G, segment_ratio):
+                 similarity_bias_word, similarity_bias_segment, noise, continuer_G, segment_ratio):
         """
         The initialisation of the production class.
         :param lexicon: list; a list of v_words, for which each word consists of a list of exemplars, which in turn is a
@@ -22,7 +22,6 @@ class Production:
         :param similarity_bias_word: boolean; whether the word similarity bias is present
         :param similarity_bias_segment: boolean; whether the segment similarity bias is present
         :param noise: boolean; whether noise is added to the signals
-        :param activation_constant: float; the constant used to calculate the activation level
         :param continuer_G: int; the constant used to determine the strength of the noise bias
         :param segment_ratio: float; the relative contribution of the segment similarity bias in case of continuer v_words
         """
@@ -37,7 +36,6 @@ class Production:
         self.similarity_bias_word = similarity_bias_word
         self.similarity_bias_segment = similarity_bias_segment
         self.noise = noise
-        self.activation_constant = activation_constant
         self.continuer_G = continuer_G
         self.segment_ratio = segment_ratio
 
