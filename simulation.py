@@ -11,7 +11,7 @@ import sys
 
 
 def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers, similarity_bias_word,
-               similarity_bias_segment, noise, anti_ambiguity_bias, activation_constant, continuer_G, segment_ratio):
+               similarity_bias_segment, noise, anti_ambiguity_bias, continuer_G, segment_ratio):
     """
     Run a simulation of n_rounds rounds with the specified parameters.
     :param n_rounds: int; the number of rounds of the simulation run
@@ -24,7 +24,6 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
     :param similarity_bias_segment: boolean; whether the segment similarity bias should be applied to the signals
     :param noise: boolean; whether noise should be added to the signals
     :param anti_ambiguity_bias: boolean; whether the anti-ambiguity bias should be applied to storing signals
-    :param activation_constant: float; the constant used to calculate the activation levels of the exemplars
     :param continuer_G: int; the constant used to determine the strength of the noise bias
     :param segment_ratio: float; the relative contribution of the segment similarity bias in case of continuer v_words
     :return: list; the lexicon consists of a list of v_words, for which each word consists of a list of exemplars, which
@@ -103,15 +102,14 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
         targets, total_activations = Production(producer_lex, producer_v_words,
                                                 producer_continuer_words, n_words, n_dimensions,
                                                 n_exemplars, n_continuers, similarity_bias_word,
-                                                similarity_bias_segment, noise, activation_constant, continuer_G,
+                                                similarity_bias_segment, noise, continuer_G,
                                                 segment_ratio).select_exemplar()
         # print("Chosen target exemplars: ", targets)
 
         # Then the biases are added to the selected exemplars
         target_exemplars = Production(producer_lex, producer_v_words, producer_continuer_words, n_words, n_dimensions,
                                       n_exemplars, n_continuers, similarity_bias_word, similarity_bias_segment, noise,
-                                      activation_constant, continuer_G, segment_ratio).add_biases(targets,
-                                                                                                  total_activations)
+                                      continuer_G, segment_ratio).add_biases(targets, total_activations)
         # print("Bias added to targets: ", target_exemplars)
 
         # The other agent perceives the produced signals
@@ -124,7 +122,7 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
             # is chosen accordingly
             index_max_sim, total_similarities = Perception(perceiver_lex, perceiver_v_words, perceiver_continuer_words,
                                                            n_words, n_dimensions, n_exemplars, n_continuers,
-                                                           anti_ambiguity_bias, activation_constant).similarity(signal)
+                                                           anti_ambiguity_bias).similarity(signal)
             # print("Word category signal: ", index_max_sim)
             # print("Total similarities: ", total_similarities)
 
@@ -137,9 +135,8 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
                 if anti_ambiguity_bias:
                     lexicon2, store, probability_storage = Perception(perceiver_lex, perceiver_v_words,
                                                                       perceiver_continuer_words, n_words, n_dimensions,
-                                                                      n_exemplars, n_continuers, anti_ambiguity_bias,
-                                                                      activation_constant).add_anti_ambiguity_bias \
-                        (index_max_sim, total_similarities, signal)
+                                                                      n_exemplars, n_continuers, anti_ambiguity_bias).\
+                        add_anti_ambiguity_bias(index_max_sim, total_similarities, signal)
 
                     probability_storages2.append(probability_storage)
 
@@ -158,8 +155,7 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
                 if anti_ambiguity_bias:
                     lexicon, store, probability_storage = Perception(perceiver_lex, perceiver_v_words,
                                                                      perceiver_continuer_words, n_words, n_dimensions,
-                                                                     n_exemplars, n_continuers, anti_ambiguity_bias,
-                                                                     activation_constant). \
+                                                                     n_exemplars, n_continuers, anti_ambiguity_bias,).\
                         add_anti_ambiguity_bias(index_max_sim, total_similarities, signal)
 
                     if store is True:
@@ -195,7 +191,7 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
 
 def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exemplars=100, n_continuers=0,
                     similarity_bias_word=True, similarity_bias_segment=True, noise=True, anti_ambiguity_bias=True,
-                    activation_constant=0.02, continuer_G=1000, segment_ratio=0.25):
+                    continuer_G=1000, segment_ratio=0.25):
     """
     Run n_runs simulations with the specified parameters and pickle and store the results as a dataframe.
     :param n_runs: int; the number of simulations run
@@ -209,7 +205,6 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
     :param similarity_bias_segment: boolean; whether the segment similarity bias should be applied to the signals
     :param noise: boolean; whether noise should be added to the signals
     :param anti_ambiguity_bias: boolean; whether the anti-ambiguity bias should be applied to storing signals
-    :param activation_constant: float; the constant used to calculate the activation levels of the exemplars
     :param continuer_G: int; the constant used to determine the strength of the noise bias
     :param segment_ratio: float; the relative contribution of the segment similarity bias in case of continuer v_words
     """
@@ -230,7 +225,7 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
         probability_storages, probability_storages2 = simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars,
                                                                  n_continuers, similarity_bias_word,
                                                                  similarity_bias_segment, noise, anti_ambiguity_bias,
-                                                                 activation_constant, continuer_G, segment_ratio)
+                                                                 continuer_G, segment_ratio)
 
         # Calculate some measures for all the rows of the start dataframe (containing the starting condition of a
         # simulation run)

@@ -49,7 +49,7 @@ class Perception:
             activation_exemplars = []
             for j in range(len(self.lexicon[word_index][0])):
                 j += 1
-                activation = math.exp(-self.activation_constant*j)
+                activation = math.exp(-j/(self.n_exemplars/5))
                 activation_exemplars.append(activation)
             total_activations.append(activation_exemplars)
 
