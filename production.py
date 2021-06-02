@@ -110,12 +110,12 @@ class Production:
                 # print("Word bias: ", word_bias)
                 # print("Segment bias: ", segment_bias)
 
-                # The ratio of the word similarity to the segment similarity is 0.9:1 if we deal with regular vocabulary
+                # The ratio of the word similarity to the segment similarity is 9:1 if we deal with regular vocabulary
                 # v_words
                 if self.lexicon[word_index][1] == "V":
-                    total_bias = [(0.9 * bias_word) + bias_segment for bias_word, bias_segment in zip(word_bias,
-                                                                                                      segment_bias)]
-                    target = [bias / 1.9 for bias in total_bias]
+                    total_bias = [(9 * bias_word) + bias_segment for bias_word, bias_segment in zip(word_bias,
+                                                                                                    segment_bias)]
+                    target = [bias / 10 for bias in total_bias]
 
                 # The ratio of the word similarity to the segment similarity is 1:0.5 for continuer v_words
                 if self.lexicon[word_index][1] == "C":

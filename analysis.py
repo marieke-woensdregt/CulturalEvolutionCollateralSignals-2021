@@ -26,9 +26,12 @@ import numpy as np
 #                          "D_1.0-0.0/results_20_4000_True_1_250_0.p")
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_500_words/"
 #                          "results_20_500_True_0_250_0.5_4.p")
-# results = pd.read_pickle("results_1_20_True_0_1000_0.25_4.p")
-results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/new_version/"
-                         "0.069/results_20_4000_True_0_1000_0.25_4_0.069.p")
+# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/new_version/"
+#                          "0.069/results_20_4000_True_0_1000_0.25_4_0.069.p")
+results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/"
+                         "Wedel_start/results_20_10000_False_0_250_0.5_4_True.p")
+# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/"
+#                          "Random_start/results_20_500_True_0_250_0.5_16_False.p")
 
 # ======================================================================================================================
 
@@ -101,21 +104,22 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
 
     # Define the end position if you want an intermediate result
     #end_position = start_position + 67
+    #end_position = start_position + 11
 
-    #print(results.iloc[end_position])
+    print(results.iloc[end_position])
 
     # Define the start and end lexicons
     lexicon_start = results["Lexicon"].iloc[start_position]
     lexicon_end = results["Lexicon"].iloc[end_position]
 
     # Plot the beginning first
-    for word_index in range(n_words):
-        exemplars = lexicon_start[word_index][0]
-        plt.scatter(*zip(*exemplars))
-
-    plt.xlim(0, 100)
-    plt.ylim(0, 100)
-    plt.show()
+    # for word_index in range(n_words):
+    #     exemplars = lexicon_start[word_index][0]
+    #     plt.scatter(*zip(*exemplars))
+    #
+    # plt.xlim(0, 100)
+    # plt.ylim(0, 100)
+    # plt.show()
 
     # ===============================================================================================================
 
@@ -141,10 +145,10 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
 
         # # The centroids and average distance measures for intermediate rounds
         # centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-        #                        (results["N_rounds"] == 4000) & (results["Simulation_run"] == run), "Centroid"]
+        #                        (results["N_rounds"] == 500) & (results["Simulation_run"] == run), "Centroid"]
         # centroid_list.append(centroid.tolist())
         # average_distance = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-        #                                (results["N_rounds"] == 4000) & (results["Simulation_run"] == run),
+        #                                (results["N_rounds"] == 500) & (results["Simulation_run"] == run),
         #                                "Average_distance"]
 
         average_distance_list.append(average_distance.tolist())
@@ -157,9 +161,8 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     plt.xlim(0, 100)
     plt.ylim(0, 100)
     # plt.show()
-    #plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/4000_0.046/" +
-    #            str(run + 1) + ".pdf")
-    plt.show()
+    plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/Wedel_start/"
+                "without_amb_bias/10000/" + str(run+1) + ".pdf")
     plt.clf()
 
     # Calculate the distances between the word centroids
@@ -172,36 +175,16 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
 
     # ==================================================================================================================
 
-# # Save the plot of the average centroids distance
-# r = list(range(1, results.iloc[-1]["Simulation_run"] + 2))
-# plt.bar(x=r, height=average_centroid_distances)
-# plt.ylim(0, 50)
-# plt.xticks(r)
-# plt.xlabel("Simulation run")
-# plt.ylabel("Average centroids distance")
-# # plt.show()
-# plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/4000_0.046/centroid.pdf")
-# plt.clf()
-#
-# # Save the plot of the average SD for a two dimensional space
-# r = list(range(1, results.iloc[-1]["Simulation_run"] + 2))
-# plt.bar(x=r, height=average_sd)
-# plt.ylim(0, 5)
-# plt.xticks(r)
-# plt.xlabel("Simulation run")
-# plt.ylabel("Average distance of exemplars to centroids")
-# # plt.show()
-# plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/4000_0.046/sd.pdf")
-# plt.clf()
-
-    # ==================================================================================================================
-
     # Calculate the error: exclusion rates (how often the signal is not stored)
 
     # Get the value from the column "Store" and divide that by the number of words * number of simulation runs
     stored_signals = results.loc[(results["Word"] == n_words-1) & (results["Agent"] == 1) &
                                (results["State"] == "End") & (results["Simulation_run"] == run), "Store"].values
-    print(stored_signals)
+
+    # For intermediate results
+    # stored_signals = results.loc[(results["Word"] == n_words-1) & (results["Agent"] == 1) &
+    #                            (results["N_rounds"] == 500) & (results["Simulation_run"] == run), "Store"].values
+    # print(stored_signals)
     relative_stored = stored_signals / (n_words * (n_rounds/2))
 
     # Calculate how often the signal gets excluded
@@ -215,6 +198,11 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     probability_storage = results.loc[(results["Word"] == n_words - 1) & (results["Agent"] == 1) &
                                  (results["State"] == "End") & (results["Simulation_run"] == run),
                                       "Probability_storages"].values
+
+    # For intermediate results
+    # probability_storage = results.loc[(results["Word"] == n_words - 1) & (results["Agent"] == 1) &
+    #                              (results["N_rounds"] == 500) & (results["Simulation_run"] == run),
+    #                                   "Probability_storages"].values
 
     probability_storages.append(probability_storage)
 
@@ -251,7 +239,7 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
 #     averages_word_runs.append(average_distance_words)
 #     averages_continuer_runs.append(average_distance_continuer)
 #
-#     # ==================================================================================================================
+#     # ================================================================================================================
 #
 #     # 2D SD measure across all simulations: SD of first run to every other run compared for the v_words and continuer
 #     # v_words
@@ -291,6 +279,32 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
 # # Print the average distance (averaged over v_words) between centroids of the initialisation versus the end for every word
 # print("Regular vocabulary word average distance per run: ", v_word_distance_run1_average)
 # print("Continuer average distance per run: ", continuer_distance_run1_average)
+
+# ======================================================================================================================
+
+# Save the plot of the average centroids distance
+r = list(range(1, results.iloc[-1]["Simulation_run"] + 2))
+plt.bar(x=r, height=average_centroid_distances)
+plt.ylim(0, 50)
+plt.xticks(r)
+plt.xlabel("Simulation run")
+plt.ylabel("Average centroids distance")
+# plt.show()
+plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/Wedel_start/"
+            "without_amb_bias/10000/centroid.pdf")
+plt.clf()
+
+# Save the plot of the average SD for a two dimensional space
+r = list(range(1, results.iloc[-1]["Simulation_run"] + 2))
+plt.bar(x=r, height=average_sd)
+plt.ylim(0, 5)
+plt.xticks(r)
+plt.xlabel("Simulation run")
+plt.ylabel("Average distance of exemplars to centroids")
+# plt.show()
+plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/Wedel_start/"
+            "without_amb_bias/10000/sd.pdf")
+plt.clf()
 
 # ======================================================================================================================
 
