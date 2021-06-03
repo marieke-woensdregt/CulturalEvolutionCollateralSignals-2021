@@ -205,7 +205,7 @@ class Production:
             sum = 0
             sum2 = 0
 
-            # This is done for all the v_words in the lexicon
+            # This is done for all the words in the lexicon
             for word in self.lexicon:
 
                 # The exemplar index

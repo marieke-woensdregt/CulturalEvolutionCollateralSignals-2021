@@ -28,10 +28,12 @@ import numpy as np
 #                          "results_20_500_True_0_250_0.5_4.p")
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/new_version/"
 #                          "0.069/results_20_4000_True_0_1000_0.25_4_0.069.p")
-results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/"
-                         "Wedel_start/results_20_10000_False_0_250_0.5_4_True.p")
+# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/"
+#                          "Wedel_start/results_20_10000_False_0_250_0.5_4_True.p")
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/"
 #                          "Random_start/results_20_500_True_0_250_0.5_16_False.p")
+
+results = pd.read_pickle("results_20_500_True_0_1000_0.25_4_True.p")
 
 # ======================================================================================================================
 
@@ -106,7 +108,7 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     #end_position = start_position + 67
     #end_position = start_position + 11
 
-    print(results.iloc[end_position])
+    #print(results.iloc[end_position])
 
     # Define the start and end lexicons
     lexicon_start = results["Lexicon"].iloc[start_position]
@@ -160,9 +162,9 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     # Save the plot of the end state of the simulations of the first agent
     plt.xlim(0, 100)
     plt.ylim(0, 100)
-    # plt.show()
-    plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/Wedel_start/"
-                "without_amb_bias/10000/" + str(run+1) + ".pdf")
+    plt.show()
+    # plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/Wedel_start/"
+    #             "without_amb_bias/10000/" + str(run+1) + ".pdf")
     plt.clf()
 
     # Calculate the distances between the word centroids
@@ -289,9 +291,9 @@ plt.ylim(0, 50)
 plt.xticks(r)
 plt.xlabel("Simulation run")
 plt.ylabel("Average centroids distance")
-# plt.show()
-plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/Wedel_start/"
-            "without_amb_bias/10000/centroid.pdf")
+plt.show()
+# plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/Wedel_start/"
+#             "without_amb_bias/10000/centroid.pdf")
 plt.clf()
 
 # Save the plot of the average SD for a two dimensional space
@@ -301,9 +303,9 @@ plt.ylim(0, 5)
 plt.xticks(r)
 plt.xlabel("Simulation run")
 plt.ylabel("Average distance of exemplars to centroids")
-# plt.show()
-plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/Wedel_start/"
-            "without_amb_bias/10000/sd.pdf")
+plt.show()
+# plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/Wedel_start/"
+#             "without_amb_bias/10000/sd.pdf")
 plt.clf()
 
 # ======================================================================================================================
@@ -383,4 +385,9 @@ print("Average probability storage: ", average_probability_storage)
 # ax5.set_xlim([0, 100])
 # ax5.set_ylim([0, 100])
 #
+# plt.show()
+
+# Test for comparing exclusion rates
+# plt.bar(x=["10 - 500 random", "5 - 4000 random", "10 - 500 Wedel", "5 - 4000 Wedel"], height=[0.2829, 0.26349, 0.095, 0.176549])
+# plt.yticks(np.arange(0, 1.25, 0.25))
 # plt.show()
