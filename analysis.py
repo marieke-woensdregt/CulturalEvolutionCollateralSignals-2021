@@ -83,6 +83,8 @@ continuer_distance_run1_average = []
 v_words = []
 continuer_words = []
 
+exemplar_list = []
+
 # Iterate over the total number of runs to access every independent simulation run
 for run in range(results.iloc[-1]["Simulation_run"] + 1):
 
@@ -128,11 +130,18 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     # Initialise empty lists to store the centroids and 2D SDs
     centroid_list = []
     average_distance_list = []
+    # fig, axs = plt.subplots(4, 5)
+    # axs = axs.ravel()
+    # sns.set_style("whitegrid")
+    # sns.set_palette("colorblind")
+    # axs[run].set_xlim([0, 100])
+    # axs[run].set_ylim([0, 100])
     for word_index in range(n_words):
         # Define the exemplars of the word
         exemplars = lexicon_end[word_index][0]
+        exemplar_list.append(exemplars)
         # Plot the end state for all simulations
-        plt.scatter(*zip(*exemplars))
+        #axs[run].scatter(*zip(*exemplars), edgecolors="white", linewidths=0.5)
 
         # Gather the centroids for the first agent only, for the current word, for the end position of the simulation
         # and for the current simulation run
@@ -158,14 +167,6 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
 
     average_distance_list = list(chain.from_iterable(average_distance_list))
     # print("Average SD: ", sum(average_distance_list)/len(average_distance_list))
-
-    # Save the plot of the end state of the simulations of the first agent
-    plt.xlim(0, 100)
-    plt.ylim(0, 100)
-    plt.show()
-    # plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/Wedel_start/"
-    #             "without_amb_bias/10000/" + str(run+1) + ".pdf")
-    plt.clf()
 
     # Calculate the distances between the word centroids
     centroid_list = list(chain(*centroid_list))
@@ -284,8 +285,29 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
 
 # ======================================================================================================================
 
+# Save the plot of the end state of the simulations of the first agent
+with sns.axes_style("whitegrid"):
+    sns.set_palette("colorblind")
+    fig, axs = plt.subplots(4, 5)
+    axs = axs.ravel()
+for run in range(results.iloc[-1]["Simulation_run"] + 1):
+    for word_index in range(n_words):
+        exemplars = exemplar_list[(run*n_words) + word_index]
+        axs[run].scatter(*zip(*exemplars), edgecolors="white", linewidths=0.5)
+    sns.set_style("whitegrid")
+    sns.set_palette("colorblind")
+    axs[run].set_xlim([0, 100])
+    axs[run].set_ylim([0, 100])
+
+plt.show()
+# plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/Wedel_start/"
+#             "without_amb_bias/10000/" + str(run+1) + ".pdf")
+#plt.clf()
+
 # Save the plot of the average centroids distance
 r = list(range(1, results.iloc[-1]["Simulation_run"] + 2))
+sns.set_style("whitegrid")
+sns.color_palette("colorblind")
 plt.bar(x=r, height=average_centroid_distances)
 plt.ylim(0, 50)
 plt.xticks(r)
@@ -298,6 +320,8 @@ plt.clf()
 
 # Save the plot of the average SD for a two dimensional space
 r = list(range(1, results.iloc[-1]["Simulation_run"] + 2))
+sns.set_style("whitegrid")
+sns.color_palette("colorblind")
 plt.bar(x=r, height=average_sd)
 plt.ylim(0, 5)
 plt.xticks(r)
