@@ -4,37 +4,17 @@ from itertools import chain
 from math import hypot
 from itertools import combinations
 import seaborn as sns
+import matplotlib
 import numpy as np
 
 # Read in the data
 
-# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_10000/results_0.p")
-# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_10000/"
-#                          "results_0.p")
-# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_10000/"
-#                          "results_20_10000_False_0.02.p")
-# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/"
-#                          "results_20_10000_True_0.069.p")
-# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/"
-#                           "results_20_10000_True_0.046.p")
-# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_2500/"
-#                          "results_20_2500_True_0.02.p")
-# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_runs_4000/"
-#                          "results_0.p")
-# results = pd.read_pickle("Results/results_20_4000_True_2.p")
-# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/Continuers/"
-#                          "D_1.0-0.0/results_20_4000_True_1_250_0.p")
-# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Results/20_500_words/"
-#                          "results_20_500_True_0_250_0.5_4.p")
-# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_start/new_version/"
-#                          "0.069/results_20_4000_True_0_1000_0.25_4_0.069.p")
-# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/"
-#                          "Wedel_start/results_20_10000_False_0_250_0.5_4_True.p")
-# results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/"
-#                          "Random_start/results_20_500_True_0_250_0.5_16_False.p")
-
-results = pd.read_pickle("results_20_500_True_0_1000_0.25_4_True.p")
-
+results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/"
+                         "Wedel_simweight/Random_start/results_20_10000_False_0_1000_0.25_4_False.p")
+print(results.loc[(results["Word"] == 3) & (results["Agent"] == 1) &
+                               (results["State"] == "End"), "Lexicon"])
+print(results.loc[(results["Word"] == 3) & (results["Agent"] == 1) &
+                               (results["N_rounds"] == 500), "Lexicon"])
 # ======================================================================================================================
 
 # Define the Euclidean distance measure between two points in a 2D space
@@ -130,18 +110,11 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     # Initialise empty lists to store the centroids and 2D SDs
     centroid_list = []
     average_distance_list = []
-    # fig, axs = plt.subplots(4, 5)
-    # axs = axs.ravel()
-    # sns.set_style("whitegrid")
-    # sns.set_palette("colorblind")
-    # axs[run].set_xlim([0, 100])
-    # axs[run].set_ylim([0, 100])
+
     for word_index in range(n_words):
         # Define the exemplars of the word
         exemplars = lexicon_end[word_index][0]
         exemplar_list.append(exemplars)
-        # Plot the end state for all simulations
-        #axs[run].scatter(*zip(*exemplars), edgecolors="white", linewidths=0.5)
 
         # Gather the centroids for the first agent only, for the current word, for the end position of the simulation
         # and for the current simulation run
@@ -154,12 +127,12 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
                                        (results["State"] == "End") & (results["Simulation_run"] == run),
                                        "Average_distance"]
 
-        # # The centroids and average distance measures for intermediate rounds
+        # The centroids and average distance measures for intermediate rounds
         # centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-        #                        (results["N_rounds"] == 500) & (results["Simulation_run"] == run), "Centroid"]
+        #                        (results["N_rounds"] == 4000) & (results["Simulation_run"] == run), "Centroid"]
         # centroid_list.append(centroid.tolist())
         # average_distance = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-        #                                (results["N_rounds"] == 500) & (results["Simulation_run"] == run),
+        #                                (results["N_rounds"] == 4000) & (results["Simulation_run"] == run),
         #                                "Average_distance"]
 
         average_distance_list.append(average_distance.tolist())
@@ -186,8 +159,8 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
 
     # For intermediate results
     # stored_signals = results.loc[(results["Word"] == n_words-1) & (results["Agent"] == 1) &
-    #                            (results["N_rounds"] == 500) & (results["Simulation_run"] == run), "Store"].values
-    # print(stored_signals)
+    #                            (results["N_rounds"] == 4000) & (results["Simulation_run"] == run), "Store"].values
+
     relative_stored = stored_signals / (n_words * (n_rounds/2))
 
     # Calculate how often the signal gets excluded
@@ -198,16 +171,19 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
 
     # Calculate the average probability storage of all signals in all the simulation runs
 
-    probability_storage = results.loc[(results["Word"] == n_words - 1) & (results["Agent"] == 1) &
-                                 (results["State"] == "End") & (results["Simulation_run"] == run),
-                                      "Probability_storages"].values
+    # Only applied when there is an anti-ambiguity bias
+    if results["Anti_ambiguity_bias"].iloc[0]:
+        probability_storage = results.loc[(results["Word"] == n_words - 1) & (results["Agent"] == 1) &
+                                     (results["State"] == "End") & (results["Simulation_run"] == run),
+                                          "Probability_storages"].values
 
     # For intermediate results
-    # probability_storage = results.loc[(results["Word"] == n_words - 1) & (results["Agent"] == 1) &
-    #                              (results["N_rounds"] == 500) & (results["Simulation_run"] == run),
-    #                                   "Probability_storages"].values
+    # if results["Anti_ambiguity_bias"].iloc[0]:
+    #     probability_storage = results.loc[(results["Word"] == n_words - 1) & (results["Agent"] == 1) &
+    #                                  (results["N_rounds"] == 4000) & (results["Simulation_run"] == run),
+    #                                       "Probability_storages"].values
 
-    probability_storages.append(probability_storage)
+        probability_storages.append(probability_storage)
 
     # ==================================================================================================================
 
@@ -285,10 +261,13 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
 
 # ======================================================================================================================
 
-# Save the plot of the end state of the simulations of the first agent
+# Save the plot of the end state of the simulation runs of the first agent
+matplotlib.rc('xtick', labelsize=12)
+matplotlib.rc('ytick', labelsize=12)
+
 with sns.axes_style("whitegrid"):
     sns.set_palette("colorblind")
-    fig, axs = plt.subplots(4, 5)
+    fig, axs = plt.subplots(5, 4, figsize=(8,8))
     axs = axs.ravel()
 for run in range(results.iloc[-1]["Simulation_run"] + 1):
     for word_index in range(n_words):
@@ -299,10 +278,16 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     axs[run].set_xlim([0, 100])
     axs[run].set_ylim([0, 100])
 
-plt.show()
-# plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/Wedel_start/"
-#             "without_amb_bias/10000/" + str(run+1) + ".pdf")
-#plt.clf()
+for ax in axs.flat:
+    ax.label_outer()
+fig.suptitle("Without anti-ambiguity bias and with random initialisation: \n 10,000 rounds", size=20)
+fig.text(0.5, 0.04, 'Dimension 1', ha='center', size=18)
+fig.text(0.04, 0.5, 'Dimension 2', va='center', rotation='vertical', size=18)
+plt.setp(axs, xticks=np.arange(0, 101, 25), yticks=np.arange(0, 101, 25))
+#plt.show()
+plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/Wedel_simweight/"
+            "Random_start/exemplars_no_amb_10000.pdf")
+plt.clf()
 
 # Save the plot of the average centroids distance
 r = list(range(1, results.iloc[-1]["Simulation_run"] + 2))
@@ -311,11 +296,12 @@ sns.color_palette("colorblind")
 plt.bar(x=r, height=average_centroid_distances)
 plt.ylim(0, 50)
 plt.xticks(r)
-plt.xlabel("Simulation run")
-plt.ylabel("Average centroids distance")
-plt.show()
-# plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/Wedel_start/"
-#             "without_amb_bias/10000/centroid.pdf")
+plt.xlabel("Simulation run", size=18)
+plt.ylabel("Average centroids distance", size=18)
+plt.title("Without anti-ambiguity bias and with random initialisation: \n 10,000 rounds", size=20)
+#plt.show()
+plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/Wedel_simweight/"
+            "Random_start/centroid_no_amb_10000.pdf")
 plt.clf()
 
 # Save the plot of the average SD for a two dimensional space
@@ -325,25 +311,26 @@ sns.color_palette("colorblind")
 plt.bar(x=r, height=average_sd)
 plt.ylim(0, 5)
 plt.xticks(r)
-plt.xlabel("Simulation run")
-plt.ylabel("Average distance of exemplars to centroids")
-plt.show()
-# plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/Wedel_start/"
-#             "without_amb_bias/10000/sd.pdf")
+plt.xlabel("Simulation run", size=18)
+plt.ylabel("Average distance of exemplars to centroids", size=18)
+plt.title("Without anti-ambiguity bias and with random initialisation: \n 10,000 rounds", size=20)
+# plt.show()
+plt.savefig("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/Wedel_simweight/"
+            "Random_start/sd_no_amb_10000.pdf")
 plt.clf()
 
 # ======================================================================================================================
+if results["Anti_ambiguity_bias"].iloc[0]:
+    # Calculate the average exclusion rate for the independent simulation runs
+    average_exclusion_rate = sum(excluded_signals_runs)/len(excluded_signals_runs)
+    print("Average exclusion rate: ", average_exclusion_rate)
 
-# Calculate the average exclusion rate for the independent simulation runs
-average_exclusion_rate = sum(excluded_signals_runs)/len(excluded_signals_runs)
-print("Average exclusion rate: ", average_exclusion_rate)
+    # ==================================================================================================================
 
-# ======================================================================================================================
-
-# Calculate the average probability storage over all rounds and simulation runs
-probability_storages = list(chain.from_iterable(probability_storages))[0]
-average_probability_storage = sum(probability_storages)/len(probability_storages)
-print("Average probability storage: ", average_probability_storage)
+    # Calculate the average probability storage over all rounds and simulation runs
+    probability_storages = list(chain.from_iterable(probability_storages))[0]
+    average_probability_storage = sum(probability_storages)/len(probability_storages)
+    print("Average probability storage: ", average_probability_storage)
 
 # ======================================================================================================================
 # Plot the distinct v_words over all the simulation runs per word (one plot per word to see how they move in the
