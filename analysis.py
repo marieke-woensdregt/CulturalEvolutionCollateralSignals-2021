@@ -13,33 +13,6 @@ import numpy as np
 #                          "Wedel_simweight/Random_start/results_20_10000_False_0_1000_0.25_4_False.p")
 results = pd.read_pickle("results_1_1500_True_0_1000_0.25_4_True.p")
 
-print(results.loc[(results["Word"] == 3) & (results["Agent"] == 1) &
-                               (results["N_rounds"] == 500) & (results["Simulation_run"] == 0), "Lexicon"])
-print(results.loc[(results["Word"] == 3) & (results["Agent"] == 1) &
-                               (results["N_rounds"] == 1000) & (results["Simulation_run"] == 0), "Lexicon"])
-print(results.loc[(results["Word"] == 3) & (results["Agent"] == 1) &
-                               (results["State"] == "End") & (results["Simulation_run"] == 0), "Lexicon"])
-
-prob_stor = results.loc[(results["Word"] == 3) & (results["Agent"] == 1) & (results["N_rounds"] == 500) &
-                        (results["Simulation_run"] == 0), "Probability_storages"]
-prob_stor = list(chain.from_iterable(prob_stor))
-print(sum(prob_stor)/len(prob_stor))
-prob_stor = results.loc[(results["Word"] == 3) & (results["Agent"] == 1) &
-                               (results["N_rounds"] == 1000) & (results["Simulation_run"] == 0), "Probability_storages"]
-prob_stor = list(chain.from_iterable(prob_stor))
-print(sum(prob_stor)/len(prob_stor))
-prob_stor = results.loc[(results["Word"] == 3) & (results["Agent"] == 1) &
-                               (results["State"] == "End") & (results["Simulation_run"] == 0), "Probability_storages"]
-prob_stor = list(chain.from_iterable(prob_stor))
-print(sum(prob_stor)/len(prob_stor))
-
-print(results.loc[(results["Word"] == 3) & (results["Agent"] == 1) &
-                               (results["N_rounds"] == 500) & (results["Simulation_run"] == 0), "Store"])
-print(results.loc[(results["Word"] == 3) & (results["Agent"] == 1) &
-                               (results["N_rounds"] == 1000) & (results["Simulation_run"] == 0), "Store"])
-print(results.loc[(results["Word"] == 3) & (results["Agent"] == 1) &
-                               (results["State"] == "End") & (results["Simulation_run"] == 0), "Store"])
-
 # ======================================================================================================================
 
 # Define the Euclidean distance measure between two points in a 2D space
