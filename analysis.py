@@ -7,6 +7,7 @@ import seaborn as sns
 import matplotlib
 import numpy as np
 
+
 # ======================================================================================================================
 
 # Define the Euclidean distance measure between two points in a 2D space
@@ -31,7 +32,6 @@ def distance(p1, p2):
 # Start the analysis of the results data selected
 
 def analysis(folder, results_file, intermediate=None, wedel_start=True):
-
     # Read in the data
     results = pd.read_pickle(folder + results_file)
 
@@ -92,7 +92,7 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         elif intermediate == 4000:
             end_position = start_position + 67
 
-        #print(results.iloc[end_position])
+        # print(results.iloc[end_position])
 
         # Define the start and end lexicons
         lexicon_start = results["Lexicon"].iloc[start_position]
@@ -133,7 +133,8 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
             # The centroids and average distance measures for intermediate rounds
             else:
                 centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-                                       (results["N_rounds"] == n_rounds) & (results["Simulation_run"] == run), "Centroid"]
+                                       (results["N_rounds"] == n_rounds) & (
+                                                   results["Simulation_run"] == run), "Centroid"]
                 centroid_list.append(centroid.tolist())
                 average_distance = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
                                                (results["N_rounds"] == n_rounds) & (results["Simulation_run"] == run),
@@ -159,14 +160,15 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
 
         # Get the value from the column "Store" and divide that by the number of words * number of simulation runs
         if intermediate is None:
-            stored_signals = results.loc[(results["Word"] == n_words-1) & (results["Agent"] == 1) &
-                                       (results["State"] == "End") & (results["Simulation_run"] == run), "Store"].values
+            stored_signals = results.loc[(results["Word"] == n_words - 1) & (results["Agent"] == 1) &
+                                         (results["State"] == "End") & (
+                                                     results["Simulation_run"] == run), "Store"].values
             relative_stored = stored_signals / (n_words * (n_rounds / 2))
 
         # For intermediate results
         else:
-            stored_signals = results.loc[(results["Word"] == n_words-1) & (results["Agent"] == 1) &
-                                       (results["N_rounds"] == n_rounds) & (results["Simulation_run"] == run),
+            stored_signals = results.loc[(results["Word"] == n_words - 1) & (results["Agent"] == 1) &
+                                         (results["N_rounds"] == n_rounds) & (results["Simulation_run"] == run),
                                          "Store"].values
             relative_stored = stored_signals / (n_words * (n_rounds / 2))
 
@@ -182,13 +184,14 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         if results["Anti_ambiguity_bias"].iloc[0]:
             if intermediate is None:
                 probability_storage = results.loc[(results["Word"] == n_words - 1) & (results["Agent"] == 1) &
-                                             (results["State"] == "End") & (results["Simulation_run"] == run),
+                                                  (results["State"] == "End") & (results["Simulation_run"] == run),
                                                   "Probability_storages"].values
 
-        # For intermediate results
+            # For intermediate results
             else:
                 probability_storage = results.loc[(results["Word"] == n_words - 1) & (results["Agent"] == 1) &
-                                             (results["N_rounds"] == n_rounds) & (results["Simulation_run"] == run),
+                                                  (results["N_rounds"] == n_rounds) & (
+                                                              results["Simulation_run"] == run),
                                                   "Probability_storages"].values
 
             probability_storages.append(probability_storage)
@@ -282,11 +285,11 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
 
     with sns.axes_style("whitegrid"):
         sns.set_palette("colorblind")
-        fig, axs = plt.subplots(5, 4, figsize=(8,8))
+        fig, axs = plt.subplots(5, 4, figsize=(8, 8))
         axs = axs.ravel()
     for run in range(results.iloc[-1]["Simulation_run"] + 1):
         for word_index in range(n_words):
-            exemplars = exemplar_list[(run*n_words) + word_index]
+            exemplars = exemplar_list[(run * n_words) + word_index]
             axs[run].scatter(*zip(*exemplars), edgecolors="white", linewidths=0.5)
         sns.set_style("whitegrid")
         sns.set_palette("colorblind")
@@ -298,23 +301,23 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
 
     if results["Anti_ambiguity_bias"].iloc[0]:
         if wedel_start:
-            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation: \n" + str(n_rounds) + "rounds",
+            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation: \n" + str(n_rounds) + " rounds",
                          size=20)
         else:
-            fig.suptitle("With anti-ambiguity bias and with random initialisation: \n" + str(n_rounds) + "rounds",
+            fig.suptitle("With anti-ambiguity bias and with random initialisation: \n" + str(n_rounds) + " rounds",
                          size=20)
     else:
         if wedel_start:
-            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation: \n" + str(n_rounds) + "rounds",
+            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation: \n" + str(n_rounds) + " rounds",
                          size=20)
         else:
-            fig.suptitle("Without anti-ambiguity bias and with random initialisation: \n" + str(n_rounds) + "rounds",
+            fig.suptitle("Without anti-ambiguity bias and with random initialisation: \n" + str(n_rounds) + " rounds",
                          size=20)
 
     fig.text(0.5, 0.04, 'Dimension 1', ha='center', size=18)
     fig.text(0.04, 0.5, 'Dimension 2', va='center', rotation='vertical', size=18)
     plt.setp(axs, xticks=np.arange(0, 101, 25), yticks=np.arange(0, 101, 25))
-    #plt.show()
+    # plt.show()
     if results["Anti_ambiguity_bias"].iloc[0]:
         plt.savefig(folder + "exemplars_amb_" + str(n_rounds) + ".pdf")
     else:
@@ -333,20 +336,20 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
 
     if results["Anti_ambiguity_bias"].iloc[0]:
         if wedel_start:
-            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation: \n" + str(n_rounds) + "rounds",
+            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation: \n" + str(n_rounds) + " rounds",
                          size=20)
         else:
-            fig.suptitle("With anti-ambiguity bias and with random initialisation: \n" + str(n_rounds) + "rounds",
+            fig.suptitle("With anti-ambiguity bias and with random initialisation: \n" + str(n_rounds) + " rounds",
                          size=20)
     else:
         if wedel_start:
-            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation: \n" + str(n_rounds) + "rounds",
+            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation: \n" + str(n_rounds) + " rounds",
                          size=20)
         else:
-            fig.suptitle("Without anti-ambiguity bias and with random initialisation: \n" + str(n_rounds) + "rounds",
+            fig.suptitle("Without anti-ambiguity bias and with random initialisation: \n" + str(n_rounds) + " rounds",
                          size=20)
 
-    #plt.show()
+    # plt.show()
     if results["Anti_ambiguity_bias"].iloc[0]:
         plt.savefig(folder + "centroid_amb_" + str(n_rounds) + ".pdf")
     else:
@@ -365,37 +368,37 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
 
     if results["Anti_ambiguity_bias"].iloc[0]:
         if wedel_start:
-            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation: \n" + str(n_rounds) + "rounds",
+            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation: \n" + str(n_rounds) + " rounds",
                          size=20)
         else:
-            fig.suptitle("With anti-ambiguity bias and with random initialisation: \n" + str(n_rounds) + "rounds",
+            fig.suptitle("With anti-ambiguity bias and with random initialisation: \n" + str(n_rounds) + " rounds",
                          size=20)
     else:
         if wedel_start:
-            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation: \n" + str(n_rounds) + "rounds",
+            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation: \n" + str(n_rounds) + " rounds",
                          size=20)
         else:
-            fig.suptitle("Without anti-ambiguity bias and with random initialisation: \n" + str(n_rounds) + "rounds",
+            fig.suptitle("Without anti-ambiguity bias and with random initialisation: \n" + str(n_rounds) + " rounds",
                          size=20)
 
-    #plt.show()
+    # plt.show()
     if results["Anti_ambiguity_bias"].iloc[0]:
         plt.savefig(folder + "sd_amb_" + str(n_rounds) + ".pdf")
     else:
         plt.savefig(folder + "sd_no_amb_" + str(n_rounds) + ".pdf")
     plt.clf()
 
-    # ======================================================================================================================
+    # ==================================================================================================================
     if results["Anti_ambiguity_bias"].iloc[0]:
         # Calculate the average exclusion rate for the independent simulation runs
-        average_exclusion_rate = sum(excluded_signals_runs)/len(excluded_signals_runs)
+        average_exclusion_rate = sum(excluded_signals_runs) / len(excluded_signals_runs)
         print("Average exclusion rate: ", average_exclusion_rate)
 
-        # ==================================================================================================================
+        # ==============================================================================================================
 
         # Calculate the average probability storage over all rounds and simulation runs
         probability_storages = list(chain.from_iterable(probability_storages))[0]
-        average_probability_storage = sum(probability_storages)/len(probability_storages)
+        average_probability_storage = sum(probability_storages) / len(probability_storages)
         print("Average probability storage: ", average_probability_storage)
 
     # ======================================================================================================================
