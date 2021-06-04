@@ -179,12 +179,16 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
 
         # After every 500 rounds, store the agents' lexicons
         if i % 500 == 0 and i > 0:
-            start.loc[len(start)] = [None, 1, None, None, None, lexicon, indices_continuer, similarity_bias_word,
+            # Make a copy of the lexicon for the agents to use in conversation
+            lexicon_middle = copy.deepcopy(lexicon)
+            lexicon2_middle = copy.deepcopy(lexicon2)
+            start.loc[len(start)] = [None, 1, None, None, None, lexicon_middle, indices_continuer, similarity_bias_word,
                                      similarity_bias_segment, noise, anti_ambiguity_bias, n_words, n_dimensions, seed,
                                      n_exemplars, n_continuers, i, "Middle", None, store_count, probability_storages]
-            start.loc[len(start)] = [None, 2, None, None, None, lexicon2, indices_continuer2, similarity_bias_word,
-                                     similarity_bias_segment, noise, anti_ambiguity_bias, n_words, n_dimensions, seed,
-                                     n_exemplars, n_continuers, i, "Middle", None, store_count_2, probability_storages2]
+            start.loc[len(start)] = [None, 2, None, None, None, lexicon2_middle, indices_continuer2,
+                                     similarity_bias_word, similarity_bias_segment, noise, anti_ambiguity_bias, n_words,
+                                     n_dimensions, seed, n_exemplars, n_continuers, i, "Middle", None, store_count_2,
+                                     probability_storages2]
 
         i += 1
 
@@ -234,7 +238,6 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
 
         # Calculate some measures for all the rows of the start dataframe (containing the starting condition of a
         # simulation run)
-
         for row in range(start.shape[0]):
 
             for word_index in range(n_words):
