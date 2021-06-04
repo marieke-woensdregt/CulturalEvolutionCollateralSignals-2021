@@ -11,7 +11,34 @@ import numpy as np
 
 # results = pd.read_pickle("/Users/jacqueline/Documents/Onderzoeksassistentsschap/Simulations/Wedel_activation/"
 #                          "Wedel_simweight/Random_start/results_20_10000_False_0_1000_0.25_4_False.p")
-results = pd.read_pickle("results_5_1500_True_0_1000_0.25_4_True.p")
+results = pd.read_pickle("results_1_1500_True_0_1000_0.25_4_True.p")
+
+print(results.loc[(results["Word"] == 3) & (results["Agent"] == 1) &
+                               (results["N_rounds"] == 500) & (results["Simulation_run"] == 0), "Lexicon"])
+print(results.loc[(results["Word"] == 3) & (results["Agent"] == 1) &
+                               (results["N_rounds"] == 1000) & (results["Simulation_run"] == 0), "Lexicon"])
+print(results.loc[(results["Word"] == 3) & (results["Agent"] == 1) &
+                               (results["State"] == "End") & (results["Simulation_run"] == 0), "Lexicon"])
+
+prob_stor = results.loc[(results["Word"] == 3) & (results["Agent"] == 1) & (results["N_rounds"] == 500) &
+                        (results["Simulation_run"] == 0), "Probability_storages"]
+prob_stor = list(chain.from_iterable(prob_stor))
+print(sum(prob_stor)/len(prob_stor))
+prob_stor = results.loc[(results["Word"] == 3) & (results["Agent"] == 1) &
+                               (results["N_rounds"] == 1000) & (results["Simulation_run"] == 0), "Probability_storages"]
+prob_stor = list(chain.from_iterable(prob_stor))
+print(sum(prob_stor)/len(prob_stor))
+prob_stor = results.loc[(results["Word"] == 3) & (results["Agent"] == 1) &
+                               (results["State"] == "End") & (results["Simulation_run"] == 0), "Probability_storages"]
+prob_stor = list(chain.from_iterable(prob_stor))
+print(sum(prob_stor)/len(prob_stor))
+
+print(results.loc[(results["Word"] == 3) & (results["Agent"] == 1) &
+                               (results["N_rounds"] == 500) & (results["Simulation_run"] == 0), "Store"])
+print(results.loc[(results["Word"] == 3) & (results["Agent"] == 1) &
+                               (results["N_rounds"] == 1000) & (results["Simulation_run"] == 0), "Store"])
+print(results.loc[(results["Word"] == 3) & (results["Agent"] == 1) &
+                               (results["State"] == "End") & (results["Simulation_run"] == 0), "Store"])
 
 # ======================================================================================================================
 
@@ -159,7 +186,9 @@ for run in range(results.iloc[-1]["Simulation_run"] + 1):
     stored_signals = results.loc[(results["Word"] == n_words-1) & (results["Agent"] == 1) &
                                (results["N_rounds"] == 500) & (results["Simulation_run"] == run), "Store"].values
 
-    relative_stored = stored_signals / (n_words * (n_rounds/2))
+    #relative_stored = stored_signals / (n_words * (n_rounds/2))
+    # For intermediate results
+    relative_stored = stored_signals / (n_words * (500 / 2))
 
     # Calculate how often the signal gets excluded
     excluded_signals = 1 - relative_stored

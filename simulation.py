@@ -179,16 +179,22 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
 
         # After every 500 rounds, store the agents' lexicons
         if i % 500 == 0 and i > 0:
-            # Make a copy of the lexicon for the agents to use in conversation
+
+            # Make a copy of the lexicon, and probability storages to store the intermediate results
             lexicon_middle = copy.deepcopy(lexicon)
             lexicon2_middle = copy.deepcopy(lexicon2)
+
+            probability_storages_middle = copy.deepcopy(probability_storages)
+            probability_storages2_middle = copy.deepcopy(probability_storages2)
+
             start.loc[len(start)] = [None, 1, None, None, None, lexicon_middle, indices_continuer, similarity_bias_word,
                                      similarity_bias_segment, noise, anti_ambiguity_bias, n_words, n_dimensions, seed,
-                                     n_exemplars, n_continuers, i, "Middle", None, store_count, probability_storages]
+                                     n_exemplars, n_continuers, i, "Middle", None, store_count,
+                                     probability_storages_middle]
             start.loc[len(start)] = [None, 2, None, None, None, lexicon2_middle, indices_continuer2,
                                      similarity_bias_word, similarity_bias_segment, noise, anti_ambiguity_bias, n_words,
                                      n_dimensions, seed, n_exemplars, n_continuers, i, "Middle", None, store_count_2,
-                                     probability_storages2]
+                                     probability_storages2_middle]
 
         i += 1
 
