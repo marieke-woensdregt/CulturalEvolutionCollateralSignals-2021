@@ -1,6 +1,6 @@
 from agent import Agent
 from production import Production
-from perception import Perception
+from perception2 import Perception
 import random
 import numpy as np
 import math
