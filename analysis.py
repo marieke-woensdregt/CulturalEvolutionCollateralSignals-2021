@@ -301,17 +301,21 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
 
     if results["Anti_ambiguity_bias"].iloc[0]:
         if wedel_start:
-            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation: \n" + str(n_rounds) + " rounds",
+            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
+                         str(n_rounds) + " rounds",
                          size=20)
         else:
-            fig.suptitle("With anti-ambiguity bias and with random initialisation: \n" + str(n_rounds) + " rounds",
+            fig.suptitle("With anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: " +
+                         str(n_rounds) + " rounds",
                          size=20)
     else:
         if wedel_start:
-            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation: \n" + str(n_rounds) + " rounds",
+            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
+                         str(n_rounds) + " rounds",
                          size=20)
         else:
-            fig.suptitle("Without anti-ambiguity bias and with random initialisation: \n" + str(n_rounds) + " rounds",
+            fig.suptitle("Without anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: "
+                         + str(n_rounds) + " rounds",
                          size=20)
 
     fig.text(0.5, 0.04, 'Dimension 1', ha='center', size=18)
@@ -319,9 +323,9 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
     plt.setp(axs, xticks=np.arange(0, 101, 25), yticks=np.arange(0, 101, 25))
     # plt.show()
     if results["Anti_ambiguity_bias"].iloc[0]:
-        plt.savefig(folder + "exemplars_amb_" + str(n_rounds) + ".pdf")
+        plt.savefig(folder + "exemplars_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
     else:
-        plt.savefig(folder + "exemplars_no_amb_" + str(n_rounds) + ".pdf")
+        plt.savefig(folder + "exemplars_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
     plt.clf()
 
     # Save the plot of the average centroids distance
@@ -336,24 +340,28 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
 
     if results["Anti_ambiguity_bias"].iloc[0]:
         if wedel_start:
-            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation: \n" + str(n_rounds) + " rounds",
+            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
+                         str(n_rounds) + " rounds",
                          size=20)
         else:
-            fig.suptitle("With anti-ambiguity bias and with random initialisation: \n" + str(n_rounds) + " rounds",
+            fig.suptitle("With anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: " +
+                         str(n_rounds) + " rounds",
                          size=20)
     else:
         if wedel_start:
-            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation: \n" + str(n_rounds) + " rounds",
+            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: "
+                         + str(n_rounds) + " rounds",
                          size=20)
         else:
-            fig.suptitle("Without anti-ambiguity bias and with random initialisation: \n" + str(n_rounds) + " rounds",
+            fig.suptitle("Without anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: "
+                         + str(n_rounds) + " rounds",
                          size=20)
 
     # plt.show()
     if results["Anti_ambiguity_bias"].iloc[0]:
-        plt.savefig(folder + "centroid_amb_" + str(n_rounds) + ".pdf")
+        plt.savefig(folder + "centroid_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
     else:
-        plt.savefig(folder + "centroid_no_amb_" + str(n_rounds) + ".pdf")
+        plt.savefig(folder + "centroid_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
     plt.clf()
 
     # Save the plot of the average SD for a two dimensional space
@@ -368,24 +376,28 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
 
     if results["Anti_ambiguity_bias"].iloc[0]:
         if wedel_start:
-            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation: \n" + str(n_rounds) + " rounds",
+            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
+                         str(n_rounds) + " rounds",
                          size=20)
         else:
-            fig.suptitle("With anti-ambiguity bias and with random initialisation: \n" + str(n_rounds) + " rounds",
+            fig.suptitle("With anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: " +
+                         str(n_rounds) + " rounds",
                          size=20)
     else:
         if wedel_start:
-            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation: \n" + str(n_rounds) + " rounds",
+            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
+                         str(n_rounds) + " rounds",
                          size=20)
         else:
-            fig.suptitle("Without anti-ambiguity bias and with random initialisation: \n" + str(n_rounds) + " rounds",
+            fig.suptitle("Without anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: "
+                         + str(n_rounds) + " rounds",
                          size=20)
 
     # plt.show()
     if results["Anti_ambiguity_bias"].iloc[0]:
-        plt.savefig(folder + "sd_amb_" + str(n_rounds) + ".pdf")
+        plt.savefig(folder + "sd_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
     else:
-        plt.savefig(folder + "sd_no_amb_" + str(n_rounds) + ".pdf")
+        plt.savefig(folder + "sd_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
     plt.clf()
 
     # ==================================================================================================================

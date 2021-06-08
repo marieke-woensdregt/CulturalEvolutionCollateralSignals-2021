@@ -11,7 +11,7 @@ import sys
 
 
 def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers, similarity_bias_word,
-               similarity_bias_segment, noise, anti_ambiguity_bias, continuer_G, segment_ratio, wedel_start):
+               similarity_bias_segment, noise, anti_ambiguity_bias, continuer_G, segment_ratio, wedel_start, n_run):
     """
     Run a simulation of n_rounds rounds with the specified parameters.
     :param n_rounds: int; the number of rounds of the simulation run
@@ -28,6 +28,7 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
     :param segment_ratio: float; the relative contribution of the segment similarity bias in case of continuer v_words
     :param wedel_start: boolean; whether the means for initialising the lexicon are based on the one used in Wedel's
     model
+    :param n_run: int; the current run number
     :return: list; the lexicon consists of a list of v_words, for which each word consists of a list of exemplars, which
                    in turn is a list of the number of dimensions floats
              list; the second agent's lexicon consists of a list of v_words, for which each word consists of a list of
@@ -196,6 +197,100 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
                                      n_dimensions, seed, n_exemplars, n_continuers, i, "Middle", None, store_count_2,
                                      probability_storages2_middle]
 
+        if i == 15000:
+            # Calculate some measures for all the rows of the start dataframe (containing the starting condition of a
+            # simulation run)
+            for row in range(start.shape[0]):
+
+                for word_index in range(n_words):
+
+                    # Select the exemplars
+                    exemplars = start["Lexicon"][row][word_index][0]
+
+                    # Calculate the centroid of the word category
+                    centroid = np.mean(exemplars, axis=0)
+
+                    # Calculate the distance of the exemplars towards the centroid as a dispersion of the data for the start
+                    # condition for both agents
+                    total_distance = 0
+                    n = 1
+                    for exemplar in exemplars:
+                        x = exemplar[0]
+                        y = exemplar[1]
+                        distance = ((x - centroid[0]) ** 2) + ((y - centroid[1]) ** 2)
+                        total_distance += math.sqrt(distance)
+                        n += 1
+                    average_distance = total_distance / n
+
+                    # Store the start/in between conditions for both agents
+                    start.at[row, "Simulation_run"] = n_run
+                    start.at[row, "Word"] = word_index
+                    start.at[row, "Centroid"] = centroid
+                    start.at[row, "Average_distance"] = average_distance
+                    start.at[row, "Exemplars"] = np.array([exemplars], dtype=object)
+
+                    # Add the starting conditions to the results
+                    results = results.append(start.iloc[row])
+
+            # Store the end state results
+            for word_index in range(n_words):
+
+                # Get the exemplars of the specified word at the end state
+                exemplars = lexicon[word_index][0]
+                exemplars2 = lexicon2[word_index][0]
+
+                # Calculate the mean of the word exemplars
+                centroid = np.mean(exemplars, axis=0)
+
+                # Calculate the distance of the exemplars towards the mean as a dispersion of the data
+                total_distance = 0
+                n = 1
+                for exemplar in exemplars:
+                    x = exemplar[0]
+                    y = exemplar[1]
+                    distance = ((x - centroid[0]) ** 2) + ((y - centroid[1]) ** 2)
+                    total_distance += math.sqrt(distance)
+                    n += 1
+                average_distance = total_distance / n
+
+                # Store the results in the results dataframe
+                results.loc[len(results)] = [n_run, 1, word_index, centroid, average_distance, lexicon,
+                                             indices_continuer,
+                                             similarity_bias_word, similarity_bias_segment, noise, anti_ambiguity_bias,
+                                             n_words, n_dimensions, seed, n_exemplars, n_continuers, n_rounds, "End",
+                                             exemplars, store_count, probability_storages]
+
+                # Calculate the distance of the exemplars towards the mean as a dispersion of the data for the second agent
+                centroid = np.mean(exemplars2, axis=0)
+
+                total_distance = 0
+                n = 1
+                for exemplar in exemplars2:
+                    x = exemplar[0]
+                    y = exemplar[1]
+                    distance = ((x - centroid[0]) ** 2) + ((y - centroid[1]) ** 2)
+                    total_distance += math.sqrt(distance)
+                    n += 1
+                average_distance = total_distance / n
+
+                # Store the results for the second agent
+                results.loc[len(results)] = [n_run, 2, word_index, centroid, average_distance, lexicon2,
+                                             indices_continuer2,
+                                             similarity_bias_word, similarity_bias_segment, noise, anti_ambiguity_bias,
+                                             n_words, n_dimensions, seed, n_exemplars, n_continuers, n_rounds, "End",
+                                             exemplars2, store_count_2, probability_storages2]
+
+            results["Continuer_G"] = continuer_G
+            results["Segment_ratio"] = segment_ratio
+
+            # Pickle the results
+            filename = "results_" + str(n_runs) + "_" + str(n_rounds) + "_" + str(anti_ambiguity_bias) + "_" + \
+                       str(n_continuers) + "_" + str(continuer_G) + "_" + str(segment_ratio) + "_" + str(n_words) + "_" + \
+                       str(wedel_start) + ".p"
+            outfile = open(filename, "wb")
+            pickle.dump(results, outfile)
+            outfile.close()
+
         i += 1
 
     return lexicon, lexicon2, indices_continuer, indices_continuer2, start, store_count, store_count_2, \
@@ -240,7 +335,7 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
         probability_storages, probability_storages2 = simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars,
                                                                  n_continuers, similarity_bias_word,
                                                                  similarity_bias_segment, noise, anti_ambiguity_bias,
-                                                                 continuer_G, segment_ratio, wedel_start)
+                                                                 continuer_G, segment_ratio, wedel_start, n_run)
 
         # Calculate some measures for all the rows of the start dataframe (containing the starting condition of a
         # simulation run)
