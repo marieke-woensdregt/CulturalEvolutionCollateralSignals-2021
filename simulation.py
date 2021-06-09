@@ -50,7 +50,7 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
     lexicon_start, v_words, continuer_words, indices_continuer = Agent(n_words, n_dimensions, seed_value, n_exemplars,
                                                                        n_continuers, wedel_start).generate_lexicon()
     lexicon2_start, v_words2, continuer_words2, indices_continuer2 = Agent(n_words, n_dimensions, seed_value,
-                                                                           n_exemplars, n_continuers, wedel_start).\
+                                                                           n_exemplars, n_continuers, wedel_start). \
         generate_lexicon()
 
     # Store the state of the lexicons at the beginning for both agents
@@ -139,7 +139,7 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
                 if anti_ambiguity_bias:
                     lexicon2, store, probability_storage = Perception(perceiver_lex, perceiver_v_words,
                                                                       perceiver_continuer_words, n_words, n_dimensions,
-                                                                      n_exemplars, n_continuers, anti_ambiguity_bias).\
+                                                                      n_exemplars, n_continuers, anti_ambiguity_bias). \
                         add_anti_ambiguity_bias(index_max_sim, total_similarities, signal)
 
                     probability_storages2.append(probability_storage)
@@ -159,7 +159,7 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
                 if anti_ambiguity_bias:
                     lexicon, store, probability_storage = Perception(perceiver_lex, perceiver_v_words,
                                                                      perceiver_continuer_words, n_words, n_dimensions,
-                                                                     n_exemplars, n_continuers, anti_ambiguity_bias).\
+                                                                     n_exemplars, n_continuers, anti_ambiguity_bias). \
                         add_anti_ambiguity_bias(index_max_sim, total_similarities, signal)
 
                     if store is True:
@@ -180,7 +180,6 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
 
         # After every 500 rounds, store the agents' lexicons
         if i % 500 == 0 and i > 0:
-
             # Make a copy of the lexicon, and probability storages to store the intermediate results
             lexicon_middle = copy.deepcopy(lexicon)
             lexicon2_middle = copy.deepcopy(lexicon2)
@@ -196,100 +195,6 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
                                      similarity_bias_word, similarity_bias_segment, noise, anti_ambiguity_bias, n_words,
                                      n_dimensions, seed, n_exemplars, n_continuers, i, "Middle", None, store_count_2,
                                      probability_storages2_middle]
-
-        if i == 15000:
-            # Calculate some measures for all the rows of the start dataframe (containing the starting condition of a
-            # simulation run)
-            for row in range(start.shape[0]):
-
-                for word_index in range(n_words):
-
-                    # Select the exemplars
-                    exemplars = start["Lexicon"][row][word_index][0]
-
-                    # Calculate the centroid of the word category
-                    centroid = np.mean(exemplars, axis=0)
-
-                    # Calculate the distance of the exemplars towards the centroid as a dispersion of the data for the start
-                    # condition for both agents
-                    total_distance = 0
-                    n = 1
-                    for exemplar in exemplars:
-                        x = exemplar[0]
-                        y = exemplar[1]
-                        distance = ((x - centroid[0]) ** 2) + ((y - centroid[1]) ** 2)
-                        total_distance += math.sqrt(distance)
-                        n += 1
-                    average_distance = total_distance / n
-
-                    # Store the start/in between conditions for both agents
-                    start.at[row, "Simulation_run"] = n_run
-                    start.at[row, "Word"] = word_index
-                    start.at[row, "Centroid"] = centroid
-                    start.at[row, "Average_distance"] = average_distance
-                    start.at[row, "Exemplars"] = np.array([exemplars], dtype=object)
-
-                    # Add the starting conditions to the results
-                    results = results.append(start.iloc[row])
-
-            # Store the end state results
-            for word_index in range(n_words):
-
-                # Get the exemplars of the specified word at the end state
-                exemplars = lexicon[word_index][0]
-                exemplars2 = lexicon2[word_index][0]
-
-                # Calculate the mean of the word exemplars
-                centroid = np.mean(exemplars, axis=0)
-
-                # Calculate the distance of the exemplars towards the mean as a dispersion of the data
-                total_distance = 0
-                n = 1
-                for exemplar in exemplars:
-                    x = exemplar[0]
-                    y = exemplar[1]
-                    distance = ((x - centroid[0]) ** 2) + ((y - centroid[1]) ** 2)
-                    total_distance += math.sqrt(distance)
-                    n += 1
-                average_distance = total_distance / n
-
-                # Store the results in the results dataframe
-                results.loc[len(results)] = [n_run, 1, word_index, centroid, average_distance, lexicon,
-                                             indices_continuer,
-                                             similarity_bias_word, similarity_bias_segment, noise, anti_ambiguity_bias,
-                                             n_words, n_dimensions, seed, n_exemplars, n_continuers, n_rounds, "End",
-                                             exemplars, store_count, probability_storages]
-
-                # Calculate the distance of the exemplars towards the mean as a dispersion of the data for the second agent
-                centroid = np.mean(exemplars2, axis=0)
-
-                total_distance = 0
-                n = 1
-                for exemplar in exemplars2:
-                    x = exemplar[0]
-                    y = exemplar[1]
-                    distance = ((x - centroid[0]) ** 2) + ((y - centroid[1]) ** 2)
-                    total_distance += math.sqrt(distance)
-                    n += 1
-                average_distance = total_distance / n
-
-                # Store the results for the second agent
-                results.loc[len(results)] = [n_run, 2, word_index, centroid, average_distance, lexicon2,
-                                             indices_continuer2,
-                                             similarity_bias_word, similarity_bias_segment, noise, anti_ambiguity_bias,
-                                             n_words, n_dimensions, seed, n_exemplars, n_continuers, n_rounds, "End",
-                                             exemplars2, store_count_2, probability_storages2]
-
-            results["Continuer_G"] = continuer_G
-            results["Segment_ratio"] = segment_ratio
-
-            # Pickle the results
-            filename = "results_" + str(n_runs) + "_" + str(n_rounds) + "_" + str(anti_ambiguity_bias) + "_" + \
-                       str(n_continuers) + "_" + str(continuer_G) + "_" + str(segment_ratio) + "_" + str(n_words) + "_" + \
-                       str(wedel_start) + ".p"
-            outfile = open(filename, "wb")
-            pickle.dump(results, outfile)
-            outfile.close()
 
         i += 1
 

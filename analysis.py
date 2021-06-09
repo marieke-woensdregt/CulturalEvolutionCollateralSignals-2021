@@ -86,11 +86,8 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
             end_position = ((run + 1) * end) - 2
 
         # Define the end position if you want an intermediate result
-        elif intermediate == 500:
-            end_position = start_position + 11
-
-        elif intermediate == 4000:
-            end_position = start_position + 67
+        else:
+            end_position = start_position + ((intermediate//500) * 8) + 3
 
         # print(results.iloc[end_position])
 

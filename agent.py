@@ -26,11 +26,11 @@ class Agent:
     def generate_lexicon(self):
         """
         Generate a lexicon containing v_words, which in turn contains n_exemplar exemplars.
-        :return: list; a list of v_words, for which each word consists of a list of exemplars, which in turn is a
+        :return: list; a list of words, for which each word consists of a list of exemplars, which in turn is a
                        list of the number of dimensions floats
-                 list; a list containing the communicative v_words
-                 list; a list containing the metacommunicative v_words (continuers)
-                 list; a list containing the indices of the metacommunicative v_words in the lexicon
+                 list; a list containing the regular vocabulary words
+                 list; a list containing the continuers
+                 list; a list containing the indices of the continuers in the lexicon
         """
 
         # If a seed was provided, set the seed
@@ -58,10 +58,10 @@ class Agent:
             x, y = np.random.multivariate_normal(mean, cov, self.n_exemplars).T
             word.append(list(map(lambda x, y: [x, y], x, y)))
 
-            # Initialise all v_words as regular vocabulary v_words ('V')
+            # Initialise all v_words as regular vocabulary words ('V')
             lexicon.append([word[0], "V"])
 
-        # Split the lexicon into meta communicative v_words (continuers) and communicative v_words if applicable
+        # Split the lexicon into continuers and regular vocabulary words if applicable
         indices_continuer = False
         if self.n_continuers:
 
@@ -77,10 +77,10 @@ class Agent:
             for index in indices_continuer:
                 lexicon[index][1] = "C"
 
-                # Create a separate lexicon with the meta communicative v_words
+                # Create a separate lexicon with the continuer words
                 continuer_words.append(lexicon[index])
 
-            # The v_words that are not meta communicative v_words are communicative v_words
+            # The words that are not continuers are regular vocabulary words
             v_words = [word for word in lexicon if word not in continuer_words]
 
             # print("Lexicon:", lexicon)
@@ -88,8 +88,8 @@ class Agent:
             # print("Meta lexicon:", continuer_words)
             # print("Com lexicon:", v_words)
 
-        # If there are no continuers, the meta communicative v_words list is empty and all the v_words in the lexicon are
-        # communicative v_words
+        # If there are no continuers, the continuers list is empty and all the words in the lexicon are
+        # regular vocabulary words
         else:
             v_words = lexicon
             continuer_words = []
