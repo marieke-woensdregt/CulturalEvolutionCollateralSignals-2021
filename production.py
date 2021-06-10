@@ -56,7 +56,8 @@ class Production:
             activation_exemplars = []
             for j in range(len(self.lexicon[word_index][0])):
                 j += 1
-                activation = math.exp(-j/(self.n_exemplars/5))
+                #activation = math.exp(-j/(self.n_exemplars/5))
+                activation = 2.72 ** (-j / (self.n_exemplars / 5))
                 activation_exemplars.append(activation)
 
             # print("Activation exemplars: ", activation_exemplars)
@@ -174,9 +175,12 @@ class Production:
 
             # This is done for every exemplar in the word (see the equation)
             for exemplar in exemplars:
-                sum += exemplar[dimension] * activation_exemplars[index] * math.exp(
+                # sum += exemplar[dimension] * activation_exemplars[index] * math.exp(
+                #     (-k) * abs(target[dimension] - exemplar[dimension]))
+                sum += exemplar[dimension] * activation_exemplars[index] * 2.72**(
                     (-k) * abs(target[dimension] - exemplar[dimension]))
-                sum2 += activation_exemplars[index] * math.exp((-k) * abs(target[dimension] - exemplar[dimension]))
+                # sum2 += activation_exemplars[index] * math.exp((-k) * abs(target[dimension] - exemplar[dimension]))
+                sum2 += activation_exemplars[index] * 2.72**((-k) * abs(target[dimension] - exemplar[dimension]))
                 index += 1
 
             # Finally the target with the similarity bias is stored for the two dimensions
@@ -216,9 +220,13 @@ class Production:
 
                     # According to the equation, the similarity of the target to every exemplar is calculated and added
                     # as a bias
-                    sum += exemplar[dimension] * total_activations[word_index][index] * math.exp(
+                    # sum += exemplar[dimension] * total_activations[word_index][index] * math.exp(
+                    #     (-k) * abs(target[dimension] - exemplar[dimension]))
+                    sum += exemplar[dimension] * total_activations[word_index][index] * 2.72**(
                         (-k) * abs(target[dimension] - exemplar[dimension]))
-                    sum2 += total_activations[word_index][index] * math.exp(
+                    # sum2 += total_activations[word_index][index] * math.exp(
+                    #     (-k) * abs(target[dimension] - exemplar[dimension]))
+                    sum2 += total_activations[word_index][index] * 2.72**(
                         (-k) * abs(target[dimension] - exemplar[dimension]))
                     index += 1
                 word_index += 1

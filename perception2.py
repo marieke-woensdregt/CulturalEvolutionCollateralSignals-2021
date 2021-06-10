@@ -47,7 +47,8 @@ class Perception:
             activation_exemplars = []
             for j in range(len(self.lexicon[word_index][0])):
                 j += 1
-                activation = math.exp(-j/(self.n_exemplars/5))
+                #activation = math.exp(-j/(self.n_exemplars/5))
+                activation = 2.72**(-j/(self.n_exemplars/5))
                 activation_exemplars.append(activation)
             total_activations.append(activation_exemplars)
 
@@ -66,7 +67,8 @@ class Perception:
                 for dimension in range(self.n_dimensions):
                     distance += (signal[dimension] - exemplar[dimension])**2
                 distance = distance**0.5
-                sum += total_activations[word_index][index] * math.exp((-k) * abs(distance))
+                #sum += total_activations[word_index][index] * math.exp((-k) * abs(distance))
+                sum += total_activations[word_index][index] * 2.72**((-k) * abs(distance))
                 index += 1
 
             # Store the similarities for every exemplar of every word
