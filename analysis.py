@@ -29,6 +29,52 @@ def distance(p1, p2):
 
 # ======================================================================================================================
 
+# Functions for squareness measure
+
+def pairwise_distances(centroids, all_possible_pairings, n_dimensions):
+    distances_per_dimension = np.zeros((len(all_possible_pairings), n_dimensions))
+    distances_pairings = np.zeros(len(all_possible_pairings))
+    for p in range(len(all_possible_pairings)):
+        pairing = all_possible_pairings[p]
+        # print('')
+        # print('')
+        # print("pairing is:")
+        # print(pairing)
+        distance_per_dimension = np.zeros(n_dimensions)
+        for d in range(n_dimensions):
+            total_distance = 0.
+            for pair in pairing:
+                # print('')
+                # print("pair is:")
+                # print(pair)
+                index_i = pair[d][0]
+                index_j = pair[d][1]
+                segment_value_i = centroids[index_i][d]
+                segment_value_j = centroids[index_j][d]
+                # print("segment_value_i is:")
+                # print(segment_value_i)
+                # print("segment_value_j is:")
+                # print(segment_value_j)
+                total_distance += abs(segment_value_i - segment_value_j)
+                # print("distance is:")
+                # print(abs(segment_value_i - segment_value_j))
+            distance_per_dimension[d] = total_distance
+        # print("total_distance is:")
+        # print(total_distance)
+        distances_per_dimension[p] = distance_per_dimension
+        distances_pairings[p] = np.sum(distances_per_dimension[p])
+    return distances_per_dimension, distances_pairings
+
+
+def choose_fitting_pairing(distances_pairings):
+    smallest_distance = np.amin(distances_pairings)
+    smallest_index = np.argmin(distances_pairings)
+
+    return smallest_distance, smallest_index
+
+
+# ======================================================================================================================
+
 # Start the analysis of the results data selected
 
 def analysis(folder, results_file, intermediate=None, wedel_start=True):
@@ -87,7 +133,7 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
 
         # Define the end position if you want an intermediate result
         else:
-            end_position = start_position + ((intermediate//500) * 8) + 3
+            end_position = start_position + ((intermediate // 500) * 8) + 3
 
         # print(results.iloc[end_position])
 
@@ -129,9 +175,6 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
 
             # The centroids and average distance measures for intermediate rounds
             else:
-                centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-                                       (results["N_rounds"] == n_rounds) & (
-                                                   results["Simulation_run"] == run), "Centroid"]
                 centroid_list.append(centroid.tolist())
                 average_distance = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
                                                (results["N_rounds"] == n_rounds) & (results["Simulation_run"] == run),
@@ -159,7 +202,7 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         if intermediate is None:
             stored_signals = results.loc[(results["Word"] == n_words - 1) & (results["Agent"] == 1) &
                                          (results["State"] == "End") & (
-                                                     results["Simulation_run"] == run), "Store"].values
+                                                 results["Simulation_run"] == run), "Store"].values
             relative_stored = stored_signals / (n_words * (n_rounds / 2))
 
         # For intermediate results
@@ -173,7 +216,7 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         excluded_signals = 1 - relative_stored
         excluded_signals_runs.append(excluded_signals)
 
-        # ==================================================================================================================
+        # ==============================================================================================================
 
         # Calculate the average probability storage of all signals in all the simulation runs
 
@@ -188,10 +231,38 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
             else:
                 probability_storage = results.loc[(results["Word"] == n_words - 1) & (results["Agent"] == 1) &
                                                   (results["N_rounds"] == n_rounds) & (
-                                                              results["Simulation_run"] == run),
+                                                          results["Simulation_run"] == run),
                                                   "Probability_storages"].values
 
             probability_storages.append(probability_storage)
+
+        # ==============================================================================================================
+
+        # Calculate the squareness of all the saved rounds (per 500 rounds)
+
+        # First create a list of the centroids of all words
+        for n_round in range(0, n_rounds, 500):
+            centroid_list = []
+            for word_index in range(n_words):
+                centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
+                                       (results["N_rounds"] == n_round) & (results["Simulation_run"] == run), "Centroid"]
+                centroid_list.append(centroid.tolist())
+            print(centroid_list)
+
+        # for round in n_rounds:
+        #     squareness_distance = results.loc[(results["Word"] == n_words - 1) & (results["Agent"] == 1) &
+        #                                       (results["N_rounds"] == round) & (results["Simulation_run"] ==
+        #                                                                         run), "Centroid"].values
+        #     distances_per_dimension, distances_pairings = pairwise_distances(centroids_square, all_possible_pairings,
+        #                                                                      n_dimensions)
+        # print("distances_per_dimension are:")
+        # print(distances_per_dimension)
+        # print("distances_possibilities are:")
+        # print(distances_pairings)
+        #
+        # smallest_distance, smallest_index = choose_fitting_pairing(distances_pairings)
+        # print("Smallest distance: ", smallest_distance)
+        # print("Index smallest distance: ", smallest_index)
 
         # ==============================================================================================================
 
