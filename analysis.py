@@ -81,6 +81,10 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
     # Read in the data
     results = pd.read_pickle(folder + results_file)
 
+    # List to store data for the squareness measure
+    smallest_distances_all = []
+    smallest_indices_all = []
+
     # A list collecting all the probabilities of signals being stored in the rounds of the simulation runs
     probability_storages = []
 
@@ -175,6 +179,9 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
 
             # The centroids and average distance measures for intermediate rounds
             else:
+                centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
+                                       (results["N_rounds"] == n_rounds) & (results["Simulation_run"] == run),
+                                       "Centroid"]
                 centroid_list.append(centroid.tolist())
                 average_distance = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
                                                (results["N_rounds"] == n_rounds) & (results["Simulation_run"] == run),
@@ -241,28 +248,57 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         # Calculate the squareness of all the saved rounds (per 500 rounds)
 
         # First create a list of the centroids of all words
-        for n_round in range(0, n_rounds, 500):
-            centroid_list = []
+        centroid_list = []
+        for n_round in range(500, (n_rounds+1), 500):
+            print(n_round)
+            centroid_list_word = []
             for word_index in range(n_words):
                 centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
-                                       (results["N_rounds"] == n_round) & (results["Simulation_run"] == run), "Centroid"]
-                centroid_list.append(centroid.tolist())
-            print(centroid_list)
+                                       (results["N_rounds"] == n_round) & (results["Simulation_run"] == run), "Centroid"].values
+                if n_round == n_rounds and intermediate is None:
+                    centroid_list_word.append([centroid[1][0][0], centroid[1][1][0]])
+                else:
+                    centroid_list_word.append([centroid[0][0][0], centroid[0][1][0]])
+                # print("AFTER")
+            centroid_list.append([centroid_list_word])
+        centroid_list = list(chain(*centroid_list))
+        print(centroid_list)
 
-        # for round in n_rounds:
-        #     squareness_distance = results.loc[(results["Word"] == n_words - 1) & (results["Agent"] == 1) &
-        #                                       (results["N_rounds"] == round) & (results["Simulation_run"] ==
-        #                                                                         run), "Centroid"].values
-        #     distances_per_dimension, distances_pairings = pairwise_distances(centroids_square, all_possible_pairings,
-        #                                                                      n_dimensions)
-        # print("distances_per_dimension are:")
-        # print(distances_per_dimension)
-        # print("distances_possibilities are:")
-        # print(distances_pairings)
-        #
-        # smallest_distance, smallest_index = choose_fitting_pairing(distances_pairings)
-        # print("Smallest distance: ", smallest_distance)
-        # print("Index smallest distance: ", smallest_index)
+        pairings = np.array([[[[0, 1], [0, 2]], [[2, 3], [1, 3]]],
+                             [[[0, 2], [0, 1]], [[1, 3], [2, 3]]],
+                             [[[0, 3], [0, 1]], [[1, 2], [2, 3]]]])
+
+        smallest_indices = []
+        smallest_distances = []
+        for round in centroid_list:
+            distances_per_dimension, distances_pairings = pairwise_distances(round, pairings, 2)
+            print("distances_per_dimension are:")
+            print(distances_per_dimension)
+            print("distances_possibilities are:")
+            print(distances_pairings)
+
+            smallest_distance, smallest_index = choose_fitting_pairing(distances_pairings)
+            print("Smallest distance: ", smallest_distance)
+            print("Index smallest distance: ", smallest_index)
+            smallest_distances.append(smallest_distance)
+            smallest_indices.append(smallest_index)
+
+        print(smallest_indices)
+        print(smallest_distances)
+        smallest_indices_all.append(smallest_indices)
+        smallest_distances_all.append(smallest_distances)
+
+    print(smallest_indices_all)
+    print(smallest_distances_all)
+
+    # Get indices of the smallest distances of the squareness measure per simulation run (index stands for how many
+    # rounds in the order of 500)
+
+    indices_rounds = []
+    for distance_list in smallest_distances_all:
+        index_smallest_round = distance_list.index(min(distance_list))
+        indices_rounds.append(index_smallest_round)
+    print(indices_rounds)
 
         # ==============================================================================================================
 
