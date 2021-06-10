@@ -390,6 +390,7 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
     matplotlib.rc('xtick', labelsize=12)
     matplotlib.rc('ytick', labelsize=12)
 
+    # First plot the start positions of the simulations (initialisation)
     with sns.axes_style("whitegrid"):
         sns.set_palette("colorblind")
         fig, axs = plt.subplots(5, 4, figsize=(8, 8))
@@ -434,6 +435,8 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
     else:
         plt.savefig(folder + "start_exemplars_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
     plt.clf()
+
+    # Now plot their end positions
 
     with sns.axes_style("whitegrid"):
         sns.set_palette("colorblind")
