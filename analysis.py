@@ -111,6 +111,7 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
     continuer_words = []
 
     exemplar_list = []
+    exemplar_list_start = []
 
     # Iterate over the total number of runs to access every independent simulation run
     for run in range(results.iloc[-1]["Simulation_run"] + 1):
@@ -146,9 +147,11 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         lexicon_end = results["Lexicon"].iloc[end_position]
 
         # Plot the beginning first
-        # for word_index in range(n_words):
-        #     exemplars = lexicon_start[word_index][0]
-        #     plt.scatter(*zip(*exemplars))
+        exemplar_list_word_start = []
+        for word_index in range(n_words):
+            exemplars = lexicon_start[word_index][0]
+            exemplar_list_word_start.append(exemplars)
+        exemplar_list_start.append(exemplar_list_word_start)
         #
         # plt.xlim(0, 100)
         # plt.ylim(0, 100)
@@ -250,7 +253,7 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         # First create a list of the centroids of all words
         centroid_list = []
         for n_round in range(500, (n_rounds+1), 500):
-            print(n_round)
+            #print(n_round)
             centroid_list_word = []
             for word_index in range(n_words):
                 centroid = results.loc[(results["Word"] == word_index) & (results["Agent"] == 1) &
@@ -262,7 +265,7 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
                 # print("AFTER")
             centroid_list.append([centroid_list_word])
         centroid_list = list(chain(*centroid_list))
-        print(centroid_list)
+        #print(centroid_list)
 
         pairings = np.array([[[[0, 1], [0, 2]], [[2, 3], [1, 3]]],
                              [[[0, 2], [0, 1]], [[1, 3], [2, 3]]],
@@ -272,24 +275,24 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         smallest_distances = []
         for round in centroid_list:
             distances_per_dimension, distances_pairings = pairwise_distances(round, pairings, 2)
-            print("distances_per_dimension are:")
-            print(distances_per_dimension)
-            print("distances_possibilities are:")
-            print(distances_pairings)
+            # print("distances_per_dimension are:")
+            # print(distances_per_dimension)
+            # print("distances_possibilities are:")
+            # print(distances_pairings)
 
             smallest_distance, smallest_index = choose_fitting_pairing(distances_pairings)
-            print("Smallest distance: ", smallest_distance)
-            print("Index smallest distance: ", smallest_index)
+            # print("Smallest distance: ", smallest_distance)
+            # print("Index smallest distance: ", smallest_index)
             smallest_distances.append(smallest_distance)
             smallest_indices.append(smallest_index)
 
-        print(smallest_indices)
-        print(smallest_distances)
+        # print(smallest_indices)
+        # print(smallest_distances)
         smallest_indices_all.append(smallest_indices)
         smallest_distances_all.append(smallest_distances)
 
-    print(smallest_indices_all)
-    print(smallest_distances_all)
+    # print(smallest_indices_all)
+    # print(smallest_distances_all)
 
     # Get indices of the smallest distances of the squareness measure per simulation run (index stands for how many
     # rounds in the order of 500)
@@ -386,6 +389,51 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
     # Save the plot of the end state of the simulation runs of the first agent
     matplotlib.rc('xtick', labelsize=12)
     matplotlib.rc('ytick', labelsize=12)
+
+    with sns.axes_style("whitegrid"):
+        sns.set_palette("colorblind")
+        fig, axs = plt.subplots(5, 4, figsize=(8, 8))
+        axs = axs.ravel()
+    for run in range(results.iloc[-1]["Simulation_run"] + 1):
+        for word_index in range(n_words):
+            exemplars = exemplar_list_start[(run * n_words) + word_index]
+            axs[run].scatter(*zip(*exemplars), edgecolors="white", linewidths=0.5)
+        sns.set_style("whitegrid")
+        sns.set_palette("colorblind")
+        axs[run].set_xlim([0, 100])
+        axs[run].set_ylim([0, 100])
+
+    for ax in axs.flat:
+        ax.label_outer()
+
+    if results["Anti_ambiguity_bias"].iloc[0]:
+        if wedel_start:
+            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
+                         str(n_rounds) + " rounds",
+                         size=20)
+        else:
+            fig.suptitle("With anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: " +
+                         str(n_rounds) + " rounds",
+                         size=20)
+    else:
+        if wedel_start:
+            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
+                         str(n_rounds) + " rounds",
+                         size=20)
+        else:
+            fig.suptitle("Without anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: "
+                         + str(n_rounds) + " rounds",
+                         size=20)
+
+    fig.text(0.5, 0.04, 'Dimension 1', ha='center', size=18)
+    fig.text(0.04, 0.5, 'Dimension 2', va='center', rotation='vertical', size=18)
+    plt.setp(axs, xticks=np.arange(0, 101, 25), yticks=np.arange(0, 101, 25))
+    # plt.show()
+    if results["Anti_ambiguity_bias"].iloc[0]:
+        plt.savefig(folder + "start_exemplars_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
+    else:
+        plt.savefig(folder + "start_exemplars_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
+    plt.clf()
 
     with sns.axes_style("whitegrid"):
         sns.set_palette("colorblind")
