@@ -4,7 +4,7 @@ import numpy as np
 
 class Agent:
 
-    def __init__(self, n_words, n_dimensions, seed, n_exemplars, n_continuers, wedel_start):
+    def __init__(self, n_words, n_dimensions, seed, n_exemplars, n_continuers, wedel_start, collateral_index):
         """
         Initialisation of the agent class.
         :param n_words: int; the number of word categories contained in the lexicons of the agents
@@ -22,6 +22,7 @@ class Agent:
         self.n_exemplars = n_exemplars
         self.n_continuers = n_continuers
         self.wedel_start = wedel_start
+        self.collateral_index = collateral_index
 
     def generate_lexicon(self):
         """
@@ -42,6 +43,9 @@ class Agent:
 
         # The means of the starting condition of the v_words used in Wedel's paper
         means = [[20, 80], [40, 40], [60, 60], [80, 20]]
+
+        means_collateral = [[20, 20], [40, 70], [50, 90], [60, 27], [80, 42], [10, 60], [90, 70], [70, 85], [40, 15],
+                            [25, 50]]
 
         for w in range(self.n_words):
             word = []
@@ -65,20 +69,33 @@ class Agent:
         indices_continuer = False
         if self.n_continuers:
 
-            # If the number of continuer v_words is bigger than the number of v_words in the lexicon raise an error
-            # message
-            if self.n_continuers > self.n_words:
-                raise ValueError("The number of continuers must be lower than the number of v_words.")
-
-            # The continuers are randomly chosen out of the lexicon
-            indices_continuer = random.sample(range(self.n_words), k=self.n_continuers)
-
+            # # If the number of continuer v_words is bigger than the number of v_words in the lexicon raise an error
+            # # message
+            # if self.n_continuers > self.n_words:
+            #     raise ValueError("The number of continuers must be lower than the number of v_words.")
+            #
+            # # The continuers are randomly chosen out of the lexicon
+            # indices_continuer = random.sample(range(self.n_words), k=self.n_continuers)
+            #
             continuer_words = []
-            for index in indices_continuer:
-                lexicon[index][1] = "C"
+            # for index in indices_continuer:
+            #     lexicon[index][1] = "C"
 
-                # Create a separate lexicon with the continuer words
-                continuer_words.append(lexicon[index])
+            if self.collateral_index > 9:
+                self.collateral_index = self.collateral_index - 10
+            continuer = []
+            mean = means_collateral[self.collateral_index]
+            cov = [[10, 0], [0, 10]]
+            x, y = np.random.multivariate_normal(mean, cov, self.n_exemplars).T
+            continuer.append(list(map(lambda x, y: [x, y], x, y)))
+
+            # Initialise all c_words as continuer words ('C')
+            lexicon.append([continuer[0], "C"])
+            indices_continuer = lexicon.index([continuer[0], "C"])
+
+
+            # Create a separate lexicon with the continuer words
+            continuer_words.append([continuer[0], "C"])
 
             # The words that are not continuers are regular vocabulary words
             v_words = [word for word in lexicon if word not in continuer_words]

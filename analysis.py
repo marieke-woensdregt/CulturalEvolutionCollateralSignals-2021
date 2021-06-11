@@ -132,6 +132,7 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         # Calculate the start and end position in the results dataframe for every simulation
         end = int(2 * n_words * n_states)
         start_position = run * end
+        #print(results["State"].iloc[start_position])
 
         if intermediate is None:
             end_position = ((run + 1) * end) - 2
@@ -143,15 +144,17 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         # print(results.iloc[end_position])
 
         # Define the start and end lexicons
-        lexicon_start = results["Lexicon"].iloc[start_position]
+        #lexicon_start = results["Lexicon"].iloc[start_position]
+        lexicon_start = results.loc[(results["Word"] == 0) & (results["Agent"] == 1) &
+                                       (results["State"] == "Start") & (results["Simulation_run"] == run), "Lexicon"]
+        lexicon_start = lexicon_start[0]
         lexicon_end = results["Lexicon"].iloc[end_position]
 
         # Plot the beginning first
-        exemplar_list_word_start = []
         for word_index in range(n_words):
+            #print(lexicon_start[word_index])
             exemplars = lexicon_start[word_index][0]
-            exemplar_list_word_start.append(exemplars)
-        exemplar_list_start.append(exemplar_list_word_start)
+            exemplar_list_start.append(exemplars)
         #
         # plt.xlim(0, 100)
         # plt.ylim(0, 100)
