@@ -9,16 +9,16 @@ class Production:
                  similarity_bias_word, similarity_bias_segment, noise, continuer_G, segment_ratio):
         """
         The initialisation of the production class.
-        :param lexicon: list; a list of v_words, for which each word consists of a list of exemplars, which in turn is a
+        :param lexicon: list; a list of words, for which each word consists of a list of exemplars, which in turn is a
         list of the number of dimensions floats
         :param v_words: list; a list of the regular vocabulary v_words, for which each word consists of a list of
         exemplars, which in turn is a list of the number of dimensions floats
-        :param continuer_words: list; a list of the continuer v_words, for which each word consists of a list of
+        :param continuer_words: list; a list of the continuer words, for which each word consists of a list of
         exemplars, which in turn is a list of the number of dimensions floats
-        :param n_words: int; the number of v_words contained in the agent's lexicon
+        :param n_words: int; the number of words contained in the agent's lexicon
         :param n_dimensions: int; the number of dimensions of the exemplars
         :param n_exemplars: int; the number of exemplars per word
-        :param n_continuers: int; the number of continuer v_words
+        :param n_continuers: int; the number of continuer words
         :param similarity_bias_word: boolean; whether the word similarity bias is present
         :param similarity_bias_segment: boolean; whether the segment similarity bias is present
         :param noise: boolean; whether noise is added to the signals
@@ -207,13 +207,11 @@ class Production:
 
             # This is done for all the words in the lexicon
             for word in self.lexicon:
-
                 # The exemplar index
                 index = 0
 
                 # Every exemplar is compared to the target exemplar
                 for exemplar in word[0]:
-
                     # According to the equation, the similarity of the target to every exemplar is calculated and added
                     # as a bias
                     sum += exemplar[dimension] * total_activations[word_index][index] * math.exp(

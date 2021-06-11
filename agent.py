@@ -44,10 +44,10 @@ class Agent:
         # The means of the starting condition of the v_words used in Wedel's paper
         means = [[20, 80], [40, 40], [60, 60], [80, 20]]
 
-        means_collateral = [[20, 20], [40, 70], [50, 90], [60, 27], [80, 42], [10, 60], [90, 70], [70, 85], [40, 15],
-                            [25, 50]]
+        means_collateral = [[20, 20], [40, 70], [50, 90], [55, 25], [80, 42], [10, 60], [90, 70], [70, 85], [40, 15],
+                            [18, 50]]
 
-        for w in range(self.n_words):
+        for w in range(self.n_words - self.n_continuers):
             word = []
 
             # Define the mean and the covariance to sample from a multivariate normal distribution to create clustered
