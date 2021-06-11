@@ -53,6 +53,11 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
     lexicon2_start, v_words2, continuer_words2, indices_continuer2 = Agent(n_words, n_dimensions, seed_value,
                                                                            n_exemplars, n_continuers, wedel_start,
                                                                            n_run).generate_lexicon()
+    print("Lexicon start: ", lexicon_start)
+    print("Continuer_words: ", continuer_words)
+
+    print("Lexicon start 2: ", lexicon2_start)
+    print("Continuer_words 2: ", continuer_words2)
 
     # Store the state of the lexicons at the beginning for both agents
     start = pd.DataFrame(columns=["Simulation_run", "Agent", "Word", "Centroid", "Average_distance", "Lexicon",
