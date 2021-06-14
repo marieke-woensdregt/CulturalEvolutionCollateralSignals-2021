@@ -110,6 +110,7 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
     v_words = []
     continuer_words = []
 
+    # Initialise a list to store all the exemplars and the exemplars of the initialisation
     exemplar_list = []
     exemplar_list_start = []
 
@@ -150,15 +151,11 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         lexicon_start = lexicon_start[0]
         lexicon_end = results["Lexicon"].iloc[end_position]
 
-        # Plot the beginning first
+        # Gather the data of the exemplars in their initialisation position for plotting later (outside of this loop)
         for word_index in range(n_words):
             #print(lexicon_start[word_index])
             exemplars = lexicon_start[word_index][0]
             exemplar_list_start.append(exemplars)
-        #
-        # plt.xlim(0, 100)
-        # plt.ylim(0, 100)
-        # plt.show()
 
         # ===============================================================================================================
 
@@ -270,10 +267,12 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         centroid_list = list(chain(*centroid_list))
         #print(centroid_list)
 
+        # The possible pairings to get a square
         pairings = np.array([[[[0, 1], [0, 2]], [[2, 3], [1, 3]]],
                              [[[0, 2], [0, 1]], [[1, 3], [2, 3]]],
                              [[[0, 3], [0, 1]], [[1, 2], [2, 3]]]])
 
+        # Per number of rounds (per 500 rounds) calculate the squareness
         smallest_indices = []
         smallest_distances = []
         for round in centroid_list:
@@ -333,6 +332,7 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         # 2D SD measure across all simulations: SD of first run to every other run compared for the v_words and
         # continuer v_words
 
+        # Initialise empty lists to store the distances between the start and end position of the centroids
         v_word_distance_run1 = []
         continuer_distance_run1 = []
 
@@ -386,7 +386,9 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         indices_rounds.append(index_smallest_round)
     print(indices_rounds)
 
-    # ======================================================================================================================
+    # ==================================================================================================================
+
+    # This section entails the plotting of the data
 
     # Save the plot of the end state of the simulation runs of the first agent
     matplotlib.rc('xtick', labelsize=12)
@@ -432,6 +434,8 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
     fig.text(0.04, 0.5, 'Dimension 2', va='center', rotation='vertical', size=18)
     plt.setp(axs, xticks=np.arange(0, 101, 25), yticks=np.arange(0, 101, 25))
     # plt.show()
+
+    # The commented out part is without continuers, the commented one with continuers
     if results["Anti_ambiguity_bias"].iloc[0]:
         #plt.savefig(folder + "start_exemplars_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
         plt.savefig(folder + "start_exemplars_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" +
@@ -483,6 +487,8 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
     fig.text(0.04, 0.5, 'Dimension 2', va='center', rotation='vertical', size=18)
     plt.setp(axs, xticks=np.arange(0, 101, 25), yticks=np.arange(0, 101, 25))
     # plt.show()
+
+    # The commented out part is without continuers, the commented one with continuers
     if results["Anti_ambiguity_bias"].iloc[0]:
         #plt.savefig(folder + "exemplars_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
         plt.savefig(folder + "exemplars_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" +
@@ -523,6 +529,8 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
                          size=20)
 
     # plt.show()
+
+    # The commented out part is without continuers, the commented one with continuers
     if results["Anti_ambiguity_bias"].iloc[0]:
         #plt.savefig(folder + "centroid_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
         plt.savefig(folder + "centroid_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" +
@@ -563,6 +571,8 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
                          size=20)
 
     # plt.show()
+
+    # The commented out part is without continuers, the commented one with continuers
     if results["Anti_ambiguity_bias"].iloc[0]:
         #plt.savefig(folder + "sd_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
         plt.savefig(folder + "sd_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" +
@@ -586,9 +596,11 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         average_probability_storage = sum(probability_storages) / len(probability_storages)
         print("Average probability storage: ", average_probability_storage)
 
-    # ======================================================================================================================
-    # Plot the distinct v_words over all the simulation runs per word (one plot per word to see how they move in the
-    # space)
+    # ==================================================================================================================
+    # If not working with continuers, comment out these parts
+
+    # Plot the distinct words over all the simulation runs per word (one plot per word to see how they move in the
+    # space), includes continuer words as well
 
     sns.set_style("whitegrid")
     palette = sns.color_palette("colorblind")
@@ -612,23 +624,6 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         ax3.scatter(*zip(*v_words[2+(run*4)]), color=palette[2], edgecolors="white", linewidths=0.5)
         ax4.scatter(*zip(*v_words[3+(run*4)]), color=palette[3], edgecolors="white", linewidths=0.5)
         ax5.scatter(*zip(*continuer_words[0+run]), color=palette[4], edgecolors="white", linewidths=0.5)
-
-    # print(v_words[0])
-    # print(np.array(v_words)[0].T)
-
-    # for run in range(results.iloc[-1]["Simulation_run"] + 1):
-    #     sns.scatterplot(np.array(v_words)[0+(run*4)].T, c="tab:blue")
-    #     # ax2.sns.scatterplot(*zip(*v_words[1+(run*4)]), c="tab:orange")
-    #     # ax3.sns.scatterplot(*zip(*v_words[2+(run*4)]), c="tab:green")
-    #     # ax4.sns.scatterplot(*zip(*v_words[3+(run*4)]), c="tab:red")
-    #     # ax5.sns.scatterplot(*zip(*continuer_words[0+run]), c="tab:purple")
-
-
-    # for word in v_words:
-    #     ax1.scatter(*zip(*word))
-    #
-    # for word in continuer_words:
-    #     ax2.scatter(*zip(*word))
 
     # # Plot the in between states as well
     # sliced_results = results[results["Agent"] == 1]
