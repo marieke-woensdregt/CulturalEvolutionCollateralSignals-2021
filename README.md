@@ -41,15 +41,15 @@ Finally, when the simulations are done, the results can be analysed with the hel
 4. *The exemplars of all simulation runs plotted per word category*: this only applies when there is at least one continuer word. All exemplars for all simulation runs are plotted per word category. This now only plots 4 regular vocabulary words and 1 continuer word, this can be adjusted if needed.
 
 Moreover, the following measures are calculated and printed:
-1. Average exclusion rate: averaged over all simulation runs, how often signals are excluded (not stored in the lexicon) due to the anti-ambiguity bias.
-2. Average probability storage:  averaged over all simulation runs, how often signals are stored in the lexicon.
-3. Regular vocabulary words average distance to middle: the average distance of the regular vocabulary words to the middle of the space per run.
-4. Continuer average distance to middle: the averagde distance of the continuer words to the middle of the space per run.
-5. Regular vocabulary word average distance over all runs: the average distance of the start and end states of the centroids for the regular vocabulary words over all runs.
-6. Continuer average distance over all runs: the average distance of the start and end states of the centroids for the continuer words over all runs.
-6. Regular vocabulary word average distance per run: the average distance (averaged over regular vocabulary words) between centroids of the initialisation versus the end for every simulation run.
-7. Continuer average distance per run: the average distance between the continuer centroids of the initialisation versus the end for every simulation run.
-8. Order of 500 rounds of most squareness: a list containing for every simulation run which number of rounds got the most square configuration. The index represents an order of 500 rounds (e.g., an index of 19 means 10,000 rounds: 500*(19+1)).
+1. *Average exclusion rate*: averaged over all simulation runs, how often signals are excluded (not stored in the lexicon) due to the anti-ambiguity bias.
+2. *Average probability storage*:  averaged over all simulation runs, how often signals are stored in the lexicon.
+3. *Regular vocabulary words average distance to middle*: the average distance of the regular vocabulary words to the middle of the space per run.
+4. *Continuer average distance to middle*: the averagde distance of the continuer words to the middle of the space per run.
+5. *Regular vocabulary word average distance over all runs*: the average distance of the start and end states of the centroids for the regular vocabulary words over all runs.
+6. *Continuer average distance over all runs*: the average distance of the start and end states of the centroids for the continuer words over all runs.
+6. *Regular vocabulary word average distance per run*: the average distance (averaged over regular vocabulary words) between centroids of the initialisation versus the end for every simulation run.
+7. *Continuer average distance per run*: the average distance between the continuer centroids of the initialisation versus the end for every simulation run.
+8. *Order of 500 rounds of most squareness*: a list containing for every simulation run which number of rounds got the most square configuration. The index represents an order of 500 rounds (e.g., an index of 19 means 10,000 rounds: 500*(19+1)).
 
 
 In order to start the analysis, the following command can be run from the command line:
