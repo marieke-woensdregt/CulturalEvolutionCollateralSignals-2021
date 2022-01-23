@@ -8,6 +8,7 @@ import pandas as pd
 import pickle
 import copy
 import sys
+import time
 
 
 def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers, similarity_bias_word,
@@ -89,7 +90,9 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
     probability_storages2 = []
 
     while i < n_rounds:
-        print("Run number: ", i)
+        if i % 100:
+            print('')
+            print("Round number: ", i)
 
         # Assign the roles to the agents so they change role every round
         if (i % 2) == 0:
@@ -233,6 +236,8 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
     model
     """
 
+    t0 = time.time()
+
     # Turn off the warning
     np.warnings.filterwarnings('ignore', category=np.VisibleDeprecationWarning)
 
@@ -245,6 +250,10 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
 
     # Run the simulations
     for n_run in range(n_runs):
+
+        print('')
+        print("Run number: ", n_run)
+
         lexicon, lexicon2, indices_continuer, indices_continuer2, start, store_count, store_count_2, \
         probability_storages, probability_storages2 = simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars,
                                                                  n_continuers, similarity_bias_word,
@@ -342,3 +351,9 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
     outfile = open(filename, "wb")
     pickle.dump(results, outfile)
     outfile.close()
+
+
+    t1 = time.time()
+
+    simulation_time = t0-t1
+    print("Simulation runs took "+str((simulation_time/60)/60)+" min. in total")
