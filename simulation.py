@@ -355,4 +355,4 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
     t1 = time.time()
 
     simulation_time = t1-t0
-    print("Simulation runs took "+str((simulation_time/60))+" min. in total")
+    print("Simulation runs took "+str(round((simulation_time/60), 2))+" min. in total")
