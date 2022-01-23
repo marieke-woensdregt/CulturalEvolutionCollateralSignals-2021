@@ -6,7 +6,7 @@ import math
 class Production:
 
     def __init__(self, lexicon, v_words, continuer_words, n_words, n_dimensions, n_exemplars, n_continuers,
-                 similarity_bias_word, similarity_bias_segment, noise, continuer_G, word_ratio):
+                 similarity_bias_word, similarity_bias_segment, noise, continuer_G, word_similarity_weight, segment_similarity_weight):
         """
         The initialisation of the production class.
         :param lexicon: list; a list of words, for which each word consists of a list of exemplars, which in turn is a
@@ -23,7 +23,9 @@ class Production:
         :param similarity_bias_segment: boolean; whether the segment similarity bias is present
         :param noise: boolean; whether noise is added to the signals
         :param continuer_G: int; the constant used to determine the strength of the noise bias
-        :param word_ratio: float; the relative contribution of the word similarity bias in case of continuer v_words
+        # :param word_ratio: float; the relative contribution of the word similarity bias in case of continuer v_words
+        :param word_similarity_weight: float; the relative contribution of the word-similarity bias in case of continuer v_words
+        :param segment_similarity_weight: float; the relative contribution of the segment-similarity bias in case of continuer v_words
         """
 
         self.lexicon = lexicon
@@ -37,7 +39,9 @@ class Production:
         self.similarity_bias_segment = similarity_bias_segment
         self.noise = noise
         self.continuer_G = continuer_G
-        self.word_ratio = word_ratio
+        # self.word_ratio = word_ratio
+        self.word_similarity_weight = word_similarity_weight
+        self.segment_similarity_weight = segment_similarity_weight
 
     def select_exemplar(self):
         """
@@ -119,9 +123,12 @@ class Production:
 
                 # The ratio of the word similarity to the segment similarity is 1:0.5 for continuer v_words
                 if self.lexicon[word_index][1] == "C":
-                    total_bias = [(self.word_ratio * bias_word) + (0.1 * bias_segment) for bias_word, bias_segment in
+                    # total_bias = [(self.word_ratio * bias_word) + (0.1 * bias_segment) for bias_word, bias_segment in
+                    #               zip(word_bias, segment_bias)]
+                    total_bias = [(self.word_similarity_weight * bias_word) + (self.segment_similarity_weight * bias_segment) for bias_word, bias_segment in
                                   zip(word_bias, segment_bias)]
-                    target = [bias / (0.1 + self.word_ratio) for bias in total_bias]
+                    # target = [bias / (0.1 + self.word_ratio) for bias in total_bias]
+                    target = [bias / (self.word_similarity_weight + self.segment_similarity_weight) for bias in total_bias]
 
 
                 # print("After similarity biases: ", target)
