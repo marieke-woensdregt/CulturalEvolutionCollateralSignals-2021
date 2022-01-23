@@ -345,7 +345,7 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
     results["Segment_similarity_weight"] = segment_similarity_weight
 
     # Pickle the results
-    filename = "results_" + str(n_runs) + "_" + str(n_rounds) + "_" + str(anti_ambiguity_bias) + "_" + \
+    filename = "simulation_results/results_" + str(n_runs) + "_" + str(n_rounds) + "_" + str(anti_ambiguity_bias) + "_" + \
                str(n_continuers) + "_" + str(continuer_G) + "_" + str(word_similarity_weight) + "_" + str(segment_similarity_weight) + "_" + str(n_words) + "_" + str(wedel_start) + ".p"
     outfile = open(filename, "wb")
     pickle.dump(results, outfile)
