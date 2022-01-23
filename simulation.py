@@ -90,8 +90,7 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
     probability_storages2 = []
 
     while i < n_rounds:
-        if i % 100:
-            print('')
+        if i % 100 == 0:
             print("Round number: ", i)
 
         # Assign the roles to the agents so they change role every round
@@ -356,4 +355,4 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
     t1 = time.time()
 
     simulation_time = t0-t1
-    print("Simulation runs took "+str((simulation_time/60)/60)+" min. in total")
+    print("Simulation runs took "+str((simulation_time/60))+" min. in total")
