@@ -11,7 +11,7 @@ import sys
 
 
 def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers, similarity_bias_word,
-               similarity_bias_segment, noise, anti_ambiguity_bias, continuer_G, word_ratio, wedel_start, n_run):
+               similarity_bias_segment, noise, anti_ambiguity_bias, continuer_G, word_similarity_weight, segment_similarity_weight, wedel_start, n_run):
     """
     Run a simulation of n_rounds rounds with the specified parameters.
     :param n_rounds: int; the number of rounds of the simulation run
@@ -25,7 +25,9 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
     :param noise: boolean; whether noise should be added to the signals
     :param anti_ambiguity_bias: boolean; whether the anti-ambiguity bias should be applied to storing signals
     :param continuer_G: int; the constant used to determine the strength of the noise bias
-    :param word_ratio: float; the relative contribution of the word similarity bias in case of continuer v_words
+    # :param word_ratio: float; the relative contribution of the word similarity bias in case of continuer v_words
+    :param word_similarity_weight: float; the relative contribution of the word-similarity bias in case of continuer v_words
+    :param segment_similarity_weight: float; the relative contribution of the segment-similarity bias in case of continuer v_words
     :param wedel_start: boolean; whether the means for initialising the lexicon are based on the one used in Wedel's
     model
     :param n_run: int; the current run number
@@ -112,14 +114,13 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
         targets, total_activations = Production(producer_lex, producer_v_words,
                                                 producer_continuer_words, n_words, n_dimensions,
                                                 n_exemplars, n_continuers, similarity_bias_word,
-                                                similarity_bias_segment, noise, continuer_G,
-                                                word_ratio).select_exemplar()
+                                                similarity_bias_segment, noise, continuer_G, word_similarity_weight, segment_similarity_weight).select_exemplar()
         # print("Chosen target exemplars: ", targets)
 
         # Then the biases are added to the selected exemplars
         target_exemplars = Production(producer_lex, producer_v_words, producer_continuer_words, n_words, n_dimensions,
                                       n_exemplars, n_continuers, similarity_bias_word, similarity_bias_segment, noise,
-                                      continuer_G, word_ratio).add_biases(targets, total_activations)
+                                      continuer_G, word_similarity_weight, segment_similarity_weight).add_biases(targets, total_activations)
         # print("Bias added to targets: ", target_exemplars)
 
         # The other agent perceives the produced signals
@@ -210,7 +211,7 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
 
 def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exemplars=100, n_continuers=0,
                     similarity_bias_word=True, similarity_bias_segment=True, noise=True, anti_ambiguity_bias=True,
-                    continuer_G=2500, word_ratio=1.8, wedel_start=False):
+                    continuer_G=2500, word_similarity_weight=1.8, segment_similarity_weight=0.1, wedel_start=False):
     """
     Run n_runs simulations with the specified parameters and pickle and store the results as a dataframe.
     :param n_runs: int; the number of simulations run
@@ -225,7 +226,9 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
     :param noise: boolean; whether noise should be added to the signals
     :param anti_ambiguity_bias: boolean; whether the anti-ambiguity bias should be applied to storing signals
     :param continuer_G: int; the constant used to determine the strength of the noise bias
-    :param word_ratio: float; the relative contribution of the word similarity bias in case of continuer v_words
+    # :param word_ratio: float; the relative contribution of the word similarity bias in case of continuer v_words
+    :param word_similarity_weight: float; the relative contribution of the word-similarity bias in case of continuer v_words
+    :param segment_similarity_weight: float; the relative contribution of the segment-similarity bias in case of continuer v_words
     :param wedel_start: boolean; whether the means for initialising the lexicon are based on the one used in Wedel's
     model
     """
@@ -246,7 +249,7 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
         probability_storages, probability_storages2 = simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars,
                                                                  n_continuers, similarity_bias_word,
                                                                  similarity_bias_segment, noise, anti_ambiguity_bias,
-                                                                 continuer_G, word_ratio, wedel_start, n_run)
+                                                                 continuer_G, word_similarity_weight, segment_similarity_weight, wedel_start, n_run)
 
         # Calculate some measures for all the rows of the start dataframe (containing the starting condition of a
         # simulation run)
@@ -329,12 +332,13 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
                                          exemplars2, store_count_2, probability_storages2]
 
     results["Continuer_G"] = continuer_G
-    results["Word_ratio"] = word_ratio
+    # results["Word_ratio"] = word_ratio
+    results["Word_similarity_weight"] = word_similarity_weight
+    results["Segment_similarity_weight"] = segment_similarity_weight
 
     # Pickle the results
     filename = "results_" + str(n_runs) + "_" + str(n_rounds) + "_" + str(anti_ambiguity_bias) + "_" + \
-               str(n_continuers) + "_" + str(continuer_G) + "_" + str(word_ratio) + "_" + str(n_words) + "_" + \
-               str(wedel_start) + ".p"
+               str(n_continuers) + "_" + str(continuer_G) + "_" + str(word_similarity_weight) + "_" + str(segment_similarity_weight) + "_" + str(n_words) + "_" + str(wedel_start) + ".p"
     outfile = open(filename, "wb")
     pickle.dump(results, outfile)
     outfile.close()
