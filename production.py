@@ -89,12 +89,13 @@ class Production:
 
         return targets, total_activations
 
-    def add_biases(self, targets, total_activations, k=0.2):
+    def add_biases(self, targets, total_activations, k=0.2, ignore_continuers_segment_similarity=False):
         """
         Add the selected biases to the chosen exemplars.
         :param targets: list; the target exemplars to be produced.
         :param total_activations: list; a list containing the activations of the exemplars for every word category
         :param k: float; a constant for calculating the similarity
+        :param ignore_continuers_segment_similarity: Boolean; if set to True, the words from the continuer category are ignored when calculating the segment-similarity bias.
         :return: list; a list of the target exemplars with the selected biases added
         """
 
@@ -109,7 +110,7 @@ class Production:
             # If both similarity biases are added to the target, they are combined
             if self.similarity_bias_word and self.similarity_bias_segment:
                 word_bias = self.similarity_word(target, exemplars, total_activations[word_index], k)
-                segment_bias = self.similarity_segment(target, total_activations, k)
+                segment_bias = self.similarity_segment(target, total_activations, k, ignore_continuers_segment_similarity)
 
                 # print("Word bias: ", word_bias)
                 # print("Segment bias: ", segment_bias)
@@ -138,7 +139,7 @@ class Production:
                 target = self.similarity_word(target, exemplars, total_activations[word_index], k)
 
             elif self.similarity_bias_segment:
-                target = self.similarity_segment(target, total_activations, k)
+                target = self.similarity_segment(target, total_activations, k, ignore_continuers_segment_similarity)
 
             # If noise is added, it should be added to the target exemplar after the other biases have been added if
             # applicable
@@ -193,12 +194,13 @@ class Production:
 
         return bias_exemplar
 
-    def similarity_segment(self, target, total_activations, k):
+    def similarity_segment(self, target, total_activations, k, ignore_continuers=False):
         """
         Calculate the segment similarity bias.
         :param target: list; the target to which the bias is added, consisting of a number of dimensions
         :param total_activations: list; a list containing the activations of the exemplars for every word category
         :param k: float; a constant used to calculate the similarity
+        :param ignore_continuers: Boolean; if set to True, the words from the continuer category are ignored when calculating the segment-similarity bias.
         :return: list; the target exemplar with the added word similarity bias
         """
 
@@ -213,7 +215,15 @@ class Production:
             sum2 = 0
 
             # This is done for all the words in the lexicon
-            for word in self.lexicon:
+            if ignore_continuers is False:
+                comparison_words = self.lexicon
+            else:
+                comparison_words = []
+                for i in range(len(self.lexicon)):
+                    word = self.lexicon[i]
+                    if word[-1] == "V":
+                        comparison_words.append(word)
+            for word in comparison_words:
                 # The exemplar index
                 index = 0
 
