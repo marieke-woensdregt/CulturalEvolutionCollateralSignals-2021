@@ -12,7 +12,7 @@ import time
 
 
 def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers, similarity_bias_word,
-               similarity_bias_segment, noise, anti_ambiguity_bias, continuer_G, word_similarity_weight, segment_similarity_weight, wedel_start, n_run):
+               similarity_bias_segment, noise, anti_ambiguity_bias, continuer_G, word_similarity_weight, segment_similarity_weight, wedel_start, n_run, ignore_continuers_segment_similarity):
     """
     Run a simulation of n_rounds rounds with the specified parameters.
     :param n_rounds: int; the number of rounds of the simulation run
@@ -32,6 +32,7 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
     :param wedel_start: boolean; whether the means for initialising the lexicon are based on the one used in Wedel's
     model
     :param n_run: int; the current run number
+    :param ignore_continuers_segment_similarity: Boolean; if set to True, the words from the continuer category are ignored when calculating the segment-similarity bias.
     :return: list; the lexicon consists of a list of v_words, for which each word consists of a list of exemplars, which
                    in turn is a list of the number of dimensions floats
              list; the second agent's lexicon consists of a list of v_words, for which each word consists of a list of
@@ -122,7 +123,7 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
         # Then the biases are added to the selected exemplars
         target_exemplars = Production(producer_lex, producer_v_words, producer_continuer_words, n_words, n_dimensions,
                                       n_exemplars, n_continuers, similarity_bias_word, similarity_bias_segment, noise,
-                                      continuer_G, word_similarity_weight, segment_similarity_weight).add_biases(targets, total_activations)
+                                      continuer_G, word_similarity_weight, segment_similarity_weight).add_biases(targets, total_activations, ignore_continuers_segment_similarity=ignore_continuers_segment_similarity)
         # print("Bias added to targets: ", target_exemplars)
 
         # The other agent perceives the produced signals
@@ -213,7 +214,7 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
 
 def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exemplars=100, n_continuers=1,
                     similarity_bias_word=True, similarity_bias_segment=True, noise=True, anti_ambiguity_bias=True,
-                    continuer_G=1250, word_similarity_weight=0.9, segment_similarity_weight=0.0, wedel_start=True):
+                    continuer_G=1250, word_similarity_weight=0.9, segment_similarity_weight=0.0, wedel_start=True, ignore_continuers_segment_similarity=False):
     """
     Run n_runs simulations with the specified parameters and pickle and store the results as a dataframe.
     :param n_runs: int; the number of simulations run
@@ -233,6 +234,7 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
     :param segment_similarity_weight: float; the relative contribution of the segment-similarity bias in case of continuer v_words
     :param wedel_start: boolean; whether the means for initialising the lexicon are based on the one used in Wedel's
     model
+    :param ignore_continuers_segment_similarity: Boolean; if set to True, the words from the continuer category are ignored when calculating the segment-similarity bias.
     """
 
     t0 = time.time()
@@ -257,7 +259,7 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
         probability_storages, probability_storages2 = simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars,
                                                                  n_continuers, similarity_bias_word,
                                                                  similarity_bias_segment, noise, anti_ambiguity_bias,
-                                                                 continuer_G, word_similarity_weight, segment_similarity_weight, wedel_start, n_run)
+                                                                 continuer_G, word_similarity_weight, segment_similarity_weight, wedel_start, n_run, ignore_continuers_segment_similarity)
 
         # Calculate some measures for all the rows of the start dataframe (containing the starting condition of a
         # simulation run)
@@ -346,7 +348,7 @@ def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exempl
 
     # Pickle the results
     filename = "simulation_results/results_" + str(n_runs) + "_" + str(n_rounds) + "_" + str(anti_ambiguity_bias) + "_" + \
-               str(n_continuers) + "_" + str(continuer_G) + "_" + str(word_similarity_weight) + "_" + str(segment_similarity_weight) + "_" + str(n_words) + "_" + str(wedel_start) + ".p"
+               str(n_continuers) + "_" + str(continuer_G) + "_" + str(word_similarity_weight) + "_" + str(segment_similarity_weight) + "_" + str(n_words) + "_" + str(wedel_start) + "_" + str(ignore_continuers_segment_similarity) + ".p"
     outfile = open(filename, "wb")
     pickle.dump(results, outfile)
     outfile.close()
