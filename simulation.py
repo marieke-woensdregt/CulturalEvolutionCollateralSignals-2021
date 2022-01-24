@@ -213,7 +213,7 @@ def simulation(n_rounds, n_words, n_dimensions, seed, n_exemplars, n_continuers,
 
 def simulation_runs(n_runs, n_rounds, n_words, n_dimensions, seed=None, n_exemplars=100, n_continuers=1,
                     similarity_bias_word=True, similarity_bias_segment=True, noise=True, anti_ambiguity_bias=True,
-                    continuer_G=1666.66, word_similarity_weight=0.9, segment_similarity_weight=0.0, wedel_start=True):
+                    continuer_G=1250, word_similarity_weight=0.9, segment_similarity_weight=0.0, wedel_start=True):
     """
     Run n_runs simulations with the specified parameters and pickle and store the results as a dataframe.
     :param n_runs: int; the number of simulations run
