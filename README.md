@@ -13,7 +13,7 @@ The remaining files are used for running the simulation or analysis:
 ## How to run simulations
 The easiest way to run a simulation is to run it from your command line. 
 1. Go to the folder in which the implemention of the model is stored.
-2. Run the following line: *python3 -c 'import simulation; simulation.simulation_runs(20, 10000, 5, 2, anti_ambiguity_bias=True, n_continuers=1, wedel_start=True)'*. The first four arguments are mandatory to specify and stand for the number of simulation runs, the number of rounds, the number of words (regular vocabulary words and continuer words summed) and the number of dimensions. Some other arguments can be specified when you do not want to run the default. These arguments include: 
+2. Run the following line: *python3 -c 'import simulation; simulation.simulation_runs(20, 10000, 5, 2, anti_ambiguity_bias=True, n_continuers=1, wedel_start=True, ignore_continuers_segment_similarity=False)'*. The first four arguments are mandatory to specify and stand for the number of simulation runs, the number of rounds, the number of words (regular vocabulary words and continuer words summed) and the number of dimensions. Some other arguments can be specified when you do not want to run the default. These arguments include: 
     1. *seed=None*: if you want to specify a seed for initialising the agent's lexicon
     2. *n_exemplars=100*: set the number of exemplars per word category in the lexicon
     3. *n_continuers=0*: set the number of continuer words in the lexicon
