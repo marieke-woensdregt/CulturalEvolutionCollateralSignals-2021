@@ -440,12 +440,12 @@ def analysis(results_folder, plots_folder, results_file, intermediate=None, wede
         #plt.savefig(folder + "start_exemplars_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
 
         # plt.savefig(folder + "start_exemplars_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(plots_folder + "start_exemplars_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" + str(results.iloc[-1]["N_words"] + 1) + "_words_" + str(results.iloc[-1]["N_continuers"] + 1) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G.pdf")
+        plt.savefig(plots_folder + "start_exemplars_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" + str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G.pdf")
     else:
         #plt.savefig(folder + "start_exemplars_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
 
         # plt.savefig(folder + "start_exemplars_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(plots_folder + "start_exemplars_no_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"] + 1) + "_words_" + str(results.iloc[-1]["N_continuers"] + 1) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G.pdf")
+        plt.savefig(plots_folder + "start_exemplars_no_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G.pdf")
     plt.clf()
 
     # Now plot their end positions
@@ -495,12 +495,12 @@ def analysis(results_folder, plots_folder, results_file, intermediate=None, wede
         #plt.savefig(folder + "exemplars_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
 
         # plt.savefig(folder + "exemplars_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(plots_folder + "exemplars_amb_" +str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_"+ str(results.iloc[-1]["N_words"] + 1) + "_words_" + str(results.iloc[-1]["N_continuers"] + 1) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G.pdf")
+        plt.savefig(plots_folder + "exemplars_amb_" +str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_"+ str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G.pdf")
     else:
         #plt.savefig(folder + "exemplars_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
 
         # plt.savefig(folder + "exemplars_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(plots_folder + "exemplars_no_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"] + 1) + "_words_" + str(results.iloc[-1]["N_continuers"] + 1) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G.pdf")
+        plt.savefig(plots_folder + "exemplars_no_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G.pdf")
     plt.clf()
 
     # Save the plot of the average centroids distance
@@ -539,12 +539,12 @@ def analysis(results_folder, plots_folder, results_file, intermediate=None, wede
         #plt.savefig(folder + "centroid_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
 
         # plt.savefig(folder + "centroid_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(plots_folder + "centroid_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"] + 1) + "_words_" + str(results.iloc[-1]["N_continuers"] + 1) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G.pdf")
+        plt.savefig(plots_folder + "centroid_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G.pdf")
     else:
         #plt.savefig(folder + "centroid_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
 
         # plt.savefig(folder + "centroid_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(plots_folder + "centroid_no_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"] + 1) + "_words_" + str(results.iloc[-1]["N_continuers"] + 1) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G.pdf")
+        plt.savefig(plots_folder + "centroid_no_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G.pdf")
     plt.clf()
 
     # Save the plot of the average SD for a two dimensional space
@@ -583,12 +583,12 @@ def analysis(results_folder, plots_folder, results_file, intermediate=None, wede
         #plt.savefig(folder + "sd_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
 
         # plt.savefig(folder + "sd_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(plots_folder + "sd_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"] + 1) + "_words_" + str(results.iloc[-1]["N_continuers"] + 1) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G.pdf")
+        plt.savefig(plots_folder + "sd_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G.pdf")
     else:
         #plt.savefig(folder + "sd_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
 
         # plt.savefig(folder + "sd_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(plots_folder + "sd_no_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"] + 1) + "_words_" + str(results.iloc[-1]["N_continuers"] + 1) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G.pdf")
+        plt.savefig(plots_folder + "sd_no_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G.pdf")
     plt.clf()
 
     # ==================================================================================================================
@@ -671,5 +671,5 @@ def analysis(results_folder, plots_folder, results_file, intermediate=None, wede
     # plt.show()
 
     # plt.savefig(folder + "collateral_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-    plt.savefig(plots_folder + "collateral_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_"+str(results.iloc[-1]["N_words"] + 1) + "_words_" + str(results.iloc[-1]["N_continuers"] + 1) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G.pdf")
+    plt.savefig(plots_folder + "collateral_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_"+str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G.pdf")
     plt.clf()
