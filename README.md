@@ -26,9 +26,8 @@ The easiest way to run a simulation is to run it from your command line.
     10. *wedel_start=False*: whether to use the initialisation used in Wedel's (2012) paper
 3. The simulation should start and show the current number of rounds
 4. When the simulation has ended, the results file will be stored in the current directory. The filename is specified as follows: 
-    *filename = "results_" + str(n_runs) + "\_" + str(n_rounds) + "\_" + str(anti_ambiguity_bias) + "\_" + \
-               str(n_continuers) + "\_" + str(continuer_G) + "\_" + str(word_ratio) + "\_" + str(n_words) + "\_" + \
-               str(wedel_start) + ".p"*
+    *filename = "simulation_results/results_" + str(n_runs) + "_" + str(n_rounds) + "_" + str(anti_ambiguity_bias) + "_" + \
+               str(n_continuers) + "_" + str(continuer_G) + "_" + str(word_similarity_weight) + "_" + str(segment_similarity_weight) + "_" + str(n_words) + "_" + str(wedel_start) + ".p"*
     
 ### Using Ponyland
 When you want to make use of the computer cluster Ponyland to run simulations, there are a few things to take into account. First of all, I'd advise to make use of **GNU screens**. See the following link for instructions on how to use these: https://ponyland.science.ru.nl/doku.php?id=wiki:ponyland:gnu_screen. I used them so the simulations kept running after the connection to the server was broken due to inactivity. When running simulations in parallel, you can create multiple screens, as to run one simulation per screen.  
@@ -53,7 +52,7 @@ Moreover, the following measures are calculated and printed:
 
 
 In order to start the analysis, the following command can be run from the command line:
-*python3 -c 'import analysis; analysis.analysis("/Users/jacqueline/Documents/", "results_20_2_True_1_1000_0.25_5_True.p", intermediate=None, wedel_start=True)'*
+*python3 -c 'import analysis; analysis.analysis("simulation_results/", "plots/", "results_20_500_True_1_1250_0.9_0.0_10_False.p", intermediate=None, wedel_start=False)'*
 
 The analysis function needs the following (mandatory) arguments:
 1. *Folder*: the folder in which your results are saved and the analysis plots will be stored. 
