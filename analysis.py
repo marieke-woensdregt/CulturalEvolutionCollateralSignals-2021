@@ -77,9 +77,9 @@ def choose_fitting_pairing(distances_pairings):
 
 # Start the analysis of the results data selected
 
-def analysis(folder, results_file, intermediate=None, wedel_start=True):
+def analysis(results_folder, plots_folder, results_file, intermediate=None, wedel_start=True):
     # Read in the data
-    results = pd.read_pickle(folder + results_file)
+    results = pd.read_pickle(results_folder + results_file)
 
     # List to store data for the squareness measure
     smallest_distances_all = []
@@ -440,12 +440,12 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         #plt.savefig(folder + "start_exemplars_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
 
         # plt.savefig(folder + "start_exemplars_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(folder + "start_exemplars_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(plots_folder + "start_exemplars_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
     else:
         #plt.savefig(folder + "start_exemplars_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
 
         # plt.savefig(folder + "start_exemplars_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(folder + "start_exemplars_no_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(plots_folder + "start_exemplars_no_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
     plt.clf()
 
     # Now plot their end positions
@@ -495,12 +495,12 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         #plt.savefig(folder + "exemplars_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
 
         # plt.savefig(folder + "exemplars_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(folder + "exemplars_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(plots_folder + "exemplars_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
     else:
         #plt.savefig(folder + "exemplars_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
 
         # plt.savefig(folder + "exemplars_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(folder + "exemplars_no_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(plots_folder + "exemplars_no_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
     plt.clf()
 
     # Save the plot of the average centroids distance
@@ -539,12 +539,12 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         #plt.savefig(folder + "centroid_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
 
         # plt.savefig(folder + "centroid_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(folder + "centroid_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(plots_folder + "centroid_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
     else:
         #plt.savefig(folder + "centroid_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
 
         # plt.savefig(folder + "centroid_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(folder + "centroid_no_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(plots_folder + "centroid_no_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
     plt.clf()
 
     # Save the plot of the average SD for a two dimensional space
@@ -583,12 +583,12 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
         #plt.savefig(folder + "sd_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
 
         # plt.savefig(folder + "sd_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(folder + "sd_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(plots_folder + "sd_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
     else:
         #plt.savefig(folder + "sd_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
 
         # plt.savefig(folder + "sd_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(folder + "sd_no_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(plots_folder + "sd_no_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
     plt.clf()
 
     # ==================================================================================================================
@@ -671,5 +671,5 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
     # plt.show()
 
     # plt.savefig(folder + "collateral_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-    plt.savefig(folder + "collateral_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+    plt.savefig(plots_folder + "collateral_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
     plt.clf()
