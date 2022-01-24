@@ -438,12 +438,14 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
     # The commented out part is without continuers, the commented one with continuers
     if results["Anti_ambiguity_bias"].iloc[0]:
         #plt.savefig(folder + "start_exemplars_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
-        plt.savefig(folder + "start_exemplars_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" +
-                    str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+
+        # plt.savefig(folder + "start_exemplars_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(folder + "start_exemplars_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
     else:
         #plt.savefig(folder + "start_exemplars_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
-        plt.savefig(folder + "start_exemplars_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" +
-                    str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+
+        # plt.savefig(folder + "start_exemplars_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(folder + "start_exemplars_no_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
     plt.clf()
 
     # Now plot their end positions
@@ -491,12 +493,14 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
     # The commented out part is without continuers, the commented one with continuers
     if results["Anti_ambiguity_bias"].iloc[0]:
         #plt.savefig(folder + "exemplars_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
-        plt.savefig(folder + "exemplars_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" +
-                    str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+
+        # plt.savefig(folder + "exemplars_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(folder + "exemplars_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
     else:
         #plt.savefig(folder + "exemplars_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
-        plt.savefig(folder + "exemplars_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" +
-                    str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+
+        # plt.savefig(folder + "exemplars_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(folder + "exemplars_no_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
     plt.clf()
 
     # Save the plot of the average centroids distance
@@ -533,12 +537,14 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
     # The commented out part is without continuers, the commented one with continuers
     if results["Anti_ambiguity_bias"].iloc[0]:
         #plt.savefig(folder + "centroid_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
-        plt.savefig(folder + "centroid_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" +
-                    str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+
+        # plt.savefig(folder + "centroid_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(folder + "centroid_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
     else:
         #plt.savefig(folder + "centroid_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
-        plt.savefig(folder + "centroid_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" +
-                    str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+
+        # plt.savefig(folder + "centroid_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(folder + "centroid_no_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
     plt.clf()
 
     # Save the plot of the average SD for a two dimensional space
@@ -575,12 +581,14 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
     # The commented out part is without continuers, the commented one with continuers
     if results["Anti_ambiguity_bias"].iloc[0]:
         #plt.savefig(folder + "sd_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
-        plt.savefig(folder + "sd_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" +
-                    str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+
+        # plt.savefig(folder + "sd_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(folder + "sd_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
     else:
         #plt.savefig(folder + "sd_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
-        plt.savefig(folder + "sd_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" +
-                    str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+
+        # plt.savefig(folder + "sd_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(folder + "sd_no_amb_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
     plt.clf()
 
     # ==================================================================================================================
