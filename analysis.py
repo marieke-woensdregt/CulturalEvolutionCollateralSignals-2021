@@ -661,9 +661,9 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
     ax5.set_xlim([0, 100])
     ax5.set_ylim([0, 100])
 
-    fig.suptitle(str(results.iloc[-1]["Simulation_run"]+1) + " runs and " + str(n_rounds) + " rounds: \n G: " +
-                 str(results.iloc[-1]["Continuer_G"]) + ", word ratio: " + str(results.iloc[-1]["Word_ratio"]),
-                 size=20)
+    # fig.suptitle(str(results.iloc[-1]["Simulation_run"]+1) + " runs and " + str(n_rounds) + " rounds: \n G: " + str(results.iloc[-1]["Continuer_G"]) + ", word ratio: " + str(results.iloc[-1]["Word_ratio"]), size=20)
+    fig.suptitle(str(results.iloc[-1]["Simulation_run"] + 1) + " runs and " + str(n_rounds) + " rounds: \n G: " + str(
+        results.iloc[-1]["Continuer_G"]) + ", word-similarity weight: " + str(results.iloc[-1]["Word_similarity_weight"]) + ", segment-similarity weight: " + str(results.iloc[-1]["Segment_similarity_weight"]), size=20)
 
     fig.text(0.5, 0.04, 'Dimension 1', ha='center', size=18)
     fig.text(0.04, 0.5, 'Dimension 2', va='center', rotation='vertical', size=18)
