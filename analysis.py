@@ -670,6 +670,6 @@ def analysis(folder, results_file, intermediate=None, wedel_start=True):
 
     # plt.show()
 
-    plt.savefig(folder + "collateral_" + str(results.iloc[-1]["Word_ratio"]) + "_" +
-                str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+    # plt.savefig(folder + "collateral_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+    plt.savefig(folder + "collateral_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
     plt.clf()
