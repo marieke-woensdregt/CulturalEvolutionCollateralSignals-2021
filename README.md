@@ -52,7 +52,7 @@ Moreover, the following measures are calculated and printed:
 
 
 In order to start the analysis, the following command can be run from the command line:
-*python3 -c 'import analysis; analysis.analysis("simulation_results/", "plots/", "results_20_500_True_1_1250_0.9_0.0_10_False.p", intermediate=None, wedel_start=False)'*
+*python3 -c 'import analysis; analysis.analysis("simulation_results/", "plots/", "results_20_500_True_1_1250_0.9_0.0_10_False_False.p", intermediate=None, wedel_start=False, ignore_continuers_segment_similarity=False)'*
 
 The analysis function needs the following (mandatory) arguments:
 1. *Folder*: the folder in which your results are saved and the analysis plots will be stored. 
