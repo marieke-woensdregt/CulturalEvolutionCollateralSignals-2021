@@ -73,6 +73,308 @@ def choose_fitting_pairing(distances_pairings):
     return smallest_distance, smallest_index
 
 
+
+def plot_start_positions(plots_folder, results, exemplar_list_start, n_words, n_rounds, wedel_start, ignore_continuers_segment_similarity):
+    # Save the plot of the end state of the simulation runs of the first agent
+    matplotlib.rc('xtick', labelsize=12)
+    matplotlib.rc('ytick', labelsize=12)
+
+    with sns.axes_style("whitegrid"):
+        sns.set_palette("colorblind")
+        fig, axs = plt.subplots(5, 4, figsize=(8, 8))
+        axs = axs.ravel()
+        for run in range(results.iloc[-1]["Simulation_run"] + 1):
+            for word_index in range(n_words):
+                exemplars = exemplar_list_start[(run * n_words) + word_index]
+                axs[run].scatter(*zip(*exemplars), edgecolors="white", linewidths=0.5)
+            sns.set_style("whitegrid")
+            sns.set_palette("colorblind")
+            axs[run].set_xlim([0, 100])
+            axs[run].set_ylim([0, 100])
+
+        for ax in axs.flat:
+            ax.label_outer()
+
+        if results["Anti_ambiguity_bias"].iloc[0]:
+            if wedel_start:
+                fig.suptitle("With anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
+                             str(n_rounds) + " rounds",
+                             size=20)
+            else:
+                fig.suptitle("With anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: " +
+                             str(n_rounds) + " rounds",
+                             size=20)
+        else:
+            if wedel_start:
+                fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
+                             str(n_rounds) + " rounds",
+                             size=20)
+            else:
+                fig.suptitle("Without anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: "
+                             + str(n_rounds) + " rounds",
+                             size=20)
+
+        fig.text(0.5, 0.04, 'Dimension 1', ha='center', size=18)
+        fig.text(0.04, 0.5, 'Dimension 2', va='center', rotation='vertical', size=18)
+        plt.setp(axs, xticks=np.arange(0, 101, 25), yticks=np.arange(0, 101, 25))
+        # plt.show()
+
+        # The commented out part is without continuers, the commented one with continuers
+        if results["Anti_ambiguity_bias"].iloc[0]:
+            #plt.savefig(folder + "start_exemplars_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
+
+            # plt.savefig(folder + "start_exemplars_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+            plt.savefig(plots_folder + "start_exemplars_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" + str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G" + "_wedel_start_"+str(wedel_start) + "_ignore_continuers_" + str(ignore_continuers_segment_similarity) +".pdf")
+        else:
+            #plt.savefig(folder + "start_exemplars_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
+
+            # plt.savefig(folder + "start_exemplars_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+            plt.savefig(plots_folder + "start_exemplars_no_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G" + "_wedel_start_"+str(wedel_start) + "_ignore_continuers_" + str(ignore_continuers_segment_similarity) +".pdf")
+        # plt.clf()
+
+
+
+def plot_end_positions(plots_folder, results, exemplar_list, n_words, n_rounds, wedel_start, ignore_continuers_segment_similarity):
+    matplotlib.rc('xtick', labelsize=12)
+    matplotlib.rc('ytick', labelsize=12)
+
+    with sns.axes_style("whitegrid"):
+        sns.set_palette("colorblind")
+        fig, axs = plt.subplots(5, 4, figsize=(8, 8))
+        axs = axs.ravel()
+        for run in range(results.iloc[-1]["Simulation_run"] + 1):
+            for word_index in range(n_words):
+                exemplars = exemplar_list[(run * n_words) + word_index]
+                axs[run].scatter(*zip(*exemplars), edgecolors="white", linewidths=0.5)
+            sns.set_style("whitegrid")
+            sns.set_palette("colorblind")
+            axs[run].set_xlim([0, 100])
+            axs[run].set_ylim([0, 100])
+
+        for ax in axs.flat:
+            ax.label_outer()
+
+        if results["Anti_ambiguity_bias"].iloc[0]:
+            if wedel_start:
+                fig.suptitle("With anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
+                             str(n_rounds) + " rounds",
+                             size=20)
+            else:
+                fig.suptitle("With anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: " +
+                             str(n_rounds) + " rounds",
+                             size=20)
+        else:
+            if wedel_start:
+                fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
+                             str(n_rounds) + " rounds",
+                             size=20)
+            else:
+                fig.suptitle("Without anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: "
+                             + str(n_rounds) + " rounds",
+                             size=20)
+
+        fig.text(0.5, 0.04, 'Dimension 1', ha='center', size=18)
+        fig.text(0.04, 0.5, 'Dimension 2', va='center', rotation='vertical', size=18)
+        plt.setp(axs, xticks=np.arange(0, 101, 25), yticks=np.arange(0, 101, 25))
+        # plt.show()
+
+        # The commented out part is without continuers, the commented one with continuers
+        if results["Anti_ambiguity_bias"].iloc[0]:
+            #plt.savefig(folder + "exemplars_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
+
+            # plt.savefig(folder + "exemplars_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+            plt.savefig(plots_folder + "exemplars_amb_" +str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_"+ str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G" + "_wedel_start_"+str(wedel_start) + "_ignore_continuers_" + str(ignore_continuers_segment_similarity) +".pdf")
+        else:
+            #plt.savefig(folder + "exemplars_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
+
+            # plt.savefig(folder + "exemplars_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+            plt.savefig(plots_folder + "exemplars_no_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G" + "_wedel_start_"+str(wedel_start) + "_ignore_continuers_" + str(ignore_continuers_segment_similarity) +".pdf")
+        # plt.clf()
+
+
+
+def plot_avg_centroid_distance(plots_folder, results, average_centroid_distances, n_words, n_rounds, wedel_start, ignore_continuers_segment_similarity):
+    # matplotlib.rc('xtick', labelsize=12)
+    # matplotlib.rc('ytick', labelsize=12)
+    #
+    # with sns.axes_style("whitegrid"):
+    #     sns.set_palette("colorblind")
+    #     fig, axs = plt.subplots(5, 4, figsize=(8, 8))
+
+    sns.set_style("whitegrid")
+    palette = sns.color_palette("colorblind")
+
+    fig = plt.figure()
+
+    r = list(range(1, results.iloc[-1]["Simulation_run"] + 2))
+    sns.set_style("whitegrid")
+    sns.color_palette("colorblind")
+    plt.bar(x=r, height=average_centroid_distances)
+    plt.ylim(0, 50)
+    plt.xticks(r)
+    plt.xlabel("Simulation run", size=18)
+    plt.ylabel("Average centroids distance", size=18)
+
+    if results["Anti_ambiguity_bias"].iloc[0]:
+        if wedel_start:
+            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
+                         str(n_rounds) + " rounds",
+                         size=20)
+        else:
+            fig.suptitle("With anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: " +
+                         str(n_rounds) + " rounds",
+                         size=20)
+    else:
+        if wedel_start:
+            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: "
+                         + str(n_rounds) + " rounds",
+                         size=20)
+        else:
+            fig.suptitle("Without anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: "
+                         + str(n_rounds) + " rounds",
+                         size=20)
+
+    # plt.show()
+
+    # The commented out part is without continuers, the commented one with continuers
+    if results["Anti_ambiguity_bias"].iloc[0]:
+        #plt.savefig(folder + "centroid_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
+
+        # plt.savefig(folder + "centroid_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(plots_folder + "centroid_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G" + "_wedel_start_"+str(wedel_start) + "_ignore_continuers_" + str(ignore_continuers_segment_similarity) +".pdf")
+    else:
+        #plt.savefig(folder + "centroid_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
+
+        # plt.savefig(folder + "centroid_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(plots_folder + "centroid_no_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G" + "_wedel_start_"+str(wedel_start) + "_ignore_continuers_" + str(ignore_continuers_segment_similarity) +".pdf")
+    # plt.clf()
+
+
+
+def plot_avg_sd(plots_folder, results, average_sd, n_words, n_rounds, wedel_start, ignore_continuers_segment_similarity):
+    # matplotlib.rc('xtick', labelsize=12)
+    # matplotlib.rc('ytick', labelsize=12)
+    #
+    # with sns.axes_style("whitegrid"):
+    #     sns.set_palette("colorblind")
+    #     fig, axs = plt.subplots(5, 4, figsize=(8, 8))
+
+    sns.set_style("whitegrid")
+    palette = sns.color_palette("colorblind")
+
+    fig = plt.figure()
+
+    r = list(range(1, results.iloc[-1]["Simulation_run"] + 2))
+    sns.set_style("whitegrid")
+    sns.color_palette("colorblind")
+    plt.bar(x=r, height=average_sd)
+    plt.ylim(0, 5)
+    plt.xticks(r)
+    plt.xlabel("Simulation run", size=18)
+    plt.ylabel("Average distance of exemplars to centroids", size=18)
+
+    if results["Anti_ambiguity_bias"].iloc[0]:
+        if wedel_start:
+            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
+                         str(n_rounds) + " rounds",
+                         size=20)
+        else:
+            fig.suptitle("With anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: " +
+                         str(n_rounds) + " rounds",
+                         size=20)
+    else:
+        if wedel_start:
+            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
+                         str(n_rounds) + " rounds",
+                         size=20)
+        else:
+            fig.suptitle("Without anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: "
+                         + str(n_rounds) + " rounds",
+                         size=20)
+
+    # plt.show()
+
+    # The commented out part is without continuers, the commented one with continuers
+    if results["Anti_ambiguity_bias"].iloc[0]:
+        #plt.savefig(folder + "sd_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
+
+        # plt.savefig(folder + "sd_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(plots_folder + "sd_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G" + "_wedel_start_"+str(wedel_start) + "_ignore_continuers_" + str(ignore_continuers_segment_similarity) +".pdf")
+    else:
+        #plt.savefig(folder + "sd_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
+
+        # plt.savefig(folder + "sd_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+        plt.savefig(plots_folder + "sd_no_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G" + "_wedel_start_"+str(wedel_start) + "_ignore_continuers_" + str(ignore_continuers_segment_similarity) +".pdf")
+    # plt.clf()
+
+
+
+def plot_words_across_runs(plots_folder, results, v_words, continuer_words, n_rounds, wedel_start, ignore_continuers_segment_similarity):
+    sns.set_style("whitegrid")
+    palette = sns.color_palette("colorblind")
+
+    fig = plt.figure()
+
+    fig.set_figheight(7)
+    fig.set_figwidth(12)
+
+    # Create subplots for the different words (5 words: 4 V 1 C)
+    ax1 = fig.add_subplot(231)
+    ax2 = fig.add_subplot(232)
+    ax3 = fig.add_subplot(233)
+    ax4 = fig.add_subplot(234)
+    ax5 = fig.add_subplot(236)
+
+    # Plot every run on the same subplot
+    for run in range(results.iloc[-1]["Simulation_run"] + 1):
+        ax1.scatter(*zip(*v_words[0+(run*4)]), color=palette[0], edgecolors="white", linewidths=0.5)
+        ax2.scatter(*zip(*v_words[1+(run*4)]), color=palette[1], edgecolors="white", linewidths=0.5)
+        ax3.scatter(*zip(*v_words[2+(run*4)]), color=palette[2], edgecolors="white", linewidths=0.5)
+        ax4.scatter(*zip(*v_words[3+(run*4)]), color=palette[3], edgecolors="white", linewidths=0.5)
+        ax5.scatter(*zip(*continuer_words[0+run]), color=palette[4], edgecolors="white", linewidths=0.5)
+
+    # # Plot the in between states as well
+    # sliced_results = results[results["Agent"] == 1]
+    #
+    # for index, row in sliced_results.iterrows():
+    #     if row["Lexicon"][1] == "W":
+    #         exemplars = row["Exemplars"]
+    #         plt.scatter(*zip(*exemplars))
+    #     else:
+    #         exemplars = row["Exemplars"]
+    #         plt.scatter(*zip(*exemplars))
+    # plt.show()
+
+    # Plot all the v_words for all runs
+    ax1.set_xlim([0, 100])
+    ax1.set_ylim([0, 100])
+
+    ax2.set_xlim([0, 100])
+    ax2.set_ylim([0, 100])
+
+    ax3.set_xlim([0, 100])
+    ax3.set_ylim([0, 100])
+
+    ax4.set_xlim([0, 100])
+    ax4.set_ylim([0, 100])
+
+    ax5.set_xlim([0, 100])
+    ax5.set_ylim([0, 100])
+
+    # fig.suptitle(str(results.iloc[-1]["Simulation_run"]+1) + " runs and " + str(n_rounds) + " rounds: \n G: " + str(results.iloc[-1]["Continuer_G"]) + ", word ratio: " + str(results.iloc[-1]["Word_ratio"]), size=20)
+    fig.suptitle(str(results.iloc[-1]["Simulation_run"] + 1) + " runs and " + str(n_rounds) + " rounds: \n G: " + str(
+        results.iloc[-1]["Continuer_G"]) + ", word-similarity weight: " + str(results.iloc[-1]["Word_similarity_weight"]) + ", segment-similarity weight: " + str(results.iloc[-1]["Segment_similarity_weight"]), size=20)
+
+    fig.text(0.5, 0.04, 'Dimension 1', ha='center', size=18)
+    fig.text(0.04, 0.5, 'Dimension 2', va='center', rotation='vertical', size=18)
+
+    # plt.show()
+
+    # plt.savefig(folder + "collateral_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
+    plt.savefig(plots_folder + "collateral_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_"+str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G" + "_wedel_start_"+str(wedel_start) + "_ignore_continuers_" + str(ignore_continuers_segment_similarity) +".pdf")
+    # plt.clf()
+
+
 # ======================================================================================================================
 
 # Start the analysis of the results data selected
@@ -387,210 +689,25 @@ def analysis(results_folder, plots_folder, results_file, intermediate=None, wede
         indices_rounds.append(index_smallest_round)
     print(indices_rounds)
 
+
+
+
     # ==================================================================================================================
 
     # This section entails the plotting of the data
 
-    # Save the plot of the end state of the simulation runs of the first agent
-    matplotlib.rc('xtick', labelsize=12)
-    matplotlib.rc('ytick', labelsize=12)
-
     # First plot the start positions of the simulations (initialisation)
-    with sns.axes_style("whitegrid"):
-        sns.set_palette("colorblind")
-        fig, axs = plt.subplots(5, 4, figsize=(8, 8))
-        axs = axs.ravel()
-    for run in range(results.iloc[-1]["Simulation_run"] + 1):
-        for word_index in range(n_words):
-            exemplars = exemplar_list_start[(run * n_words) + word_index]
-            axs[run].scatter(*zip(*exemplars), edgecolors="white", linewidths=0.5)
-        sns.set_style("whitegrid")
-        sns.set_palette("colorblind")
-        axs[run].set_xlim([0, 100])
-        axs[run].set_ylim([0, 100])
-
-    for ax in axs.flat:
-        ax.label_outer()
-
-    if results["Anti_ambiguity_bias"].iloc[0]:
-        if wedel_start:
-            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
-                         str(n_rounds) + " rounds",
-                         size=20)
-        else:
-            fig.suptitle("With anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: " +
-                         str(n_rounds) + " rounds",
-                         size=20)
-    else:
-        if wedel_start:
-            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
-                         str(n_rounds) + " rounds",
-                         size=20)
-        else:
-            fig.suptitle("Without anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: "
-                         + str(n_rounds) + " rounds",
-                         size=20)
-
-    fig.text(0.5, 0.04, 'Dimension 1', ha='center', size=18)
-    fig.text(0.04, 0.5, 'Dimension 2', va='center', rotation='vertical', size=18)
-    plt.setp(axs, xticks=np.arange(0, 101, 25), yticks=np.arange(0, 101, 25))
-    # plt.show()
-
-    # The commented out part is without continuers, the commented one with continuers
-    if results["Anti_ambiguity_bias"].iloc[0]:
-        #plt.savefig(folder + "start_exemplars_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
-
-        # plt.savefig(folder + "start_exemplars_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(plots_folder + "start_exemplars_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" + str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G" + "_wedel_start_"+str(wedel_start) + "_ignore_continuers_" + str(ignore_continuers_segment_similarity) +".pdf")
-    else:
-        #plt.savefig(folder + "start_exemplars_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
-
-        # plt.savefig(folder + "start_exemplars_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(plots_folder + "start_exemplars_no_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G" + "_wedel_start_"+str(wedel_start) + "_ignore_continuers_" + str(ignore_continuers_segment_similarity) +".pdf")
-    plt.clf()
+    plot_start_positions(plots_folder, results, exemplar_list_start, n_words, n_rounds, wedel_start, ignore_continuers_segment_similarity)
 
     # Now plot their end positions
-
-    with sns.axes_style("whitegrid"):
-        sns.set_palette("colorblind")
-        fig, axs = plt.subplots(5, 4, figsize=(8, 8))
-        axs = axs.ravel()
-    for run in range(results.iloc[-1]["Simulation_run"] + 1):
-        for word_index in range(n_words):
-            exemplars = exemplar_list[(run * n_words) + word_index]
-            axs[run].scatter(*zip(*exemplars), edgecolors="white", linewidths=0.5)
-        sns.set_style("whitegrid")
-        sns.set_palette("colorblind")
-        axs[run].set_xlim([0, 100])
-        axs[run].set_ylim([0, 100])
-
-    for ax in axs.flat:
-        ax.label_outer()
-
-    if results["Anti_ambiguity_bias"].iloc[0]:
-        if wedel_start:
-            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
-                         str(n_rounds) + " rounds",
-                         size=20)
-        else:
-            fig.suptitle("With anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: " +
-                         str(n_rounds) + " rounds",
-                         size=20)
-    else:
-        if wedel_start:
-            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
-                         str(n_rounds) + " rounds",
-                         size=20)
-        else:
-            fig.suptitle("Without anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: "
-                         + str(n_rounds) + " rounds",
-                         size=20)
-
-    fig.text(0.5, 0.04, 'Dimension 1', ha='center', size=18)
-    fig.text(0.04, 0.5, 'Dimension 2', va='center', rotation='vertical', size=18)
-    plt.setp(axs, xticks=np.arange(0, 101, 25), yticks=np.arange(0, 101, 25))
-    # plt.show()
-
-    # The commented out part is without continuers, the commented one with continuers
-    if results["Anti_ambiguity_bias"].iloc[0]:
-        #plt.savefig(folder + "exemplars_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
-
-        # plt.savefig(folder + "exemplars_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(plots_folder + "exemplars_amb_" +str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_"+ str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G" + "_wedel_start_"+str(wedel_start) + "_ignore_continuers_" + str(ignore_continuers_segment_similarity) +".pdf")
-    else:
-        #plt.savefig(folder + "exemplars_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
-
-        # plt.savefig(folder + "exemplars_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(plots_folder + "exemplars_no_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G" + "_wedel_start_"+str(wedel_start) + "_ignore_continuers_" + str(ignore_continuers_segment_similarity) +".pdf")
-    plt.clf()
+    plot_end_positions(plots_folder, results, exemplar_list, n_words, n_rounds, wedel_start, ignore_continuers_segment_similarity)
 
     # Save the plot of the average centroids distance
-    r = list(range(1, results.iloc[-1]["Simulation_run"] + 2))
-    sns.set_style("whitegrid")
-    sns.color_palette("colorblind")
-    plt.bar(x=r, height=average_centroid_distances)
-    plt.ylim(0, 50)
-    plt.xticks(r)
-    plt.xlabel("Simulation run", size=18)
-    plt.ylabel("Average centroids distance", size=18)
-
-    if results["Anti_ambiguity_bias"].iloc[0]:
-        if wedel_start:
-            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
-                         str(n_rounds) + " rounds",
-                         size=20)
-        else:
-            fig.suptitle("With anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: " +
-                         str(n_rounds) + " rounds",
-                         size=20)
-    else:
-        if wedel_start:
-            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: "
-                         + str(n_rounds) + " rounds",
-                         size=20)
-        else:
-            fig.suptitle("Without anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: "
-                         + str(n_rounds) + " rounds",
-                         size=20)
-
-    # plt.show()
-
-    # The commented out part is without continuers, the commented one with continuers
-    if results["Anti_ambiguity_bias"].iloc[0]:
-        #plt.savefig(folder + "centroid_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
-
-        # plt.savefig(folder + "centroid_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(plots_folder + "centroid_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G" + "_wedel_start_"+str(wedel_start) + "_ignore_continuers_" + str(ignore_continuers_segment_similarity) +".pdf")
-    else:
-        #plt.savefig(folder + "centroid_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
-
-        # plt.savefig(folder + "centroid_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(plots_folder + "centroid_no_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G" + "_wedel_start_"+str(wedel_start) + "_ignore_continuers_" + str(ignore_continuers_segment_similarity) +".pdf")
-    plt.clf()
+    plot_avg_centroid_distance(plots_folder, results, average_centroid_distances, n_words, n_rounds, wedel_start, ignore_continuers_segment_similarity)
 
     # Save the plot of the average SD for a two dimensional space
-    r = list(range(1, results.iloc[-1]["Simulation_run"] + 2))
-    sns.set_style("whitegrid")
-    sns.color_palette("colorblind")
-    plt.bar(x=r, height=average_sd)
-    plt.ylim(0, 5)
-    plt.xticks(r)
-    plt.xlabel("Simulation run", size=18)
-    plt.ylabel("Average distance of exemplars to centroids", size=18)
+    plot_avg_sd(plots_folder, results, average_sd, n_words, n_rounds, wedel_start, ignore_continuers_segment_similarity)
 
-    if results["Anti_ambiguity_bias"].iloc[0]:
-        if wedel_start:
-            fig.suptitle("With anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
-                         str(n_rounds) + " rounds",
-                         size=20)
-        else:
-            fig.suptitle("With anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: " +
-                         str(n_rounds) + " rounds",
-                         size=20)
-    else:
-        if wedel_start:
-            fig.suptitle("Without anti-ambiguity bias and with Wedel initialisation of \n" + str(n_words) + " words: " +
-                         str(n_rounds) + " rounds",
-                         size=20)
-        else:
-            fig.suptitle("Without anti-ambiguity bias and with random initialisation of \n" + str(n_words) + " words: "
-                         + str(n_rounds) + " rounds",
-                         size=20)
-
-    # plt.show()
-
-    # The commented out part is without continuers, the commented one with continuers
-    if results["Anti_ambiguity_bias"].iloc[0]:
-        #plt.savefig(folder + "sd_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
-
-        # plt.savefig(folder + "sd_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(plots_folder + "sd_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G" + "_wedel_start_"+str(wedel_start) + "_ignore_continuers_" + str(ignore_continuers_segment_similarity) +".pdf")
-    else:
-        #plt.savefig(folder + "sd_no_amb_" + str(n_rounds) + "_" + str(n_words) + ".pdf")
-
-        # plt.savefig(folder + "sd_no_amb_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-        plt.savefig(plots_folder + "sd_no_amb_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_" +str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G" + "_wedel_start_"+str(wedel_start) + "_ignore_continuers_" + str(ignore_continuers_segment_similarity) +".pdf")
-    plt.clf()
 
     # ==================================================================================================================
     if results["Anti_ambiguity_bias"].iloc[0]:
@@ -610,67 +727,5 @@ def analysis(results_folder, plots_folder, results_file, intermediate=None, wede
 
     # Plot the distinct words over all the simulation runs per word (one plot per word to see how they move in the
     # space), includes continuer words as well
+    plot_words_across_runs(plots_folder, results, v_words, continuer_words, n_rounds, wedel_start, ignore_continuers_segment_similarity)
 
-    sns.set_style("whitegrid")
-    palette = sns.color_palette("colorblind")
-
-    fig = plt.figure()
-
-    fig.set_figheight(7)
-    fig.set_figwidth(12)
-
-    # Create subplots for the different words (5 words: 4 V 1 C)
-    ax1 = fig.add_subplot(231)
-    ax2 = fig.add_subplot(232)
-    ax3 = fig.add_subplot(233)
-    ax4 = fig.add_subplot(234)
-    ax5 = fig.add_subplot(236)
-
-    # Plot every run on the same subplot
-    for run in range(results.iloc[-1]["Simulation_run"] + 1):
-        ax1.scatter(*zip(*v_words[0+(run*4)]), color=palette[0], edgecolors="white", linewidths=0.5)
-        ax2.scatter(*zip(*v_words[1+(run*4)]), color=palette[1], edgecolors="white", linewidths=0.5)
-        ax3.scatter(*zip(*v_words[2+(run*4)]), color=palette[2], edgecolors="white", linewidths=0.5)
-        ax4.scatter(*zip(*v_words[3+(run*4)]), color=palette[3], edgecolors="white", linewidths=0.5)
-        ax5.scatter(*zip(*continuer_words[0+run]), color=palette[4], edgecolors="white", linewidths=0.5)
-
-    # # Plot the in between states as well
-    # sliced_results = results[results["Agent"] == 1]
-    #
-    # for index, row in sliced_results.iterrows():
-    #     if row["Lexicon"][1] == "W":
-    #         exemplars = row["Exemplars"]
-    #         plt.scatter(*zip(*exemplars))
-    #     else:
-    #         exemplars = row["Exemplars"]
-    #         plt.scatter(*zip(*exemplars))
-    # plt.show()
-
-    # Plot all the v_words for all runs
-    ax1.set_xlim([0, 100])
-    ax1.set_ylim([0, 100])
-
-    ax2.set_xlim([0, 100])
-    ax2.set_ylim([0, 100])
-
-    ax3.set_xlim([0, 100])
-    ax3.set_ylim([0, 100])
-
-    ax4.set_xlim([0, 100])
-    ax4.set_ylim([0, 100])
-
-    ax5.set_xlim([0, 100])
-    ax5.set_ylim([0, 100])
-
-    # fig.suptitle(str(results.iloc[-1]["Simulation_run"]+1) + " runs and " + str(n_rounds) + " rounds: \n G: " + str(results.iloc[-1]["Continuer_G"]) + ", word ratio: " + str(results.iloc[-1]["Word_ratio"]), size=20)
-    fig.suptitle(str(results.iloc[-1]["Simulation_run"] + 1) + " runs and " + str(n_rounds) + " rounds: \n G: " + str(
-        results.iloc[-1]["Continuer_G"]) + ", word-similarity weight: " + str(results.iloc[-1]["Word_similarity_weight"]) + ", segment-similarity weight: " + str(results.iloc[-1]["Segment_similarity_weight"]), size=20)
-
-    fig.text(0.5, 0.04, 'Dimension 1', ha='center', size=18)
-    fig.text(0.04, 0.5, 'Dimension 2', va='center', rotation='vertical', size=18)
-
-    # plt.show()
-
-    # plt.savefig(folder + "collateral_" + str(results.iloc[-1]["Word_ratio"]) + "_" + str(results.iloc[-1]["Continuer_G"]) + ".pdf")
-    plt.savefig(plots_folder + "collateral_"+str(results.iloc[-1]["Simulation_run"] + 1) + "_runs_" + str(n_rounds) + "_rounds_"+str(results.iloc[-1]["N_words"]) + "_words_" + str(results.iloc[-1]["N_continuers"]) + "_continuers_" + str(results.iloc[-1]["Word_similarity_weight"]) + "_word_bias_" + str(results.iloc[-1]["Segment_similarity_weight"]) + "_segment_bias_" + str(results.iloc[-1]["Continuer_G"]) + "_G" + "_wedel_start_"+str(wedel_start) + "_ignore_continuers_" + str(ignore_continuers_segment_similarity) +".pdf")
-    plt.clf()
