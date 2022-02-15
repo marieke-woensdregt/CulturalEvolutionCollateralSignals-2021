@@ -205,7 +205,7 @@ def plot_end_positions(plots_folder, results, exemplar_list, n_words, n_rounds, 
         #                      + str(n_rounds) + " rounds",
         #                      size=20)
 
-        fig.suptitle("a) End state of selection of 6 separate runs", size=18)
+        fig.suptitle("A) End state of selection of 6 separate runs", size=18)
 
         fig.text(0.5, 0.01, 'Dimension 1', ha='center', size=16)
         fig.text(0.03, 0.5, 'Dimension 2', va='center', rotation='vertical', size=16)
@@ -433,8 +433,8 @@ def plot_words_across_runs_overlaid(plots_folder, results, v_words, continuer_wo
     plt.figure()
 
     # Plot every run on the same subplot
-    for i in range(4):
-        for run in range(results.iloc[-1]["Simulation_run"] + 1):
+    for run in range(results.iloc[-1]["Simulation_run"] + 1):
+        for i in range(4):
             plt.scatter(*zip(*v_words[i + (run * 4)]), color=palette[i], alpha=0.7, edgecolors="white", linewidths=0.5)
     for run in range(results.iloc[-1]["Simulation_run"] + 1):
         plt.scatter(*zip(*continuer_words[0 + run]), color=palette[4], marker="^", alpha=0.7, edgecolors="white", linewidths=0.5)
@@ -442,7 +442,7 @@ def plot_words_across_runs_overlaid(plots_folder, results, v_words, continuer_wo
     plt.xlim([0, 100])
     plt.ylim([0, 100])
 
-    plt.title("b) End state across 20 simulation runs, overlaid", size=18)
+    plt.title("B) End state across 20 simulation runs, overlaid", size=18)
 
     plt.xlabel("Dimension 1", size=16)
     plt.ylabel("Dimension 2", size=16)
