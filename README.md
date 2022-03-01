@@ -1,5 +1,7 @@
 # CulturalEvolutionCollateralSignals-2021
 
+An interactive Jupyter notebook explaining the reasoning behind the model and simulations is available here (click the launch binder badge): [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/marieke-woensdregt/CulturalEvolutionCollateralSignals-2021/main?labpath=evolution_of_continuers_model.ipynb)
+
 The implementation of the model consists of three files:
 * *agent.py*: the implementation of the agents getting initialised with a lexicon.
 * *production.py*: the implementation of the production.
